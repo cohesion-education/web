@@ -40,7 +40,7 @@ deploy:
     - script:
         name: npm-build
         code: |
-          npm build
+          npm run build 
 
     - script:
         name: install-cf-cli
