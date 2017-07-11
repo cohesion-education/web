@@ -40,7 +40,9 @@ deploy:
     - script:
         name: npm-build
         code: |
-          npm run build 
+          npm run build
+          ls -la
+          ls -la ./build
 
     - script:
         name: install-cf-cli
@@ -65,6 +67,4 @@ deploy:
     - script:
         name: cf-push-to-dev
         code: |
-          ls -la
-          ls -la ./build
           cf zero-downtime-push web -f ${CF_SPACE}-manifest.yml
