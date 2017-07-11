@@ -37,7 +37,10 @@ build:
 
 deploy:
   steps:
-    - npm-build
+    - script:
+        name: npm-build
+        code: |
+          npm build 
 
     - script:
         name: install-cf-cli
