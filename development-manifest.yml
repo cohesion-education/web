@@ -1,0 +1,8 @@
+---
+applications:
+- name: web
+  path: ./build
+  buildpack: staticfile_buildpack
+  memory: 16M
+  routes:
+   - route: dev.cohesioned.io
