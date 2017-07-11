@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Button, Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
+import { Button, Navbar, Nav } from 'react-bootstrap'
 import logo from '../images/cohesion-logo.png'
 
 const styles = {

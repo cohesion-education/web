@@ -7,7 +7,7 @@ class Footer extends React.Component {
         <div className="container">
           <div className="row">
             <div className="col-lg-3 col-md-3">
-                &copy; 2017 Cohesion Education, Inc.
+              &copy; 2017 Cohesion Education, Inc.
             </div>
             <div className="col-lg-4 col-lg-offset-3 col-md-7">
               <ul className="nav navbar-nav">
@@ -19,9 +19,9 @@ class Footer extends React.Component {
             </div>
             <div className="col-lg-2 col-md-2">
               <ul className="social-icons">
-                <li><a href="#"><i className="fa fa-facebook"></i></a></li>
-                <li><a href="#"><i className="fa fa-twitter"></i></a></li>
-                <li><a href="#"><i className="fa fa-google-plus"></i></a></li>
+                <li><a href="https://www.facebook.com/cohesioned/"><i className="fa fa-facebook"></i></a></li>
+                <li><a href="https://twitter.com/cohesioned"><i className="fa fa-twitter"></i></a></li>
+                <li><a href="https://www.instagram.com/cohesioned/"><i className="fa fa-instagram"></i></a></li>
               </ul>
             </div>
           </div>

@@ -3,7 +3,7 @@
 # If you want Nodesource's container you would reference nodesource/node
 # Read more about containers on our dev center
 # http://devcenter.wercker.com/docs/containers/index.html
-box: node
+box: kkarczmarczyk/node-yarn
 # This is the build pipeline. Pipelines are the core of wercker
 # Read more about pipelines on our dev center
 # http://devcenter.wercker.com/docs/pipelines/index.html
@@ -22,28 +22,31 @@ build:
   # Read more about steps on our dev center:
   # http://devcenter.wercker.com/docs/steps/index.html
   steps:
-    # A step that executes `npm install` command
-    - npm-install
-    # A step that executes `npm test` command
-    - npm-test
+    - script:
+        name: echo nodejs information
+        code: |
+          echo "node version $(node -v) running"
+          echo "npm version $(npm -v) running"
 
-    # A custom script step, name value is used in the UI
-    # and the code value contains the command that get executed
-#    - script:
-#        name: echo nodejs information
-#        code: |
-#          echo "node version $(node -v) running"
-#          echo "npm version $(npm -v) running"
+    - script:
+        name: yarn-install
+        code: |
+          yarn install
+
+    - script:
+        name: yarn-test
+        code: |
+          CI=true yarn test
+
+    - script:
+        name: yarn-build
+        code: |
+          CI=true yarn build
+
+
 
 deploy:
   steps:
-    - script:
-        name: npm-build
-        code: |
-          CI=true npm run build
-          ls -la
-          ls -la ./build
-
     - script:
         name: install-cf-cli
         code: |
