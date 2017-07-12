@@ -24,12 +24,6 @@ export default class PricingPlan extends React.Component {
             <h2 className="plan-price">{price}</h2>
             <div className="plan-duration">{duration}</div>
           </div>
-          <ul className="plan-stats list-unstyled">
-            <li><i className="pe-7s-server"></i>Number of end products <b>1</b></li>
-            <li><i className="pe-7s-graph"></i>Customer support</li>
-            <li><i className="pe-7s-mail-open"></i>Free Updates</li>
-            <li><i className="pe-7s-tools"></i>24x7 Support</li>
-          </ul>
           <div className="text-center">
             <a href="/purchase" className="btn btn-sm btn-custom btn-login">Purchase Now</a>
           </div>

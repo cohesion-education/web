@@ -9,6 +9,7 @@ const auth = new Auth()
 
 const styles = {
   navbar:{
+    width: '970px',
     backgroundColor: '#ffffff',
     width: '100%',
     borderRadius: '0px',
@@ -57,6 +58,7 @@ const styles = {
 }
 
 const HomepageNavbar = ({classes}) =>
+
   <Navbar fluid fixedTop className={classes.navbar}>
     <Navbar.Header>
       <Navbar.Brand>

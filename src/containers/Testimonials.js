@@ -31,8 +31,7 @@ class TestimonialList extends React.Component {
     }
 
     return(
-      <section className="section bg-img-1">
-        <div className="bg-overlay"></div>
+      <section className="section">
         <div className="container">
           <div className="row">
             <div className="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">

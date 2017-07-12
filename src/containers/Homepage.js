@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Navbar from '../views/Navbar'
-import Header from './Header'
+import HomepageHeader from './HomepageHeader'
 import Features from './Features'
 import FeatureDescriptionList from '../views/FeatureDescriptionList'
 import Testimonials from './Testimonials'
@@ -22,7 +22,7 @@ class Homepage extends React.Component {
     return(
       <div>
         <Navbar />
-        <Header />
+        <HomepageHeader />
         <Features />
         <FeatureDescriptionList />
         <Testimonials />

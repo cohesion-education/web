@@ -3,24 +3,23 @@ import PropTypes from 'prop-types'
 
 class Feature extends React.Component {
   static propTypes = {
-    iconClassName: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    imgURI: PropTypes.string.isRequired,
+    imgAltText: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired
   }
 
   static defaultProps =  {
-    iconClassName: "",
-    title:"",
+    imgURI: "",
+    imgAltText: "",
     description:""
   }
 
   render(){
-    const {iconClassName, title, description} = this.props
+    const {imgURI, imgAltText, description} = this.props
 
     return(
       <div className="features-box">
-        <i className={`fa ${iconClassName}`}></i>
-        <h4>{title}</h4>
+        <img src={imgURI} alt={imgAltText} />
         <p className="text-muted">{description}</p>
       </div>
     )
