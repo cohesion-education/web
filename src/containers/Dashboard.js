@@ -4,7 +4,7 @@ import { Grid, Row, Col } from 'react-bootstrap'
 import DashboardTopBar from './DashboardTopBar'
 import DashboardLeftSideMenu from './DashboardLeftSideMenu'
 import DashboardFooter from '../views/DashboardFooter'
-import VideoPlayer from '../views/VideoPlayer'
+import EarlyRegistration from '../views/EarlyRegistration'
 
 const styles = {
   containerFluid:{
@@ -27,17 +27,7 @@ const styles = {
 }
 
 class Dashboard extends React.Component {
-
   render (){
-    const videoJsOptions = {
-      autoplay: false,
-      controls: true,
-      sources: [{
-        src: 'http://www.sample-videos.com/video/mp4/240/big_buck_bunny_240p_1mb.mp4',
-        type: 'video/mp4'
-      }]
-    }
-
     return(
       <Grid fluid style={styles.containerFluid}>
         <Row>
@@ -50,10 +40,7 @@ class Dashboard extends React.Component {
             <DashboardLeftSideMenu />
           </Col>
           <Col sm={9} xs={12} style={styles.contentArea}>
-            <h4>Welcome to Cohesion Education!</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean malesuada interdum bibendum. Aliquam varius tristique cursus. Suspendisse scelerisque ornare neque, nec semper risus aliquam in. Ut aliquet neque enim, et ultricies justo feugiat eget. Ut ut maximus dolor, ut rutrum nisl. Nam a pharetra diam. Maecenas nec bibendum tellus. Sed vitae magna nisi. Aliquam sed rutrum ligula, nec iaculis nisi. Curabitur eleifend lacus ut leo tincidunt blandit.</p>
-            <VideoPlayer { ...videoJsOptions } />
-
+            <EarlyRegistration />
           </Col>
         </Row>
         <Row>
