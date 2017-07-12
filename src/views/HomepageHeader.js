@@ -1,6 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import Auth from '../utils/Auth'
 
 const auth = new Auth()
@@ -30,6 +28,4 @@ class HomepageHeader extends React.Component {
   }
 }
 
-export default connect(
-  state => ({ ...state.header })
-)(HomepageHeader)
+export default HomepageHeader

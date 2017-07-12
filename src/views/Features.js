@@ -1,6 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import ScrollableAnchor from 'react-scrollable-anchor'
 import Feature from '../views/Feature'
 import bookshelf from '../images/bookshelf.png'
@@ -36,7 +34,4 @@ class FeatureList extends React.Component {
   }
 }
 
-export default connect(
-  state => ({ ...state.features }),
-  dispatch => ({})
-)(FeatureList)
+export default FeatureList

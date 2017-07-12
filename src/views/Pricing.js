@@ -1,11 +1,9 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import ScrollableAnchor from 'react-scrollable-anchor'
 import PricingPlan from '../views/PricingPlan'
 
 class PricingList extends React.Component {
-  
+
   render(){
     return(
       <ScrollableAnchor id='pricing'>
@@ -34,6 +32,4 @@ class PricingList extends React.Component {
   }
 }
 
-export default connect(
-  state => ({ ...state.pricing })
-)(PricingList)
+export default PricingList
