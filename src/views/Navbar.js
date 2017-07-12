@@ -9,7 +9,6 @@ const auth = new Auth()
 
 const styles = {
   navbar:{
-    width: '970px',
     backgroundColor: '#ffffff',
     width: '100%',
     borderRadius: '0px',
