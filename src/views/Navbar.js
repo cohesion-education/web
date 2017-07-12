@@ -2,7 +2,6 @@ import React from 'react'
 import Auth from '../utils/Auth'
 import { Button, Navbar, Nav, NavItem } from 'react-bootstrap'
 import injectSheet from 'react-jss'
-import classNames from 'classnames'
 import logo from '../images/cohesion-logo.png'
 
 const auth = new Auth()
