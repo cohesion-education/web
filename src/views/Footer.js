@@ -6,7 +6,7 @@ class Footer extends React.Component {
       <footer className="footer">
         <div className="container">
           <div className="row">
-            <div className="col-lg-3 col-md-3">
+            <div className="copy col-lg-3 col-md-3">
               &copy; 2017 Cohesion Education, Inc.
             </div>
             <div className="col-lg-4 col-lg-offset-3 col-md-7">
