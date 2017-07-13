@@ -1,4 +1,4 @@
-box: node
+box: node:7.10
 
 test:
   steps:
