@@ -44,11 +44,12 @@ deploy:
         name: yarn-install
         code: |
           yarn install
-          
+
     - script:
         name: yarn-build
         code: |
           yarn build
+          ls -la ./build
 
     - script:
         name: install-cf-cli
