@@ -16,11 +16,7 @@ box: node
 
     # - mongo
     # http://devcenter.wercker.com/docs/services/mongodb.html
-build:
-  # The steps that will be executed on build
-  # Steps make up the actions in your pipeline
-  # Read more about steps on our dev center:
-  # http://devcenter.wercker.com/docs/steps/index.html
+test:
   steps:
     - script:
         name: echo nodejs information
@@ -38,19 +34,18 @@ build:
         code: |
           npm test
 
+build:
+  steps:
     - script:
         name: npm-build
         code: |
           npm run build
-          ls -la
-          ls -la ./build
 
 deploy:
   steps:
     - script:
         name: check-build-dir
         code: |
-          ls -la
           ls -la ./build
 
     - script:
