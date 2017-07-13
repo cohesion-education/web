@@ -38,19 +38,15 @@ build:
         code: |
           CI=true yarn test
 
+
+deploy:
+  steps:
     - script:
         name: yarn-build
         code: |
           yarn build
           ls -la
           ls -la ./build
-
-deploy:
-  steps:
-    - script:
-        name: check-cache
-        code: |
-          ls -la $WERCKER_CACHE_DIR
 
     - script:
         name: install-cf-cli
