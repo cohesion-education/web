@@ -41,6 +41,11 @@ build:
 deploy:
   steps:
     - script:
+        name: yarn-install
+        code: |
+          yarn install
+          
+    - script:
         name: yarn-build
         code: |
           yarn build
