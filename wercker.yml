@@ -38,15 +38,13 @@ build:
         code: |
           CI=true yarn test
 
+deploy:
+  steps:
     - script:
         name: yarn-build
         code: |
-          CI=true yarn build
+          yarn build
 
-
-
-deploy:
-  steps:
     - script:
         name: install-cf-cli
         code: |
