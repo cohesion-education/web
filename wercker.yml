@@ -38,13 +38,18 @@ build:
         code: |
           npm test
 
-
-deploy:
-  steps:
     - script:
         name: npm-build
         code: |
           npm run build
+          ls -la
+          ls -la ./build
+
+deploy:
+  steps:
+    - script:
+        name: check-build-dir
+        code: |
           ls -la
           ls -la ./build
 
