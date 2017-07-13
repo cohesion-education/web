@@ -1,0 +1,17 @@
+.wercker/
+.git/
+build/
+coverage/
+node_modules/
+src/
+
+.env*
+.gitignore
+.eslintrc.yml
+
+*manifest.yml
+package.json
+yarn.lock
+*README.md
+wercker.env
+wercker.yml
