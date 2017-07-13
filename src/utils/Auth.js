@@ -33,16 +33,15 @@ export default class Auth {
 
   handleAuthentication() {
     this.webAuth.parseHash((err, authResult) => {
-      console.log(err)
-      console.log(authResult)
-      console.log(JSON.stringify(authResult))
-      console.log(`app_metadata: ${authResult.app_metadata}`)
-      if (authResult && authResult.accessToken && authResult.idToken) {
+      if (err) {
+        console.log(`an error occurred when parsing the access token: ${JSON.stringify(err)}`)
+        alert(`Unexpected Error: ${err.error}. Please contact support if the issue persists`)
+      }else if (authResult && authResult.accessToken && authResult.idToken) {
+        console.log(authResult)
+        console.log(JSON.stringify(authResult))
+        console.log(`app_metadata: ${authResult.app_metadata}`)
         this.setSession(authResult)
         history.replace('/dashboard')
-      } else if (err) {
-        console.log(err)
-        alert(`Error: ${err.error}. Check the console for further details.`)
       }
     })
   }
