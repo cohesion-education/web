@@ -10,7 +10,11 @@ describe("<Homepage /> ", () => {
         subscribe: jest.fn(),
         getState: jest.fn(() =>
           ({
-              auth:new Auth(),
+              auth:new Auth({
+                domain:'cohesioned.auth0.com',
+                cliendID:'abc123',
+                callbackURL:'http://localhost:3000/callback'
+              }),
               testimonials:[{
                 text: 'Super Awesome!',
                 avatar:'test-avatar.png',

@@ -20,7 +20,7 @@ class PricingList extends React.Component {
               <div className="col-lg-10 col-lg-offset-1">
                 <div className="row">
                   <PricingPlan title="Trial" price="Free!" duration="14 days"/>
-                  <PricingPlan title="One Child" price="$10.99" duration="Monthly"/>
+                  <PricingPlan title="One Child" price="$12.99" duration="Monthly"/>
                   <PricingPlan title="One Child" price="$99" duration="Annually"/>
                 </div>
               </div>

@@ -28,11 +28,12 @@ const styles = {
 
 class Dashboard extends React.Component {
   render (){
+    const { config } = this.props
     return(
       <Grid fluid style={styles.containerFluid}>
         <Row>
           <Col xs={12}>
-            <DashboardTopBar/>
+            <DashboardTopBar config={config} />
           </Col>
         </Row>
         <Row style={styles.main}>

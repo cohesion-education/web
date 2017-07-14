@@ -4,8 +4,6 @@ import { Button, Navbar, Nav, NavItem } from 'react-bootstrap'
 import injectSheet from 'react-jss'
 import logo from '../images/cohesion-logo.png'
 
-const auth = new Auth()
-
 const styles = {
   navbar:{
     backgroundColor: '#ffffff',
@@ -51,23 +49,26 @@ const styles = {
   },
 }
 
-const HomepageNavbar = ({classes}) =>
-
-  <Navbar fluid collapseOnSelect className={classes.navbar}>
-    <Navbar.Header>
-      <Navbar.Brand>
-        <img src={logo} alt='Cohesion Education' className={classes.logo}/>
-      </Navbar.Brand>
-      <Navbar.Toggle />
-    </Navbar.Header>
-    <Navbar.Collapse>
-      <Nav pullRight>
-        <NavItem href='#features' className={classes.navLinks}>Features</NavItem>
-        <NavItem href='#pricing' className={classes.navLinks}>Plans</NavItem>
-        <NavItem href='/login' onClick={auth.login} className={classes.navLinks}>Login</NavItem>
-        <Button bsStyle="primary" href='/register' onClick={auth.login} className={classes.navCta}>Try for Free</Button>
-      </Nav>
-    </Navbar.Collapse>
-  </Navbar>
+const HomepageNavbar = ({config, classes}) => {
+  const auth = new Auth(config)
+  return (
+    <Navbar fluid collapseOnSelect className={classes.navbar}>
+      <Navbar.Header>
+        <Navbar.Brand>
+          <img src={logo} alt='Cohesion Education' className={classes.logo}/>
+        </Navbar.Brand>
+        <Navbar.Toggle />
+      </Navbar.Header>
+      <Navbar.Collapse>
+        <Nav pullRight>
+          <NavItem href='#features' className={classes.navLinks}>Features</NavItem>
+          <NavItem href='#pricing' className={classes.navLinks}>Plans</NavItem>
+          <NavItem href='/login' onClick={auth.login} className={classes.navLinks}>Login</NavItem>
+          <Button bsStyle="primary" href='/register' onClick={auth.login} className={classes.navCta}>Try for Free</Button>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
+  )
+}
 
 export default injectSheet(styles)(HomepageNavbar)

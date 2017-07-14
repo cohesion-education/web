@@ -16,7 +16,7 @@ class EarlyRegistration extends React.Component {
   render(){
     return(
       <div>
-        <h4 class="page-title">Welcome to Cohesion Education</h4>
+        <h4 className="page-title">Welcome to Cohesion Education</h4>
         <p>
           Thank you for enrolling in our exciting new product! We expect to officially launch this Fall. In the meantime, sign up for our newsletter or request to join our early access Beta program.
         </p>

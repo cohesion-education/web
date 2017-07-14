@@ -3,24 +3,22 @@ import history from '../history'
 
 export default class Auth {
 
-  webAuth = new auth0.WebAuth({
-    domain: process.env.REACT_APP_AUTH0_DOMAIN,
-    clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
-    redirectUri: process.env.REACT_APP_CALLBACK_URL,
-    audience: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/userinfo`,
-    responseType: 'token id_token',
-    scope: 'openid profile email' /* https://auth0.com/docs/scopes/current, https://auth0.com/docs/scopes */
-  })
-
-  userProfile
-
-  constructor() {
+  constructor(props) {
     this.login = this.login.bind(this)
     this.logout = this.logout.bind(this)
     this.handleAuthentication = this.handleAuthentication.bind(this)
     this.isAuthenticated = this.isAuthenticated.bind(this)
     this.getAccessToken = this.getAccessToken.bind(this)
     this.getProfile = this.getProfile.bind(this)
+
+    this.webAuth = new auth0.WebAuth({
+      domain: props.auth0_domain,
+      clientID: props.auth0_client_id,
+      redirectUri: props.callback_url,
+      audience: `https://${props.auth0_domain}/userinfo`,
+      responseType: 'token id_token',
+      scope: 'openid profile email' /* https://auth0.com/docs/scopes/current, https://auth0.com/docs/scopes */
+    })
   }
 
   login(e) {
@@ -81,9 +79,9 @@ export default class Auth {
     try{
       let accessToken = this.getAccessToken()
       this.webAuth.client.userInfo(accessToken, (err, profile) => {
-        if (profile) {
-          this.userProfile = profile
-        }
+        // if (profile) {
+        //   this.userProfile = profile
+        // }
         cb(err, profile)
       })
     }catch(err){
@@ -96,7 +94,7 @@ export default class Auth {
     localStorage.removeItem('access_token')
     localStorage.removeItem('id_token')
     localStorage.removeItem('expires_at')
-    this.userProfile = null
+    // this.userProfile = null
 
     history.replace('/')
   }

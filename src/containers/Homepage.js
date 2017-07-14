@@ -18,10 +18,11 @@ class Homepage extends React.Component {
     this.props.dispatch(fetchHomepage())
   }
 
-  render (){
+  render(){
+    const { config } = this.props
     return(
       <div>
-        <Navbar />
+        <Navbar config={config} />
         <HomepageHeader />
         <Features />
         <FeatureDescriptionList />

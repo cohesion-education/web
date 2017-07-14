@@ -1,8 +1,8 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import { Button, Navbar, Nav } from 'react-bootstrap'
+import Auth from '../utils/Auth'
 import logo from '../images/cohesion-logo.png'
+import defaultAvatar from '../images/default-avatar.png'
 
 const styles = {
   nav:{
@@ -13,30 +13,47 @@ const styles = {
     height:'4.5em',
   },
   navLinks:{
-    marginTop: '18px',
+    marginTop: '24px',
     fontSize: '1.2em',
     marginRight: '5px',
   },
   profilePicture:{
     border: '2px solid #edf0f0',
-    height: '48px',
-    width: '48px',
+    height: '60px',
+    width: '60px',
     cursor:'pointer',
   }
 }
 
 class DashboardTopBar extends React.Component {
 
-  static propTypes = {
-    picture: PropTypes.string.isRequired
+  constructor(props) {
+    super(props)
+
+    this.auth = new Auth(props.config)
+
+    this.state = {
+      profilePicture:defaultAvatar
+    }
   }
 
-  static defaultProps =  {
-    picture:''
+  componentDidMount() {
+    this.auth.getProfile((err, profile) => {
+      if(err){
+        console.log(`failed to get profile: ${err}`)
+      }else{
+        console.log(`got profile: ${JSON.stringify(profile)}`)
+        let nextState = {
+          profilePicture:profile.picture
+        }
+        console.log(`state: ${JSON.stringify(nextState)}`)
+        this.setState(nextState)
+      }
+    })
   }
 
   render (){
-    const { picture } = this.props
+    console.log(`state.profilePicture: ${this.state.profilePicture}`)
 
     return(
       <Navbar fluid style={styles.nav} fixedTop>
@@ -48,7 +65,7 @@ class DashboardTopBar extends React.Component {
         <Nav pullRight>
           <Navbar.Text>
             <Navbar.Link href="/profile">
-              <img src={picture} alt="user-img" className="img-circle" style={styles.profilePicture}/>
+              <img src={this.state.profilePicture} alt="user-img" className="img-circle" style={styles.profilePicture}/>
             </Navbar.Link>
           </Navbar.Text>
           <Button href="/logout" bsStyle="primary" style={styles.navLinks}>Logout</Button>
@@ -58,6 +75,4 @@ class DashboardTopBar extends React.Component {
   }
 }
 
-export default connect(
-  state => ({ ...state.profile })
-)(DashboardTopBar)
+export default DashboardTopBar
