@@ -1,6 +1,6 @@
 box: node:7.10
 
-build-and-deploy:
+build:
   steps:
     - script:
         name: echo nodejs information
@@ -10,11 +10,13 @@ build-and-deploy:
 
     - npm-install
     - npm-test
-    
-    - script:
+
+deploy:
+  steps:
+    -script:
         name: npm-build
         code: |
-          npm run build
+          npm run build:${CF_SPACE}
 
     - script:
         name: install-cf-cli
