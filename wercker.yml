@@ -1,6 +1,6 @@
 box: node:7.10
 
-test:
+build-and-deploy:
   steps:
     - script:
         name: echo nodejs information
@@ -8,43 +8,14 @@ test:
           echo "node version $(node -v) running"
           echo "npm version $(npm -v) running"
 
-    - script:
-        name: npm-install
-        code: |
-          npm install
-
-    - script:
-        name: npm-test
-        code: |
-          npm test
-
+    - npm-install
+    - npm-test
+    
     - script:
         name: npm-build
         code: |
           npm run build
 
-build:
-  steps:
-#    - script:
-#        name: install-yarn
-#        code: |
-#          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-#          echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-#          apt-get update && apt-get install yarn
-#          yarn --version
-    - script:
-        name: npm-build
-        code: |
-          rm -rf ./build
-          npm run build
-
-    - script:
-        name: check-build-dir
-        code: |
-          ls -la ./build
-
-deploy:
-  steps:
     - script:
         name: install-cf-cli
         code: |
