@@ -12,10 +12,10 @@ export default class Auth {
     this.getProfile = this.getProfile.bind(this)
 
     this.webAuth = new auth0.WebAuth({
-      domain: props.auth0_domain,
-      clientID: props.auth0_client_id,
-      redirectUri: props.callback_url,
-      audience: `https://${props.auth0_domain}/userinfo`,
+      domain: window.config.auth0_domain,
+      clientID: window.config.auth0_client_id,
+      redirectUri:window.config.callback_url,
+      audience: `https://${window.config.auth0_domain}/userinfo`,
       responseType: 'token id_token',
       scope: 'openid profile email' /* https://auth0.com/docs/scopes/current, https://auth0.com/docs/scopes */
     })

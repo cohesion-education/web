@@ -4,7 +4,7 @@ import Auth from './Auth'
 export default class Callback extends React.Component {
   constructor(props){
     super(props)
-    this.auth = new Auth(props.config)
+    this.auth = new Auth()
     this.handleAuthentication = this.handleAuthentication.bind(this)
   }
 

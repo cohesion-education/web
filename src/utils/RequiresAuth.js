@@ -4,12 +4,12 @@ import { Redirect } from 'react-router'
 import { receiveProfile } from '../actions'
 import Auth from './Auth'
 
-const RequiresAuth = (config, ComposedComponent) => {
+const RequiresAuth = (ComposedComponent) => {
   class RequiresAuth extends React.Component {
 
     constructor(props){
       super(props)
-      this.auth = new Auth(config)
+      this.auth = new Auth()
 
       this.state = {
         profile:{}
@@ -35,7 +35,7 @@ const RequiresAuth = (config, ComposedComponent) => {
     render() {
       return this.auth.isAuthenticated() ?
       (
-        <ComposedComponent config={config} />
+        <ComposedComponent />
       ) :
       (
         <Redirect to='/login'/>

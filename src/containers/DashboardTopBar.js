@@ -30,7 +30,7 @@ class DashboardTopBar extends React.Component {
   constructor(props) {
     super(props)
 
-    this.auth = new Auth(props.config)
+    this.auth = new Auth()
 
     this.state = {
       profilePicture:defaultAvatar

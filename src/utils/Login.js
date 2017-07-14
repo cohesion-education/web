@@ -2,7 +2,10 @@ import React from 'react'
 import Auth from './Auth'
 
 export default class Login extends React.Component {
-  auth = new Auth()
+  constructor(props){
+    super(props)
+    this.auth = new Auth()
+  }
 
   componentWillMount(){
     this.auth.login()

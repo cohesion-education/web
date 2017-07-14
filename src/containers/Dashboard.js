@@ -4,7 +4,6 @@ import { Grid, Row, Col } from 'react-bootstrap'
 import DashboardTopBar from './DashboardTopBar'
 import DashboardLeftSideMenu from './DashboardLeftSideMenu'
 import DashboardFooter from '../views/DashboardFooter'
-import EarlyRegistration from '../views/EarlyRegistration'
 
 const styles = {
   containerFluid:{
@@ -28,12 +27,11 @@ const styles = {
 
 class Dashboard extends React.Component {
   render (){
-    const { config } = this.props
     return(
       <Grid fluid style={styles.containerFluid}>
         <Row>
           <Col xs={12}>
-            <DashboardTopBar config={config} />
+            <DashboardTopBar />
           </Col>
         </Row>
         <Row style={styles.main}>
@@ -41,7 +39,7 @@ class Dashboard extends React.Component {
             <DashboardLeftSideMenu />
           </Col>
           <Col sm={9} xs={12} style={styles.contentArea}>
-            <EarlyRegistration />
+            {this.props.children}
           </Col>
         </Row>
         <Row>

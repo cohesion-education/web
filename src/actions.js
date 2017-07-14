@@ -41,7 +41,7 @@ export function fetchHomepage() {
       .then(json =>
         dispatch(receiveHomepage(json))
       ).catch(function(err) {
-        console.log(`an error occurred when making the request: ${err}`)
+        console.log(`an error occurred while fetching /api/homepage: ${err}`)
       })
   }
 }

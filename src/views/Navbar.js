@@ -49,8 +49,8 @@ const styles = {
   },
 }
 
-const HomepageNavbar = ({config, classes}) => {
-  const auth = new Auth(config)
+const HomepageNavbar = ({classes}) => {
+  const auth = new Auth()
   return (
     <Navbar fluid collapseOnSelect className={classes.navbar}>
       <Navbar.Header>

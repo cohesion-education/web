@@ -34,9 +34,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build:development": "react-scripts build",
-    "build:beta": "react-scripts build",
-    "build:prod": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "jest": "./node_modules/.bin/jest .",
     "lint": "./node_modules/.bin/eslint .",

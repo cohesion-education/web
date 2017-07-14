@@ -10,8 +10,8 @@ import Callback from './utils/Callback'
 import Login from './utils/Login'
 import Logout from './utils/Logout'
 import Dashboard from './containers/Dashboard'
+import EarlyRegistration from './views/EarlyRegistration'
 import RequiresAuth from './utils/RequiresAuth'
-
 
 const logPageView = () => {
   ReactGA.set({ page: window.location.pathname + window.location.search })
@@ -20,15 +20,20 @@ const logPageView = () => {
 
 const store = configureStore()
 
-const Routes = ({config}) => (
+const EarlyRegistrationDashboard = () =>
+  <Dashboard>
+    <EarlyRegistration />
+  </Dashboard>
+
+const Routes = () => (
   <Provider store={store}>
     <ConnectedRouter history={history} onUpdate={logPageView}>
       <div>
-        <Route exact path="/" render={ () => <Homepage config={config} /> } />
-        <Route path="/callback" render={ () => <Callback config={config} /> } />
+        <Route exact path="/" component={Homepage} />
+        <Route path="/callback" component={Callback} />
         <Route path="/login" component={Login} />
-        <Route path="/logout" component={RequiresAuth(config, Logout)} />
-        <Route path="/dashboard" component={RequiresAuth(config, Dashboard)} />
+        <Route path="/logout" component={RequiresAuth(Logout)} />
+        <Route path="/dashboard" component={RequiresAuth(EarlyRegistrationDashboard)} />
       </div>
     </ConnectedRouter>
   </Provider>

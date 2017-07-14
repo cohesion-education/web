@@ -19,10 +19,9 @@ class Homepage extends React.Component {
   }
 
   render(){
-    const { config } = this.props
     return(
       <div>
-        <Navbar config={config} />
+        <Navbar />
         <HomepageHeader />
         <Features />
         <FeatureDescriptionList />

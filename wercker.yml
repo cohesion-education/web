@@ -10,14 +10,17 @@ build:
 
     - npm-install
     - npm-test
+    - script:
+        name: npm-build
+        code: |
+          npm run build
 
 deploy:
   steps:
     - script:
-        name: npm-build
-        code: |
-          ls -la
-          npm run build:${CF_SPACE}
+      name: generate-env-config
+      code: |
+        ./scripts/generate-env-config
 
     - script:
         name: install-cf-cli
