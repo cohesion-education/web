@@ -16,6 +16,7 @@ deploy:
     - script:
         name: npm-build
         code: |
+          ls -la
           npm run build:${CF_SPACE}
 
     - script:
