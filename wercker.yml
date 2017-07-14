@@ -1,6 +1,6 @@
 box: node:7.10
 
-build:
+test:
   steps:
     - script:
         name: echo nodejs information
