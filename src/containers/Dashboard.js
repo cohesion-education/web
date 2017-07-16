@@ -15,8 +15,8 @@ const styles = {
   },
   main:{
     paddingTop:'7em',
-    paddingRight:'10',
-    paddingLeft:'10',
+    paddingRight:'10px',
+    paddingLeft:'10px',
     paddingBottom:'1em',
   },
   contentArea:{

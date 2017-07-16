@@ -1,16 +1,60 @@
 import React from 'react'
 import { FormGroup, Checkbox, Button } from 'react-bootstrap'
+import Auth from '../utils/Auth'
 
 class EarlyRegistration extends React.Component {
   constructor(props) {
     super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.auth = new Auth()
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.state = { newsletter: false, betaprogram: false }
+  }
+
+  componentDidMount() {
+    fetch('http://localhost:3001/api/profile', {
+      method: 'get',
+      mode: 'cors',
+      headers: {
+        'Authorization': `Bearer ${this.auth.getIDToken()}`,
+      }
+    })
+    .then(response => response.json())
+    .then(profile => {
+      if(profile){
+        this.setState({
+          newsletter: profile.preferences.newsletter,
+          betaprogram: profile.preferences.beta_program
+        })
+      }
+    }).catch(function(err) {
+      console.log(`an error occurred while fetching /api/profile: ${err}`)
+    })
   }
 
   handleSubmit(e){
     e.preventDefault()
 
-    alert(`form submitted. beta program: ${this.betaprogram.value} newsletter: ${this.newsletter.value}`)
+    try{
+      fetch('http://localhost:3001/api/profile/preferences', {
+        method: 'post',
+        mode: 'cors',
+        headers: {
+          'Authorization': `Bearer ${this.auth.getIDToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(this.state)
+      })
+      .then(response => {
+        return response.json()
+      })
+      .catch(function(err) {
+        console.log(`an error occurred while fetching /api/profile/preferences: ${err}`)
+      })
+    }catch(e){
+      console.log(`failed to get access token: ${e}`)
+      //TODO - probably better to redirect user somewhere in this scenario
+      alert(`You might not be logged in`)
+    }
   }
 
   render(){
@@ -22,12 +66,12 @@ class EarlyRegistration extends React.Component {
         </p>
         <form>
           <FormGroup>
-            <Checkbox inputRef={ref => { this.newsletter = ref; }}>
+            <Checkbox checked={this.state.newsletter} onClick={ () => { this.setState({ newsletter: !this.state.newsletter }) }}>
               Sign up for our Newsletter
             </Checkbox>
           </FormGroup>
           <FormGroup>
-            <Checkbox inputRef={ref => { this.betaprogram = ref; }}>
+            <Checkbox checked={this.state.betaprogram} onClick={ () => { this.setState({ betaprogram: !this.state.betaprogram }) }}>
               Sign up for our early access Beta program
             </Checkbox>
           </FormGroup>

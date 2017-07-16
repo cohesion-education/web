@@ -75,6 +75,14 @@ export default class Auth {
     return accessToken
   }
 
+  getIDToken() {
+    const token = localStorage.getItem('id_token')
+    if (!token) {
+      throw new Error('No id token found')
+    }
+    return token
+  }
+
   getProfile(cb) {
     try{
       let accessToken = this.getAccessToken()

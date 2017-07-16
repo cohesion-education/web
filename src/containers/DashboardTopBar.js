@@ -42,19 +42,16 @@ class DashboardTopBar extends React.Component {
       if(err){
         console.log(`failed to get profile: ${err}`)
       }else{
-        console.log(`got profile: ${JSON.stringify(profile)}`)
         let nextState = {
           profilePicture:profile.picture
         }
-        console.log(`state: ${JSON.stringify(nextState)}`)
+
         this.setState(nextState)
       }
     })
   }
 
   render (){
-    console.log(`state.profilePicture: ${this.state.profilePicture}`)
-
     return(
       <Navbar fluid style={styles.nav} fixedTop>
         <Navbar.Header>

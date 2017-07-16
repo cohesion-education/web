@@ -7,16 +7,16 @@ import FeatureDescriptionList from '../views/FeatureDescriptionList'
 import Testimonials from './Testimonials'
 import Pricing from '../views/Pricing'
 import Footer from '../views/Footer'
-import { fetchHomepage } from '../actions'
+// import { fetchHomepage } from '../actions'
 import '../css/fonts.css'
 import '../css/font-awesome.css'
 import '../css/homepage.css'
 
 
 class Homepage extends React.Component {
-  componentWillMount(){
-    this.props.dispatch(fetchHomepage())
-  }
+  // componentWillMount(){
+  //   this.props.dispatch(fetchHomepage())
+  // }
 
   render(){
     return(

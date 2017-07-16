@@ -15,10 +15,10 @@ export default class Callback extends React.Component {
   }
 
   componentDidMount(){
-    console.log('Callback.componentDidMount')
-    console.log(`this.props: ${JSON.stringify(this.props)}`)
-    console.log(`location.hash: ${JSON.stringify(window.location)}`)
-    console.log(`location.hash: ${window.location.hash}`)
+    // console.log('Callback.componentDidMount')
+    // console.log(`this.props: ${JSON.stringify(this.props)}`)
+    // console.log(`location.hash: ${JSON.stringify(window.location)}`)
+    // console.log(`location.hash: ${window.location.hash}`)
     this.handleAuthentication(this.props)
   }
 

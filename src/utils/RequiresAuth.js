@@ -27,7 +27,6 @@ const RequiresAuth = (ComposedComponent) => {
           return
         }
 
-        console.log(`profile loaded: ${JSON.stringify(profile)}`)
         this.props.dispatch(receiveProfile(profile))
       })
     }
