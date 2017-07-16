@@ -6,14 +6,9 @@ import Routes from './routes'
 import { configureAnchors } from 'react-scrollable-anchor'
 import 'bootstrap/dist/css/bootstrap.css'
 
-if(!window.config){
-  console.log('window.config not set - using default/localhost settings')
-  window.config = {
-    auth0_domain:"cohesioned.auth0.com",
-    auth0_client_id:"DBfgngEpPVlRawcfFWme3gxJ6WNwBEl6",
-    callback_url:"http://localhost:3000/callback",
-    ga_tracking_id:"abc123"
-  }
+if(!window.config.api_base){
+  console.log('window.config.api_base not set - using default/localhost settings')
+  window.config.api_base=""
 }
 
 ReactGA.initialize(window.config.ga_tracking_id, { debug:true })
