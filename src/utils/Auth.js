@@ -11,6 +11,15 @@ export default class Auth {
     this.getAccessToken = this.getAccessToken.bind(this)
     this.getProfile = this.getProfile.bind(this)
 
+
+    if(!window.config){
+      window.config = {
+        auth0_domain:"cohesioned.auth0.com",
+        auth0_client_id:"abc123",
+        callback_url:"http://localhost:3000/callback",
+      }
+    }
+
     this.webAuth = new auth0.WebAuth({
       domain: window.config.auth0_domain,
       clientID: window.config.auth0_client_id,

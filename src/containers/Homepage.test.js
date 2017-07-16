@@ -5,13 +5,7 @@ import Auth from '../utils/Auth'
 
 describe("<Homepage /> ", () => {
     let wrapper
-
-    window.config = {
-      auth0_domain:"cohesioned.auth0.com",
-      auth0_client_id:"abc123",
-      callback_url:"http://localhost:3000/callback",
-    }
-
+    
     let _store = {
         dispatch: jest.fn(),
         subscribe: jest.fn(),
