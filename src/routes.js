@@ -11,6 +11,7 @@ import Login from './utils/Login'
 import Logout from './utils/Logout'
 import Dashboard from './containers/Dashboard'
 import EarlyRegistration from './views/EarlyRegistration'
+import PrivacyPolicy from './views/PrivacyPolicy'
 import RequiresAuth from './utils/RequiresAuth'
 
 const logPageView = () => {
@@ -32,6 +33,7 @@ const Routes = () => (
         <Route exact path="/" component={Homepage} />
         <Route path="/callback" component={Callback} />
         <Route path="/login" component={Login} />
+        <Route path="/privacy" component={PrivacyPolicy} />
         <Route path="/logout" component={RequiresAuth(Logout)} />
         <Route path="/dashboard" component={RequiresAuth(EarlyRegistrationDashboard)} />
       </div>
