@@ -1,28 +1,54 @@
 import React from 'react'
-import { FormGroup, Checkbox, Button } from 'react-bootstrap'
+import { Alert, Button, Checkbox, FormGroup } from 'react-bootstrap'
 import { fetchPreferences, updatePreferences } from '../actions'
 
 class EarlyRegistration extends React.Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.state = { newsletter: false, betaprogram: false }
+    this.state = {
+      newsletter: false,
+      beta_program: false,
+      error:null,
+      successMessage:null,
+    }
   }
 
   componentDidMount() {
-    fetchPreferences(profile => {
+    fetchPreferences((profile, err) => {
+      if(err){
+        let nextState = Object.assign({}, this.state, {error: err})
+        this.setState(nextState)
+        return
+      }
+
       if(profile){
-        this.setState({
-          newsletter: profile.preferences.newsletter,
-          betaprogram: profile.preferences.beta_program
-        })
+        let prefs = {...profile.preferences}
+        console.log(`{prefs}: ${JSON.stringify(prefs)}`)
+        let nextState = Object.assign({}, this.state, prefs)
+
+        console.log(`nextState: ${JSON.stringify(nextState)}`)
+        // nextState.newsletter = profile.preferences.newsletter
+        // nextState.beta_program = profile.preferences.beta_program
+        this.setState(nextState)
+        return
       }
     })
   }
 
   handleSubmit(e){
     e.preventDefault()
-    updatePreferences(this.state)
+
+    updatePreferences(this.state, err => {
+      if(err){
+        let nextState = Object.assign({}, this.state, {error: err})
+        this.setState(nextState)
+        return
+      }
+
+      let nextState = Object.assign({}, this.state, {successMessage:"Thank you! Your preferences have been updated"})
+      this.setState(nextState)
+    })
   }
 
   render(){
@@ -32,6 +58,12 @@ class EarlyRegistration extends React.Component {
         <p>
           Thank you for enrolling in our exciting new product! We expect to officially launch this Fall. In the meantime, sign up for our newsletter or request to join our early access Beta program.
         </p>
+        { this.state.error &&
+          <Alert bsStyle="warning">{this.state.error}</Alert>
+        }
+        { this.state.successMessage &&
+          <Alert bsStyle="success">{this.state.successMessage}</Alert>
+        }
         <form>
           <FormGroup>
             <Checkbox checked={this.state.newsletter} onClick={ () => { this.setState({ newsletter: !this.state.newsletter }) }}>
@@ -39,7 +71,7 @@ class EarlyRegistration extends React.Component {
             </Checkbox>
           </FormGroup>
           <FormGroup>
-            <Checkbox checked={this.state.betaprogram} onClick={ () => { this.setState({ betaprogram: !this.state.betaprogram }) }}>
+            <Checkbox checked={this.state.beta_program} onClick={ () => { this.setState({ beta_program: !this.state.beta_program }) }}>
               Sign up for our early access Beta program
             </Checkbox>
           </FormGroup>

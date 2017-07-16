@@ -49,7 +49,7 @@ export function fetchHomepage() {
 }
 
 export function fetchPreferences(cb){
-  return fetch(`${window.config.api_base}/api/profile`, {
+  fetch(`${window.config.api_base}/api/profile`, {
     method: 'get',
     mode: 'cors',
     headers: {
@@ -58,16 +58,16 @@ export function fetchPreferences(cb){
   })
   .then(response => response.json())
   .then(json => {
-    cb(json)
+    cb(json, null)
   })
   .catch(function(err) {
-    console.log(`an error occurred while fetching /api/profile: ${err}`)
+    cb(null, `an error occurred while fetching /api/profile: ${err}`)
   })
 }
 
-export function updatePreferences(prefs){
+export function updatePreferences(prefs, cb){
   try{
-    return fetch(`${window.config.api_base}/api/profile/preferences`, {
+    fetch(`${window.config.api_base}/api/profile/preferences`, {
       method: 'post',
       mode: 'cors',
       headers: {
@@ -76,13 +76,14 @@ export function updatePreferences(prefs){
       },
       body: JSON.stringify(prefs)
     })
-    .then(response => response.json())
+    .then(response => {
+      response.json()
+      cb(null)
+    })
     .catch(err => {
-      console.log(`an error occurred while fetching /api/profile/preferences: ${err}`)
+      cb(`an error occurred while fetching /api/profile/preferences: ${err}`)
     })
   }catch(e){
-    console.log(`failed to get access token: ${e}`)
-    //TODO - probably better to redirect user somewhere in this scenario
-    alert(`You might not be logged in`)
+    cb(`failed to get access token - my might not be logged in: ${e}`)
   }
 }
