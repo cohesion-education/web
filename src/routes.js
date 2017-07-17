@@ -11,6 +11,7 @@ import Login from './utils/Login'
 import Logout from './utils/Logout'
 import Dashboard from './containers/Dashboard'
 import EarlyRegistration from './views/EarlyRegistration'
+import UserProfile from './views/UserProfile'
 import PrivacyPolicy from './views/PrivacyPolicy'
 import RequiresAuth from './utils/RequiresAuth'
 
@@ -26,6 +27,11 @@ const EarlyRegistrationDashboard = () =>
     <EarlyRegistration />
   </Dashboard>
 
+const UserProfileDashboard = () =>
+  <Dashboard>
+    <UserProfile />
+  </Dashboard>
+
 const Routes = () => (
   <Provider store={store}>
     <ConnectedRouter history={history} onUpdate={logPageView}>
@@ -36,6 +42,7 @@ const Routes = () => (
         <Route path="/privacy" component={PrivacyPolicy} />
         <Route path="/logout" component={RequiresAuth(Logout)} />
         <Route path="/dashboard" component={RequiresAuth(EarlyRegistrationDashboard)} />
+        <Route path="/profile" component={RequiresAuth(UserProfileDashboard)} />
       </div>
     </ConnectedRouter>
   </Provider>

@@ -1,6 +1,6 @@
 import React from 'react'
-import { Alert, Button, Checkbox, FormGroup } from 'react-bootstrap'
-import { fetchPreferences, updatePreferences } from '../actions'
+import { Alert, Button, Checkbox, FormGroup, PageHeader } from 'react-bootstrap'
+import { fetchProfile, updatePreferences } from '../actions'
 
 class EarlyRegistration extends React.Component {
   constructor(props) {
@@ -15,7 +15,7 @@ class EarlyRegistration extends React.Component {
   }
 
   componentDidMount() {
-    fetchPreferences((profile, err) => {
+    fetchProfile((profile, err) => {
       if(err){
         let nextState = Object.assign({}, this.state, {error: err})
         this.setState(nextState)
@@ -54,10 +54,11 @@ class EarlyRegistration extends React.Component {
   render(){
     return(
       <div>
-        <h4 className="page-title">Welcome to Cohesion Education</h4>
+        <PageHeader>Welcome to Cohesion Education</PageHeader>
         <p>
           Thank you for enrolling in our exciting new product! We expect to officially launch this Fall. In the meantime, sign up for our newsletter or request to join our early access Beta program.
         </p>
+
         { this.state.error &&
           <Alert bsStyle="warning">{this.state.error}</Alert>
         }

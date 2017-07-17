@@ -48,7 +48,7 @@ export function fetchHomepage() {
   }
 }
 
-export function fetchPreferences(cb){
+export function fetchProfile(cb){
   fetch(`${window.config.api_base}/api/profile`, {
     method: 'get',
     mode: 'cors',
@@ -81,9 +81,32 @@ export function updatePreferences(prefs, cb){
       cb(null)
     })
     .catch(err => {
-      cb(`an error occurred while fetching /api/profile/preferences: ${err}`)
+      cb(`An error occurred while updating your profile: ${err}`)
     })
   }catch(e){
-    cb(`failed to get access token - my might not be logged in: ${e}`)
+    cb(`failed to get access token - you might not be logged in: ${e}`)
+  }
+}
+
+export function updateProfile(profile, cb){
+  try{
+    fetch(`${window.config.api_base}/api/profile`, {
+      method: 'post',
+      mode: 'cors',
+      headers: {
+        'Authorization': `Bearer ${auth.getIDToken()}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profile)
+    })
+    .then(response => {
+      response.json()
+      cb(null)
+    })
+    .catch(err => {
+      cb(`An error occurred while trying to update your profile: ${err}`)
+    })
+  }catch(e){
+    cb(`failed to get access token - you might not be logged in: ${e}`)
   }
 }

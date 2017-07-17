@@ -6,7 +6,8 @@ class DashboardLeftSideMenu extends React.Component {
   render (){
     return(
       <ListGroup>
-        <ListGroupItem href="/videos">Videos</ListGroupItem>
+        <ListGroupItem href="/dashboard">Welcome</ListGroupItem>
+        <ListGroupItem href="/profile">Settings</ListGroupItem>
       </ListGroup>
     )
   }

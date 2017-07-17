@@ -13,6 +13,9 @@ const styles = {
     position:'fixed',
     zIndex:1000,
   },
+  leftSideMenu:{
+    marginTop:'30px',
+  },
   main:{
     paddingTop:'7em',
     paddingRight:'10px',
@@ -22,6 +25,7 @@ const styles = {
   contentArea:{
     marginTop:'-0.7em',
     paddingBottom:'2em',
+    paddingLeft:'2em',
   },
 }
 
@@ -35,10 +39,10 @@ class Dashboard extends React.Component {
           </Col>
         </Row>
         <Row style={styles.main}>
-          <Col sm={3} xsHidden>
+          <Col sm={3} xsHidden style={styles.leftSideMenu}>
             <DashboardLeftSideMenu />
           </Col>
-          <Col sm={9} xs={12} style={styles.contentArea}>
+          <Col sm={8} xs={12} style={styles.contentArea}>
             {this.props.children}
           </Col>
         </Row>
