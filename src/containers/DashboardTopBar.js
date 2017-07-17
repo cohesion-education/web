@@ -53,20 +53,23 @@ class DashboardTopBar extends React.Component {
 
   render (){
     return(
-      <Navbar fluid style={styles.nav} fixedTop>
+      <Navbar fluid style={styles.nav}>
         <Navbar.Header>
           <Navbar.Brand>
             <img src={logo} alt='Cohesion Education' style={styles.logo}/>
           </Navbar.Brand>
+          <Navbar.Toggle />
         </Navbar.Header>
-        <Nav pullRight>
-          <Navbar.Text>
-            <Navbar.Link href="/profile">
-              <img src={this.state.profilePicture} alt="user-img" className="img-circle" style={styles.profilePicture}/>
-            </Navbar.Link>
-          </Navbar.Text>
-          <Button href="/logout" bsStyle="primary" style={styles.navLinks}>Logout</Button>
-        </Nav>
+        <Navbar.Collapse>
+          <Nav pullRight>
+            <Navbar.Text>
+              <Navbar.Link href="/profile">
+                <img src={this.state.profilePicture} alt="user-img" className="img-circle" style={styles.profilePicture}/>
+              </Navbar.Link>
+            </Navbar.Text>
+            <Button href="/logout" bsStyle="primary" style={styles.navLinks}>Logout</Button>
+          </Nav>
+        </Navbar.Collapse>
       </Navbar>
     )
   }

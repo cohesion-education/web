@@ -9,21 +9,17 @@ const styles = {
   containerFluid:{
     padding:0,
   },
-  header:{
-    position:'fixed',
-    zIndex:1000,
-  },
   leftSideMenu:{
-    marginTop:'30px',
+    
   },
   main:{
-    paddingTop:'7em',
+    paddingTop:'0em',
     paddingRight:'10px',
     paddingLeft:'10px',
     paddingBottom:'1em',
   },
   contentArea:{
-    marginTop:'-0.7em',
+    marginTop:'-3em',
     paddingBottom:'2em',
     paddingLeft:'2em',
   },
