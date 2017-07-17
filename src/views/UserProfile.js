@@ -1,7 +1,7 @@
 import React from 'react'
 import { Alert, Button, Col, ControlLabel, Form, FormControl, FormGroup, PageHeader } from 'react-bootstrap'
 import { fetchProfile, updateProfile } from '../actions'
-
+import Profile from '../types/Profile'
 import Auth from '../utils/Auth'
 
 const styles = {
@@ -13,14 +13,14 @@ const styles = {
 
 class UserProfile extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this)
     this.auth = new Auth()
     this.state = {
-      name: null,
-      email: null,
-      state:null,
-      county:null,
+      profile: new Profile(),
+      error:null,
+      successMessage:null
     }
   }
 
@@ -33,20 +33,37 @@ class UserProfile extends React.Component {
       }
 
       if(profile){
-        console.log(`profile from api: ${JSON.stringify(profile)}`)
-        let nextState = Object.assign({}, this.state, {...profile})
+        let {name, email, state, county} = profile
+        let nextState = Object.assign({}, this.state, {profile: new Profile(name, email, state, county)})
+        // console.log(`nextState: ${JSON.stringify(nextState)}`)
+        nextState.profile.validate()
         this.setState(nextState)
         return
       }
     })
   }
 
+  handleInputChange(event) {
+    const target = event.target
+    const value = target.type === 'checkbox' ? target.checked : target.value
+    const name = target.name
+    let nextState = Object.assign({}, this.state)
+    nextState.profile[name] = value
+    nextState.profile.validate()
+    this.setState(nextState)
+  }
+
   handleSubmit(e){
     e.preventDefault()
 
-    console.log(`state: ${JSON.stringify(this.state)}`)
+    let nextState = Object.assign({}, this.state, {error:null, successMessage:null})
+    if(!nextState.profile.validate()){
+      nextState.error = "Oops! Looks like you're missing some information"
+      this.setState(nextState)
+      return
+    }
 
-    updateProfile(this.state, err => {
+    updateProfile(this.state.profile, err => {
       if(err){
         let nextState = Object.assign({}, this.state, {error: err})
         this.setState(nextState)
@@ -69,30 +86,32 @@ class UserProfile extends React.Component {
           <Alert bsStyle="success">{this.state.successMessage}</Alert>
         }
         <Form horizontal>
-          <FormGroup>
+          <FormGroup validationState={this.state.profile.validationState['name']}>
             <Col componentClass={ControlLabel} sm={1} style={styles.label}>
               Name
             </Col>
             <Col sm={6}>
-              <FormControl type="text" bsSize="large" placeholder="Happy Parent" value={this.state.name} onChange={() => { this.setState({ name: this.value }) }}/>
+              <FormControl type="text" bsSize="large" name="name" placeholder="Happy Parent" value={this.state.profile.name} onChange={this.handleInputChange}/>
+              <FormControl.Feedback />
             </Col>
           </FormGroup>
 
-          <FormGroup>
+          <FormGroup validationState={this.state.profile.validationState['email']}>
             <Col componentClass={ControlLabel} sm={1} style={styles.label}>
               Email
             </Col>
             <Col sm={6}>
-              <FormControl type="email" bsSize="large" placeholder="hello@domain.com" value={this.state.email} onChange={() => { this.setState({ email: this.value }) }}/>
+              <FormControl type="email" bsSize="large" name="email" placeholder="hello@domain.com" value={this.state.profile.email} onChange={this.handleInputChange}/>
+              <FormControl.Feedback />
             </Col>
           </FormGroup>
 
-          <FormGroup>
+          <FormGroup validationState={this.state.profile.validationState['state']}>
             <Col componentClass={ControlLabel} sm={1} style={styles.label}>
               State
             </Col>
             <Col sm={6}>
-              <FormControl componentClass="select" bsSize="large" placeholder="State" value={this.state.state} onChange={() => { this.setState({ state: this.value }) }}>
+              <FormControl componentClass="select" bsSize="large" name="state" placeholder="State" value={this.state.profile.state} onChange={this.handleInputChange}>
                 <option value="">State</option>
                 <option value="AL">Alabama</option>
                 <option value="AK">Alaska</option>
@@ -147,15 +166,17 @@ class UserProfile extends React.Component {
                 <option value="WI">Wisconsin</option>
                 <option value="WY">Wyoming</option>
               </FormControl>
+              <FormControl.Feedback />
             </Col>
           </FormGroup>
 
-          <FormGroup>
+          <FormGroup validationState={this.state.profile.validationState['county']}>
             <Col componentClass={ControlLabel} sm={1} style={styles.label}>
               County
             </Col>
             <Col sm={6}>
-              <FormControl type="text" bsSize="large" placeholder="Monroe County" value={this.state.county} onChange={() => { this.setState({ county: this.value }) }}/>
+              <FormControl type="text" bsSize="large" name="county" placeholder="Monroe County" value={this.state.profile.county} onChange={this.handleInputChange}/>
+              <FormControl.Feedback />
             </Col>
           </FormGroup>
 

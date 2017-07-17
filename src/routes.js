@@ -15,7 +15,11 @@ import UserProfile from './views/UserProfile'
 import PrivacyPolicy from './views/PrivacyPolicy'
 import RequiresAuth from './utils/RequiresAuth'
 
+console.log(`initializing react-ga with tracking id ${window.config.ga_tracking_id}`)
+ReactGA.initialize(window.config.ga_tracking_id, { debug:true })
+
 const logPageView = () => {
+  console.log(`logging page view with ReactGA: ${window.location.pathname + window.location.search}`)
   ReactGA.set({ page: window.location.pathname + window.location.search })
   ReactGA.pageview(window.location.pathname + window.location.search)
 }

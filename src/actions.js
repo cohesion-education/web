@@ -99,8 +99,14 @@ export function updateProfile(profile, cb){
       },
       body: JSON.stringify(profile)
     })
-    .then(response => {
-      response.json()
+    .then(response => response.json())
+    .then(json => {
+      console.log(JSON.stringify(json))
+      if(json.error){
+        cb(`Failed to update profile: ${json.error}`)
+        return
+      }
+
       cb(null)
     })
     .catch(err => {
