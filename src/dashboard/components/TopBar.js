@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, Navbar, Nav } from 'react-bootstrap'
+import { Navbar, Nav } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import Auth from '../../utils/Auth'
 import logo from '../../images/cohesion-logo.png'
 import defaultAvatar from '../../images/default-avatar.png'
@@ -63,11 +64,11 @@ export default class TopBar extends React.Component {
         <Navbar.Collapse>
           <Nav pullRight>
             <Navbar.Text>
-              <Navbar.Link href="/profile">
+              <Link to="/profile" className='navbar-link' style={styles.navLinks}>
                 <img src={this.state.profilePicture} alt="user-img" className="img-circle" style={styles.profilePicture}/>
-              </Navbar.Link>
+              </Link>
             </Navbar.Text>
-            <Button href="/logout" bsStyle="primary" style={styles.navLinks}>Logout</Button>
+            <Link to="/logout" className='btn btn-primary' style={styles.navLinks}>Logout</Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

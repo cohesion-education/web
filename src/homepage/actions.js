@@ -14,13 +14,10 @@ export function fetchHomepage() {
   }
 }
 
-export function receiveHomepage(homepage) {
+export function receiveHomepage(json) {
   return {
     type: RECEIVE_HOMEPAGE,
-    // header:homepage.header,
-    features:homepage.features,
-    testimonials:homepage.testimonials,
-    pricing:homepage.pricing,
+    homepage: json,
     receivedAt: Date.now()
   }
 }

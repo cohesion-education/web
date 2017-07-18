@@ -10,9 +10,9 @@ if(!window.config.api_base){
   window.config.api_base=""
 }
 
-console.log(`initializing react-ga with tracking id ${window.config.ga_tracking_id}`)
+// console.log(`initializing react-ga with tracking id ${window.config.ga_tracking_id}`)
 ReactGA.initialize(window.config.ga_tracking_id, { debug:true })
-console.log(`logging page view with ReactGA: ${window.location.pathname + window.location.search}`)
+// console.log(`logging page view with ReactGA: ${window.location.pathname + window.location.search}`)
 ReactGA.set({ page: window.location.pathname + window.location.search })
 ReactGA.pageview(window.location.pathname + window.location.search)
 

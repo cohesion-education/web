@@ -50,9 +50,6 @@ const styles = {
 }
 
 export default class Header extends React.Component {
-  constructor(props){
-    super(props)
-  }
 
   static propTypes = {
     auth: PropTypes.object.isRequired
@@ -69,7 +66,7 @@ export default class Header extends React.Component {
       <Navbar fluid collapseOnSelect style={styles.navbar}>
         <Navbar.Header>
           <Navbar.Brand>
-            <img src={logo} alt='Cohesion Education' style={styles.logo}/>
+            <img src={logo} alt='Cohesion Education' style={styles.logo} />
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>

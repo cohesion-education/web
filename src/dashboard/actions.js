@@ -1,16 +1,6 @@
 import Auth from '../utils/Auth'
 
-export const RECEIVE_PROFILE = 'RECEIVE_PROFILE'
 const auth = new Auth()
-
-
-export function receiveProfile(profile) {
-  return {
-    type: RECEIVE_PROFILE,
-    profile:profile,
-    receivedAt: Date.now()
-  }
-}
 
 export function fetchProfile(cb){
   fetch(`${window.config.api_base}/api/profile`, {

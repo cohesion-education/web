@@ -12,7 +12,7 @@ import { fetchHomepage } from '../actions'
 // )(FeatureList)
 
 export const Home = connect(
-  (state) => state, //mapStateToProps
+  (state) => ({ homepage:state.homepage }), //mapStateToProps
   (dispatch) => ({ fetchHomepage: bindActionCreators(fetchHomepage, dispatch) }) //mapDispatchToProps
 )(Homepage)
 
