@@ -26,8 +26,8 @@ describe("<Dashboard /> ", () => {
     afterEach(() => jest.resetAllMocks())
 
     it("renders without crashing", () => {
-      expect(wrapper.find('DashboardTopBar').length).toBe(1)
-      expect(wrapper.find('DashboardLeftSideMenu').length).toBe(1)
-      expect(wrapper.find('DashboardFooter').length).toBe(1)
+      expect(wrapper.find('TopBar').length).toBe(1)
+      expect(wrapper.find('LeftMenu').length).toBe(1)
+      expect(wrapper.find('Footer').length).toBe(1)
     })
 })

@@ -33,14 +33,22 @@ export default class Profile{
 
   validateTextField(key){
     return this.validateInput(key, (val) => {
+      if(val === undefined){
+        return false
+      }
+
       let valid = (val !== "")
-      // console.log(`${key} valid? ${valid}`)
+      // console.log(`${key}=${val} valid? ${valid}`)
       return valid
     })
   }
 
   validateEmailField(key){
     return this.validateInput(key, (val) => {
+      if(val === undefined){
+        return false
+      }
+
       return emailRegex.test(val) === true
     })
   }

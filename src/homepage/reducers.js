@@ -1,6 +1,7 @@
-import { RECEIVE_HOMEPAGE } from '../actions'
+import { combineReducers } from 'redux'
+import { RECEIVE_HOMEPAGE } from './constants'
 
-export const headerReducer = (state = {title:"", subtitle:""}, action) => {
+const headerReducer = (state = {title:'', subtitle:''}, action) => {
   switch(action.type){
     case RECEIVE_HOMEPAGE:
       return Object.assign({}, state, { ...action.header })
@@ -9,7 +10,7 @@ export const headerReducer = (state = {title:"", subtitle:""}, action) => {
   }
 }
 
-export const featuresReducer = (state = {title:"", subtitle:"", highlights:[]}, action) => {
+const featuresReducer = (state = {title:'', list:[]}, action) => {
   switch(action.type){
     case RECEIVE_HOMEPAGE:
       return Object.assign({}, state, { ...action.features })
@@ -17,7 +18,7 @@ export const featuresReducer = (state = {title:"", subtitle:"", highlights:[]}, 
       return state
   }
 }
-export const testimonialsReducer = (state = {list:[]}, action) => {
+const testimonialsReducer = (state = {list:[]}, action) => {
   switch(action.type){
     case RECEIVE_HOMEPAGE:
       return Object.assign({}, state, { ...action.testimonials })
@@ -25,7 +26,8 @@ export const testimonialsReducer = (state = {list:[]}, action) => {
       return state
   }
 }
-export const pricingReducer = (state = {title:"", subtitle:"", list:[]}, action) => {
+
+const pricingReducer = (state = {title:'', subtitle:'', list:[]}, action) => {
   switch(action.type){
     case RECEIVE_HOMEPAGE:
       return Object.assign({}, state, { ...action.pricing })
@@ -33,3 +35,10 @@ export const pricingReducer = (state = {title:"", subtitle:"", list:[]}, action)
       return state
   }
 }
+
+export const homepageReducers = combineReducers({
+  header:headerReducer,
+  features:featuresReducer,
+  testimonials:testimonialsReducer,
+  pricing:pricingReducer
+})

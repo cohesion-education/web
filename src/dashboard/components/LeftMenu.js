@@ -1,8 +1,7 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { ListGroup, ListGroupItem } from 'react-bootstrap'
 
-class DashboardLeftSideMenu extends React.Component {
+export default class LeftMenu extends React.Component {
   render (){
     return(
       <ListGroup>
@@ -12,5 +11,3 @@ class DashboardLeftSideMenu extends React.Component {
     )
   }
 }
-
-export default connect((state) => state)(DashboardLeftSideMenu)

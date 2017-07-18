@@ -1,16 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Grid, Row, Col } from 'react-bootstrap'
-import DashboardTopBar from './DashboardTopBar'
-import DashboardLeftSideMenu from './DashboardLeftSideMenu'
-import DashboardFooter from '../views/DashboardFooter'
+import TopBar from './TopBar'
+import LeftMenu from './LeftMenu'
+import Footer from './Footer'
 
 const styles = {
   containerFluid:{
     padding:0,
   },
   leftSideMenu:{
-    
+
   },
   main:{
     paddingTop:'0em',
@@ -31,12 +31,12 @@ class Dashboard extends React.Component {
       <Grid fluid style={styles.containerFluid}>
         <Row>
           <Col xs={12}>
-            <DashboardTopBar />
+            <TopBar />
           </Col>
         </Row>
         <Row style={styles.main}>
           <Col sm={3} xsHidden style={styles.leftSideMenu}>
-            <DashboardLeftSideMenu />
+            <LeftMenu />
           </Col>
           <Col sm={8} xs={12} style={styles.contentArea}>
             {this.props.children}
@@ -44,7 +44,7 @@ class Dashboard extends React.Component {
         </Row>
         <Row>
           <Col xs={12}>
-            <DashboardFooter />
+            <Footer />
           </Col>
         </Row>
       </Grid>

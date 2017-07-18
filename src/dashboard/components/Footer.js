@@ -8,7 +8,7 @@ const styles = {
   }
 }
 
-class DashboardFooter extends React.Component {
+export default class Footer extends React.Component {
   render (){
     return(
       <Navbar fluid style={styles.footer}>
@@ -19,5 +19,3 @@ class DashboardFooter extends React.Component {
     )
   }
 }
-
-export default DashboardFooter

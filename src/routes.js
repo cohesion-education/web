@@ -16,12 +16,16 @@ import PrivacyPolicy from './views/PrivacyPolicy'
 import RequiresAuth from './utils/RequiresAuth'
 
 const logPageView = () => {
-  console.log(`logging page view with ReactGA: ${window.location.pathname + window.location.search}`)
   ReactGA.set({ page: window.location.pathname + window.location.search })
   ReactGA.pageview(window.location.pathname + window.location.search)
 }
 
-const store = configureStore()
+const initialState = (localStorage['redux-store']) ? JSON.parse(localStorage['redux-store']) : {}
+const store = configureStore(initialState)
+
+store.subscribe(() => {
+  localStorage['redux-store'] = JSON.stringify(store.getState())
+})
 
 const EarlyRegistrationDashboard = () =>
   <Dashboard>

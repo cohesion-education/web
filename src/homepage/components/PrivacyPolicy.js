@@ -1,16 +1,16 @@
 import React from 'react'
-import Navbar from '../views/Navbar'
-import Footer from '../views/Footer'
-import '../css/fonts.css'
-import '../css/font-awesome.css'
-import '../css/homepage.css'
+import Header from './Header'
+import Footer from './Footer'
+import '../../css/fonts.css'
+import '../../css/font-awesome.css'
+import '../../css/homepage.css'
 
 class PrivacyPolicy extends React.Component {
 
   render(){
     return(
       <div>
-        <Navbar />
+        <Header />
         <div className="container">
           <div className="row">
             <div className="col-sm-12">

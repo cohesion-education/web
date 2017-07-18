@@ -1,11 +1,9 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import OwlCarousel from 'react-owl-carousel'
-import Testimonial from '../views/Testimonial'
+import Testimonial from './Testimonial'
 
-
-class TestimonialList extends React.Component {
+export default class TestimonialList extends React.Component {
   static propTypes = {
     list: PropTypes.array.isRequired
   }
@@ -35,9 +33,7 @@ class TestimonialList extends React.Component {
         <div className="container">
           <div className="row">
             <div className="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-              <OwlCarousel
-                {...owlOpts}
-                className="owl-carousel owl-theme text-center">
+              <OwlCarousel {...owlOpts} className="owl-carousel owl-theme text-center">
                 {list.map((testimonial, i) =>
                   <Testimonial key={i} className="item" {...testimonial}/>
                 )}
@@ -49,7 +45,3 @@ class TestimonialList extends React.Component {
     )
   }
 }
-
-export default connect(
-  state => ({ ...state.testimonials })
-)(TestimonialList)

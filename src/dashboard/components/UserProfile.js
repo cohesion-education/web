@@ -1,8 +1,7 @@
 import React from 'react'
 import { Alert, Button, Col, ControlLabel, Form, FormControl, FormGroup, PageHeader } from 'react-bootstrap'
 import { fetchProfile, updateProfile } from '../actions'
-import Profile from '../types/Profile'
-import Auth from '../utils/Auth'
+import Profile from '../../types/Profile'
 
 const styles = {
   label:{
@@ -16,7 +15,6 @@ class UserProfile extends React.Component {
     super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
-    this.auth = new Auth()
     this.state = {
       profile: new Profile(),
       error:null,
@@ -65,12 +63,12 @@ class UserProfile extends React.Component {
 
     updateProfile(this.state.profile, err => {
       if(err){
-        let nextState = Object.assign({}, this.state, {error: err})
+        let nextState = Object.assign({}, this.state, {error: err, sucessMessage:null})
         this.setState(nextState)
         return
       }
 
-      let nextState = Object.assign({}, this.state, {successMessage:"Your profile has been updated"})
+      let nextState = Object.assign({}, this.state, {error:null, successMessage:"Your profile has been updated"})
       this.setState(nextState)
     })
   }

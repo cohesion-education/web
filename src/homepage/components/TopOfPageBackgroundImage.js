@@ -1,6 +1,6 @@
 import React from 'react'
 
-class HomepageHeader extends React.Component {
+export default class TopOfPageBackgroundImage extends React.Component {
   render(){
     return(
       <section className="home bg-img-1" id="home">
@@ -20,5 +20,3 @@ class HomepageHeader extends React.Component {
     )
   }
 }
-
-export default HomepageHeader

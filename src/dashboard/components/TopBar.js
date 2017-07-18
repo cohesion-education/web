@@ -1,8 +1,8 @@
 import React from 'react'
 import { Button, Navbar, Nav } from 'react-bootstrap'
-import Auth from '../utils/Auth'
-import logo from '../images/cohesion-logo.png'
-import defaultAvatar from '../images/default-avatar.png'
+import Auth from '../../utils/Auth'
+import logo from '../../images/cohesion-logo.png'
+import defaultAvatar from '../../images/default-avatar.png'
 
 const styles = {
   nav:{
@@ -25,7 +25,7 @@ const styles = {
   }
 }
 
-class DashboardTopBar extends React.Component {
+export default class TopBar extends React.Component {
 
   constructor(props) {
     super(props)
@@ -74,5 +74,3 @@ class DashboardTopBar extends React.Component {
     )
   }
 }
-
-export default DashboardTopBar
