@@ -1,13 +1,14 @@
-import Auth from '../utils/Auth'
+import { getIDToken } from '../auth/actions'
 
-const auth = new Auth()
+//TODO - refactor with dispatch
+export const fetchProfile = (cb) => {
+  let token = getIDToken()
 
-export function fetchProfile(cb){
   fetch(`${window.config.api_base}/api/profile`, {
     method: 'get',
     mode: 'cors',
     headers: {
-      'Authorization': `Bearer ${auth.getIDToken()}`,
+      'Authorization': `Bearer ${token}`,
     }
   })
   .then(response => response.json())
@@ -19,14 +20,17 @@ export function fetchProfile(cb){
   })
 }
 
-export function updatePreferences(prefs, cb){
+//TODO - refactor with dispatch
+export const updatePreferences = (prefs, cb) => {
+  let token = getIDToken()
+
   try{
     fetch(`${window.config.api_base}/api/profile/preferences`, {
       method: 'post',
       mode: 'cors',
       headers: {
-        'Authorization': `Bearer ${auth.getIDToken()}`,
-        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(prefs)
     })
@@ -42,14 +46,17 @@ export function updatePreferences(prefs, cb){
   }
 }
 
-export function updateProfile(profile, cb){
+//TODO - refactor with dispatch
+export const updateProfile = (profile, cb) => {
+  let token = getIDToken()
+
   try{
     fetch(`${window.config.api_base}/api/profile`, {
       method: 'post',
       mode: 'cors',
       headers: {
-        'Authorization': `Bearer ${auth.getIDToken()}`,
-        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(profile)
     })

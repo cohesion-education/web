@@ -1,7 +1,6 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { Grid, Row, Col } from 'react-bootstrap'
-import TopBar from './TopBar'
+import { DashboardTopNav } from './containers'
 import LeftMenu from './LeftMenu'
 import Footer from './Footer'
 
@@ -25,13 +24,13 @@ const styles = {
   },
 }
 
-class Dashboard extends React.Component {
+export default class Dashboard extends React.Component {
   render (){
     return(
       <Grid fluid style={styles.containerFluid}>
         <Row>
           <Col xs={12}>
-            <TopBar />
+            <DashboardTopNav />
           </Col>
         </Row>
         <Row style={styles.main}>
@@ -51,6 +50,3 @@ class Dashboard extends React.Component {
     )
   }
 }
-
-
-export default connect((state) => state)(Dashboard)

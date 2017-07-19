@@ -4,7 +4,8 @@ import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 import history from '../history'
 import { homepageReducer } from '../homepage/reducers'
-import { profileReducer } from '../dashboard/reducers'
+import { authResultReducer } from '../auth/reducers'
+import { userinfoReducer } from '../dashboard/reducers'
 
 const loggerMiddleware = createLogger()
 
@@ -13,7 +14,8 @@ export default function configureStore(preloadedState) {
     combineReducers({
       router:routerReducer,
       homepage: homepageReducer,
-      profile:profileReducer
+      currentUser: authResultReducer,
+      userinfo: userinfoReducer
     }),
     preloadedState,
     applyMiddleware(

@@ -1,19 +1,18 @@
 import React from 'react'
-import Auth from './Auth'
+import PropTypes from 'prop-types'
 
 export default class Logout extends React.Component {
-  constructor(props){
-    super(props)
-    this.auth = new Auth()
+  static propTypes = {
+    login: PropTypes.func.isRequired
   }
 
   componentWillMount(){
-    this.auth.logout()
+    this.props.logout()
   }
 
   render (){
     return (
-      <div>Logging out...</div>
+      <div>Logging out</div>
     )
   }
 }

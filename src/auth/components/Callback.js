@@ -1,17 +1,9 @@
 import React from 'react'
-import Auth from './Auth'
+import PropTypes from 'prop-types'
 
 export default class Callback extends React.Component {
-  constructor(props){
-    super(props)
-    this.auth = new Auth()
-    this.handleAuthentication = this.handleAuthentication.bind(this)
-  }
-
-  handleAuthentication(){
-    if (/access_token|id_token|error/.test(window.location.hash)) {
-      this.auth.handleAuthentication()
-    }
+  static propTypes = {
+    handleAuthentication: PropTypes.func.isRequired
   }
 
   componentDidMount(){
@@ -19,12 +11,13 @@ export default class Callback extends React.Component {
     // console.log(`this.props: ${JSON.stringify(this.props)}`)
     // console.log(`location.hash: ${JSON.stringify(window.location)}`)
     // console.log(`location.hash: ${window.location.hash}`)
-    this.handleAuthentication(this.props)
+    // this.handleAuthentication(this.props)
+    this.props.handleAuthentication()
   }
 
   render (){
     return (
-      <div>Loading...</div>
+      <div>Please wait</div>
     )
   }
 }

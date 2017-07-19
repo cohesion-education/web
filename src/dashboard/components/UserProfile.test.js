@@ -2,7 +2,6 @@ import { mount } from 'enzyme'
 import Profile from '../../types/Profile'
 import UserProfile from './UserProfile'
 import { updateProfile } from '../actions'
-jest.mock('../../utils/Auth')
 
 window.config = {
   api_base:"http://localhost:3000",

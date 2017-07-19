@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navbar, Nav } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import Auth from '../../utils/Auth'
+import PropTypes from 'prop-types'
 import logo from '../../images/cohesion-logo.png'
 import defaultAvatar from '../../images/default-avatar.png'
 
@@ -27,32 +27,20 @@ const styles = {
 }
 
 export default class TopBar extends React.Component {
-
-  constructor(props) {
-    super(props)
-
-    this.auth = new Auth()
-
-    this.state = {
-      profilePicture:defaultAvatar
-    }
+  static propTypes = {
+    userinfo: PropTypes.object.isRequired,
+    error: PropTypes.object
   }
 
-  componentDidMount() {
-    this.auth.getProfile((err, profile) => {
-      if(err){
-        console.log(`failed to get profile: ${err}`)
-      }else{
-        let nextState = {
-          profilePicture:profile.picture
-        }
-
-        this.setState(nextState)
-      }
-    })
+  static defaultProps =  {
+    userinfo: { picture:defaultAvatar }
   }
 
   render (){
+    //TODO - check for error
+    // console.log(`userinfo: ${JSON.stringify(this.props.userinfo)}`)
+    // console.log(`picture: ${JSON.stringify(this.props.userinfo.picture)}`)
+    const { picture } = this.props.userinfo
     return(
       <Navbar fluid style={styles.nav}>
         <Navbar.Header>
@@ -65,7 +53,7 @@ export default class TopBar extends React.Component {
           <Nav pullRight>
             <Navbar.Text>
               <Link to="/profile" className='navbar-link' style={styles.navLinks}>
-                <img src={this.state.profilePicture} alt="user-img" className="img-circle" style={styles.profilePicture}/>
+                <img src={picture} alt="user-img" className="img-circle" style={styles.profilePicture}/>
               </Link>
             </Navbar.Text>
             <Link to="/logout" className='btn btn-primary' style={styles.navLinks}>Logout</Link>

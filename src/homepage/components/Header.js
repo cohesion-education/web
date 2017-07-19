@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Nav, Navbar, NavItem } from 'react-bootstrap'
-import Auth from '../../utils/Auth'
 import logo from '../../images/cohesion-logo.png'
 
 const styles = {
@@ -50,18 +49,12 @@ const styles = {
 }
 
 export default class Header extends React.Component {
-
   static propTypes = {
-    auth: PropTypes.object.isRequired
-  }
-
-  //TODO - dispatch an action instead of passing auth around as a dependency
-  static defaultProps =  {
-    auth: new Auth()
+    login: PropTypes.func.isRequired
   }
 
   render (){
-    const { auth } = this.props
+    const { login } = this.props
     return(
       <Navbar fluid collapseOnSelect style={styles.navbar}>
         <Navbar.Header>
@@ -74,8 +67,8 @@ export default class Header extends React.Component {
           <Nav pullRight>
             <NavItem href='#features' style={styles.navLinks}>Features</NavItem>
             <NavItem href='#pricing' style={styles.navLinks}>Plans</NavItem>
-            <NavItem href='/login' onClick={auth.login} style={styles.navLinks}>Login</NavItem>
-            <Button bsStyle="primary" href='/register' onClick={auth.login} style={styles.navCta}>Try for Free</Button>
+            <NavItem href='/login' onClick={login} style={styles.navLinks}>Login</NavItem>
+            <Button bsStyle="primary" href='/register' onClick={login} style={styles.navCta}>Try for Free</Button>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
