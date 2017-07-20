@@ -19,6 +19,11 @@ const webAuth = new auth0.WebAuth({
 
 export function login() {
   return function (dispatch) {
+    if(isAuthenticated()){
+      history.replace('/dashboard')
+      return
+    }
+    
     dispatch(requestLogin())
     webAuth.authorize()
   }

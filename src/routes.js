@@ -26,9 +26,9 @@ const initialState = (localStorage['redux-store'])
 
 const store = configureStore(initialState)
 
-store.subscribe(() => {
-  localStorage['redux-store'] = JSON.stringify(store.getState())
-})
+// store.subscribe(() => {
+//   localStorage['redux-store'] = JSON.stringify(store.getState())
+// })
 
 export default () => (
   <Provider store={store}>

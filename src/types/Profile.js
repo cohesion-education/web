@@ -6,8 +6,14 @@ export default class Profile{
     this.email = email
     this.state = state
     this.county = county
+    this.preferences = {
+      newsletter: false,
+      beta_program: false,
+    }
     this.validationErrors = []
     this.validationState = []
+    this.successMessage = null
+    this.errorMessage = null
   }
 
   validate(){

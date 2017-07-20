@@ -1,6 +1,9 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Alert, Button, Col, ControlLabel, Form, FormControl, FormGroup, PageHeader } from 'react-bootstrap'
 import PropTypes from 'prop-types'
+import { fetchProfile, handleProfileUpdate, saveProfile } from '../actions'
 import Profile from '../../types/Profile'
 
 const styles = {
@@ -20,9 +23,8 @@ class UserProfile extends React.Component {
   static propTypes = {
     profile: PropTypes.object.isRequired,
     fetchProfile: PropTypes.func.isRequired,
+    handleProfileUpdate: PropTypes.func.isRequired,
     saveProfile: PropTypes.func.isRequired,
-    error: PropTypes.object,
-    successMessage: PropTypes.string
   }
 
   static defaultProps = {
@@ -30,68 +32,32 @@ class UserProfile extends React.Component {
   }
 
   componentDidMount() {
-    //TODO - dispatch
-    // fetchProfile((profile, err) => {
-    //   if(err){
-    //     let nextState = Object.assign({}, this.state, {error: err})
-    //     this.setState(nextState)
-    //     return
-    //   }
-    //
-    //   if(profile){
-    //     let {name, email, state, county} = profile
-    //     let nextState = Object.assign({}, this.state, {profile: new Profile(name, email, state, county)})
-    //     // console.log(`nextState: ${JSON.stringify(nextState)}`)
-    //     nextState.profile.validate()
-    //     this.setState(nextState)
-    //     return
-    //   }
-    // })
+    this.props.fetchProfile()
   }
 
   handleInputChange(event) {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
     const name = target.name
-    //TODO - dispatch
-    // let nextState = Object.assign({}, this.state)
-    // nextState.profile[name] = value
-    // nextState.profile.validate()
-    // this.setState(nextState)
+    this.props.handleProfileUpdate(this.props.profile, name, value)
   }
 
   handleSubmit(e){
     e.preventDefault()
-    //TODO - dispatch
-    // let nextState = Object.assign({}, this.state, {error:null, successMessage:null})
-    // if(!nextState.profile.validate()){
-    //   nextState.error = "Oops! Looks like you're missing some information"
-    //   this.setState(nextState)
-    //   return
-    // }
-    //
-    // updateProfile(this.state.profile, err => {
-    //   if(err){
-    //     let nextState = Object.assign({}, this.state, {error: err, sucessMessage:null})
-    //     this.setState(nextState)
-    //     return
-    //   }
-    //
-    //   let nextState = Object.assign({}, this.state, {error:null, successMessage:"Your profile has been updated"})
-    //   this.setState(nextState)
-    // })
+    this.props.saveProfile(this.props.profile)
   }
 
   render(){
-    const { error, successMessage, profile } = this.props
+    const { profile } = this.props
+
     return(
       <div>
         <PageHeader>Your Profile</PageHeader>
-        { error &&
-          <Alert bsStyle="warning">{error}</Alert>
+        { profile.errorMessage &&
+          <Alert bsStyle="warning">{profile.errorMessage}</Alert>
         }
-        { successMessage &&
-          <Alert bsStyle="success">{successMessage}</Alert>
+        { profile.successMessage &&
+          <Alert bsStyle="success">{profile.successMessage}</Alert>
         }
         <Form horizontal>
           <FormGroup validationState={profile.validationState['name']}>
@@ -201,4 +167,13 @@ class UserProfile extends React.Component {
   }
 }
 
-export default UserProfile
+export default connect(
+  (state) => ({ //mapStateToProps
+    profile: state.profile
+  }),
+  (dispatch) => ({ //mapDispatchToProps
+    fetchProfile: bindActionCreators(fetchProfile, dispatch),
+    handleProfileUpdate: bindActionCreators(handleProfileUpdate, dispatch),
+    saveProfile: bindActionCreators(saveProfile, dispatch),
+  })
+)(UserProfile)

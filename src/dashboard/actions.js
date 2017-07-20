@@ -1,57 +1,89 @@
+import Profile from '../types/Profile'
 import { getIDToken } from '../auth/actions'
+import { RECEIVE_PROFILE, RECEIVE_PROFILE_FAILURE } from './constants'
 
-//TODO - refactor with dispatch
-export const fetchProfile = (cb) => {
-  let token = getIDToken()
+export const receiveProfile = (profile) => {
+  return {
+    type: RECEIVE_PROFILE,
+    profile: profile,
+    receivedAt: Date.now()
+  }
+}
 
-  fetch(`${window.config.api_base}/api/profile`, {
+export const handleProfileUpdate = (profile, key, val) => {
+  console.log(`updating profile with ${key}=${val}`)
+  let updated = Object.assign(new Profile(), profile)
+
+  if(key.indexOf('.') !== -1){
+    let splitKey = key.split('.')
+    updated[splitKey[0]][splitKey[1]] = val
+  }else{
+    updated[key] = val
+  }
+
+  updated.validate()
+  console.log(`updated profile: ${JSON.stringify(updated)}`)
+
+  return receiveProfile(updated)
+}
+
+export const handlePreferencesUpdate = (profile, key, val) => {
+  console.log(`updating profile preferences with ${key}=${val}`)
+  let updated = Object.assign(new Profile(), profile)
+  profile.preferences[key] = val
+
+  console.log(`updated profile: ${JSON.stringify(updated)}`)
+
+  return receiveProfile(updated)
+}
+
+export const receiveProfileFailure = (error) => {
+  return {
+    type: RECEIVE_PROFILE_FAILURE,
+    error: error,
+    receivedAt: Date.now()
+  }
+}
+
+export function fetchProfile() {
+  const token = getIDToken()
+  const opts = {
     method: 'get',
     mode: 'cors',
     headers: {
       'Authorization': `Bearer ${token}`,
     }
-  })
-  .then(response => response.json())
-  .then(json => {
-    cb(json, null)
-  })
-  .catch(function(err) {
-    cb(null, `an error occurred while fetching /api/profile: ${err}`)
-  })
-}
+  }
 
-//TODO - refactor with dispatch
-export const updatePreferences = (prefs, cb) => {
-  let token = getIDToken()
-
-  try{
-    fetch(`${window.config.api_base}/api/profile/preferences`, {
-      method: 'post',
-      mode: 'cors',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(prefs)
-    })
-    .then(response => {
-      response.json()
-      cb(null)
-    })
-    .catch(err => {
-      cb(`An error occurred while updating your profile: ${err}`)
-    })
-  }catch(e){
-    cb(`failed to get access token - you might not be logged in: ${e}`)
+  return (dispatch) => {
+    // console.log('fetching profile')
+    return fetch(`${window.config.api_base}/api/profile`, opts)
+      .then(response => response.json())
+      .then(json => {
+        if(json){
+          const profile = Object.assign(new Profile(), {...json})
+          profile.validate()
+          dispatch(receiveProfile(profile))
+        }
+      })
+      .catch(error => {
+        console.log(`error: ${error}`)
+        dispatch(receiveProfileFailure(error))
+      })
   }
 }
 
-//TODO - refactor with dispatch
-export const updateProfile = (profile, cb) => {
-  let token = getIDToken()
+export const saveProfile = (p) => {
+  return (dispatch) => {
+    let profile = Object.assign(new Profile(), p)
+    if(!profile.validate()){
+      profile.errorMessage = 'Oops! Looks like you\'re missing some information'
+      dispatch(receiveProfile(profile))
+      return
+    }
 
-  try{
-    fetch(`${window.config.api_base}/api/profile`, {
+    const token = getIDToken()
+    const opts = {
       method: 'post',
       mode: 'cors',
       headers: {
@@ -59,21 +91,59 @@ export const updateProfile = (profile, cb) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(profile)
+    }
+
+    fetch(`${window.config.api_base}/api/profile`, opts)
+    .then(response => response.json())
+    .then(json => {
+      if(json.error){
+        json.errorMessage = `Failed to update profile: ${json.error}`
+        dispatch(receiveProfile(json))
+        return
+      }
+
+      json.successMessage = 'Your profile has been updated'
+      dispatch(receiveProfile(json))
     })
+    .catch(err => {
+      profile.errorMessage = `An error occurred while trying to update your profile: ${err}`
+      dispatch(receiveProfile(profile))
+    })
+  }
+}
+
+export const savePreferences = (profile) => {
+  return (dispatch) => {
+    const prefs = {...profile.preferences}
+    const token = getIDToken()
+    const opts = {
+      method: 'post',
+      mode: 'cors',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(prefs)
+    }
+    console.log(`prefs body: ${opts.body}`)
+
+    fetch(`${window.config.api_base}/api/profile/preferences`, opts)
     .then(response => response.json())
     .then(json => {
       console.log(JSON.stringify(json))
       if(json.error){
-        cb(`Failed to update profile: ${json.error}`)
+        json.errorMessage = `Failed to update profile: ${json.error}`
+        dispatch(receiveProfile(json))
         return
       }
 
-      cb(null)
+      json.successMessage = 'Thank you! Your preferences have been updated'
+      dispatch(receiveProfile(json))
     })
     .catch(err => {
-      cb(`An error occurred while trying to update your profile: ${err}`)
+      profile.errorMessage = `An error occurred while updating your profile: ${err}`
+      dispatch(receiveProfile(profile))
+      return
     })
-  }catch(e){
-    cb(`failed to get access token - you might not be logged in: ${e}`)
   }
 }

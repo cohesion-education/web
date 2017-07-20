@@ -5,7 +5,7 @@ import { createLogger } from 'redux-logger'
 import history from '../history'
 import { homepageReducer } from '../homepage/reducers'
 import { authResultReducer } from '../auth/reducers'
-import { userinfoReducer } from '../dashboard/reducers'
+import { profileReducer, userinfoReducer } from '../dashboard/reducers'
 
 const loggerMiddleware = createLogger()
 
@@ -15,7 +15,8 @@ export default function configureStore(preloadedState) {
       router:routerReducer,
       homepage: homepageReducer,
       currentUser: authResultReducer,
-      userinfo: userinfoReducer
+      userinfo: userinfoReducer,
+      profile: profileReducer
     }),
     preloadedState,
     applyMiddleware(

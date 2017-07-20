@@ -1,6 +1,6 @@
 import React from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
-import { DashboardTopNav } from './containers'
+import TopBar from './TopBar'
 import LeftMenu from './LeftMenu'
 import Footer from './Footer'
 
@@ -30,7 +30,7 @@ export default class Dashboard extends React.Component {
       <Grid fluid style={styles.containerFluid}>
         <Row>
           <Col xs={12}>
-            <DashboardTopNav />
+            <TopBar />
           </Col>
         </Row>
         <Row style={styles.main}>

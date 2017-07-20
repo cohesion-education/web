@@ -8,11 +8,14 @@ import { isAuthenticated, requestUserInfo } from '../actions'
 const RequiresAuth = (ComposedComponent) => {
   class RequiresAuth extends React.Component {
     static propTypes = {
-      requestUserInfo: PropTypes.func.isRequired
+      requestUserInfo: PropTypes.func.isRequired,
+      userinfo: PropTypes.object
     }
 
     componentWillMount(){
-      this.props.requestUserInfo()
+      if(this.props.userinfo !== undefined){
+        this.props.requestUserInfo()
+      }
     }
 
     render() {
@@ -27,7 +30,7 @@ const RequiresAuth = (ComposedComponent) => {
   }
 
   return connect(
-    (state) => state,  //mapStateToProps
+    (state) => ({userinfo:state.userinfo}),  //mapStateToProps
     (dispatch) => ({ requestUserInfo: bindActionCreators(requestUserInfo, dispatch) }) //mapDispatchToProps
   )(RequiresAuth)
 }

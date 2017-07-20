@@ -1,57 +1,47 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import PropTypes from 'prop-types'
 import { Alert, Button, Checkbox, FormGroup, PageHeader } from 'react-bootstrap'
-import { fetchProfile, updatePreferences } from '../actions'
+import { fetchProfile, handlePreferencesUpdate, savePreferences } from '../actions'
+import Profile from '../../types/Profile'
 
 class EarlyRegistration extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.state = {
-      newsletter: false,
-      beta_program: false,
-      error:null,
-      successMessage:null,
-    }
+    this.handleInputChange = this.handleInputChange.bind(this)
+  }
+
+  static propTypes = {
+    fetchProfile: PropTypes.func.isRequired,
+    handlePreferencesUpdate: PropTypes.func.isRequired,
+    savePreferences: PropTypes.func.isRequired,
+    profile: PropTypes.object.isRequired,
+  }
+
+  static defaultProps = {
+    profile: new Profile()
   }
 
   componentDidMount() {
-    fetchProfile((profile, err) => {
-      if(err){
-        let nextState = Object.assign({}, this.state, {error: err})
-        this.setState(nextState)
-        return
-      }
+    this.props.fetchProfile()
+  }
 
-      if(profile){
-        let prefs = {...profile.preferences}
-        console.log(`{prefs}: ${JSON.stringify(prefs)}`)
-        let nextState = Object.assign({}, this.state, prefs)
-
-        console.log(`nextState: ${JSON.stringify(nextState)}`)
-        // nextState.newsletter = profile.preferences.newsletter
-        // nextState.beta_program = profile.preferences.beta_program
-        this.setState(nextState)
-        return
-      }
-    })
+  handleInputChange(event) {
+    const target = event.target
+    const value = target.type === 'checkbox' ? target.checked : target.value
+    const name = target.name
+    this.props.handlePreferencesUpdate(this.props.profile, name, value)
   }
 
   handleSubmit(e){
     e.preventDefault()
-
-    updatePreferences(this.state, err => {
-      if(err){
-        let nextState = Object.assign({}, this.state, {error: err})
-        this.setState(nextState)
-        return
-      }
-
-      let nextState = Object.assign({}, this.state, {successMessage:"Thank you! Your preferences have been updated"})
-      this.setState(nextState)
-    })
+    this.props.savePreferences(this.props.profile)
   }
 
   render(){
+    const { profile } = this.props
     return(
       <div>
         <PageHeader>Welcome to Cohesion Education</PageHeader>
@@ -59,20 +49,20 @@ class EarlyRegistration extends React.Component {
           Thank you for enrolling in our exciting new product! We expect to officially launch this Fall. In the meantime, sign up for our newsletter or request to join our early access Beta program.
         </p>
 
-        { this.state.error &&
-          <Alert bsStyle="warning">{this.state.error}</Alert>
+        { profile.errorMessage &&
+          <Alert bsStyle="warning">{profile.errorMessage}</Alert>
         }
-        { this.state.successMessage &&
-          <Alert bsStyle="success">{this.state.successMessage}</Alert>
+        { profile.successMessage &&
+          <Alert bsStyle="success">{profile.successMessage}</Alert>
         }
         <form>
           <FormGroup>
-            <Checkbox checked={this.state.newsletter} onClick={ () => { this.setState({ newsletter: !this.state.newsletter }) }}>
+            <Checkbox checked={profile.preferences.newsletter} name="newsletter" onClick={this.handleInputChange}>
               Sign up for our Newsletter
             </Checkbox>
           </FormGroup>
           <FormGroup>
-            <Checkbox checked={this.state.beta_program} onClick={ () => { this.setState({ beta_program: !this.state.beta_program }) }}>
+            <Checkbox checked={profile.preferences.beta_program} name="beta_program" onClick={this.handleInputChange}>
               Sign up for our early access Beta program
             </Checkbox>
           </FormGroup>
@@ -87,4 +77,13 @@ class EarlyRegistration extends React.Component {
   }
 }
 
-export default EarlyRegistration;
+export default connect(
+  (state) => ({ //mapStateToProps
+    profile:state.profile
+  }),
+  (dispatch) => ({ //mapDispatchToProps
+    fetchProfile: bindActionCreators(fetchProfile, dispatch),
+    handlePreferencesUpdate: bindActionCreators(handlePreferencesUpdate, dispatch),
+    savePreferences: bindActionCreators(savePreferences, dispatch)
+  })
+)(EarlyRegistration)

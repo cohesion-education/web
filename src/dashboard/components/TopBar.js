@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { Navbar, Nav } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
@@ -26,7 +27,7 @@ const styles = {
   }
 }
 
-export default class TopBar extends React.Component {
+class TopBar extends React.Component {
   static propTypes = {
     userinfo: PropTypes.object.isRequired,
     error: PropTypes.object
@@ -63,3 +64,8 @@ export default class TopBar extends React.Component {
     )
   }
 }
+
+export default connect(
+  (state) => ({userinfo: state.userinfo}), //mapStateToProps
+  (dispatch) => ({}) //mapDispatchToProps
+)(TopBar)
