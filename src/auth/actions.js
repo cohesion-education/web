@@ -23,7 +23,7 @@ export function login() {
       history.replace('/dashboard')
       return
     }
-    
+
     dispatch(requestLogin())
     webAuth.authorize()
   }
@@ -51,7 +51,7 @@ export const isAuthenticated = () => {
 export const getAccessToken = () => {
   let token = localStorage.getItem('access_token') || null
   if(!token) {
-    throw 'Not authenticated'
+    throw new Error('Not authenticated')
   }
 
   return token
@@ -60,7 +60,7 @@ export const getAccessToken = () => {
 export const getIDToken = () => {
   let token = localStorage.getItem('id_token') || null
   if(!token) {
-    throw 'Not authenticated'
+    throw new Error('Not authenticated')
   }
 
   return token
