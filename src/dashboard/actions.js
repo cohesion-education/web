@@ -1,18 +1,20 @@
+import fetch from 'isomorphic-fetch'
 import Profile from '../types/Profile'
 import { getIDToken } from '../auth/actions'
-import { RECEIVE_PROFILE, RECEIVE_PROFILE_FAILURE } from './constants'
+import * as constants from './constants'
 
 export const receiveProfile = (profile) => {
   return {
-    type: RECEIVE_PROFILE,
-    profile: profile,
+    type: constants.RECEIVE_PROFILE,
+    profile: Object.assign(new Profile(), {...profile}),
     receivedAt: Date.now()
   }
 }
 
 export const handleProfileUpdate = (profile, key, val) => {
-  console.log(`updating profile with ${key}=${val}`)
-  let updated = Object.assign(new Profile(), profile)
+  // console.log(`updating profile with ${key}=${val}`)
+  let { validationErrors, validationState, ...remainingProps } = profile
+  let updated = Object.assign(new Profile(), {...remainingProps})
 
   if(key.indexOf('.') !== -1){
     let splitKey = key.split('.')
@@ -22,24 +24,25 @@ export const handleProfileUpdate = (profile, key, val) => {
   }
 
   updated.validate()
-  console.log(`updated profile: ${JSON.stringify(updated)}`)
+  // console.log(`updated profile: ${JSON.stringify(updated)}`)
 
   return receiveProfile(updated)
 }
 
 export const handlePreferencesUpdate = (profile, key, val) => {
-  console.log(`updating profile preferences with ${key}=${val}`)
-  let updated = Object.assign(new Profile(), profile)
-  profile.preferences[key] = val
+  // console.log(`updating profile preferences with ${key}=${val}`)
+  let { validationErrors, validationState, ...remainingProps } = profile
+  let updated = Object.assign(new Profile(), {...remainingProps})
+  updated.preferences[key] = val
 
-  console.log(`updated profile: ${JSON.stringify(updated)}`)
+  // console.log(`updated profile: ${JSON.stringify(updated)}`)
 
   return receiveProfile(updated)
 }
 
 export const receiveProfileFailure = (error) => {
   return {
-    type: RECEIVE_PROFILE_FAILURE,
+    type: constants.RECEIVE_PROFILE_FAILURE,
     error: error,
     receivedAt: Date.now()
   }
@@ -67,7 +70,7 @@ export function fetchProfile() {
         }
       })
       .catch(error => {
-        console.log(`error: ${error}`)
+        console.log(`error fetching profile: ${error}\nuri: ${window.config.api_base}/api/profile\nopts: ${JSON.stringify(opts)}`)
         dispatch(receiveProfileFailure(error))
       })
   }
@@ -75,11 +78,11 @@ export function fetchProfile() {
 
 export const saveProfile = (p) => {
   return (dispatch) => {
-    let profile = Object.assign(new Profile(), p)
+    const { successMessage, errorMessage, validationErrors, validationState, ...remainingProps } = p
+    const profile = Object.assign(new Profile(), {...remainingProps})
     if(!profile.validate()){
       profile.errorMessage = 'Oops! Looks like you\'re missing some information'
-      dispatch(receiveProfile(profile))
-      return
+      return dispatch(receiveProfile(profile))
     }
 
     const token = getIDToken()
@@ -93,21 +96,21 @@ export const saveProfile = (p) => {
       body: JSON.stringify(profile)
     }
 
-    fetch(`${window.config.api_base}/api/profile`, opts)
+    return fetch(`${window.config.api_base}/api/profile`, opts)
     .then(response => response.json())
     .then(json => {
       if(json.error){
         json.errorMessage = `Failed to update profile: ${json.error}`
-        dispatch(receiveProfile(json))
-        return
+        return dispatch(receiveProfile(json))
       }
 
       json.successMessage = 'Your profile has been updated'
-      dispatch(receiveProfile(json))
+      return dispatch(receiveProfile(json))
     })
     .catch(err => {
       profile.errorMessage = `An error occurred while trying to update your profile: ${err}`
-      dispatch(receiveProfile(profile))
+      console.log(`error:${profile.errorMessage}\nuri: ${window.config.api_base}/api/profile\nopts: ${JSON.stringify(opts)}`)
+      return dispatch(receiveProfile(profile))
     })
   }
 }
@@ -125,12 +128,10 @@ export const savePreferences = (profile) => {
       },
       body: JSON.stringify(prefs)
     }
-    console.log(`prefs body: ${opts.body}`)
 
-    fetch(`${window.config.api_base}/api/profile/preferences`, opts)
+    return fetch(`${window.config.api_base}/api/profile/preferences`, opts)
     .then(response => response.json())
     .then(json => {
-      console.log(JSON.stringify(json))
       if(json.error){
         json.errorMessage = `Failed to update profile: ${json.error}`
         dispatch(receiveProfile(json))
