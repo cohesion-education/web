@@ -19,6 +19,10 @@ export default class Student{
     return this.validationErrors.length === 0
   }
 
+  isEmpty(){
+    return this.name === '' && this.grade === '' && this.school === ''
+  }
+
   validateInput(key, validator){
     if(validator(this[key]) !== true){
       this.validationErrors.push({fieldName:key, valid:false})

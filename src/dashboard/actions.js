@@ -31,22 +31,26 @@ export const handleProfileUpdate = (profile, key, val) => {
 }
 
 export const handlePreferencesUpdate = (profile, key, val) => {
-  // console.log(`updating profile preferences with ${key}=${val}`)
   let { validationErrors, validationState, ...remainingProps } = profile
   let updated = Object.assign(new Profile(), {...remainingProps})
   updated.preferences[key] = val
 
-  // console.log(`updated profile: ${JSON.stringify(updated)}`)
 
   return receiveProfile(updated)
+}
+
+export const handleStudentAdd = (profile) => {
+  let { profileValidationErrors, profileValidationState, ...remainingProfileProps } = profile
+  let nextProfile = Object.assign(new Profile(), {...remainingProfileProps})
+  nextProfile.students.push(new Student('', '', '', nextProfile.students.length))
+  return receiveProfile(nextProfile)
 }
 
 export const handleStudentUpdate = (profile, studentID, key, val) => {
   let { profileValidationErrors, profileValidationState, ...remainingProfileProps } = profile
   let nextProfile = Object.assign(new Profile(), {...remainingProfileProps})
 
-  nextProfile.students.map(student => {
-    console.log(`student id: ${student.id} - studentID: ${studentID}`)
+  nextProfile.students = nextProfile.students.map(student => {
     if (student.id === studentID) {
       let { studentValidationErrors, studentValidationState, ...remainingStudentProps } = student
       let updatedStudent = Object.assign(new Student(), {...remainingStudentProps})
@@ -56,7 +60,15 @@ export const handleStudentUpdate = (profile, studentID, key, val) => {
       return student
     }
   })
-  // console.log(`updated profile: ${JSON.stringify(updated)}`)
+
+  return receiveProfile(nextProfile)
+}
+
+export const handleStudentRemove = (profile, studentID) => {
+  let { profileValidationErrors, profileValidationState, ...remainingProfileProps } = profile
+  let nextProfile = Object.assign(new Profile(), {...remainingProfileProps})
+
+  nextProfile.students = nextProfile.students.filter(student => student.id !== studentID)
 
   return receiveProfile(nextProfile)
 }

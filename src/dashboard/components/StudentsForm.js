@@ -5,7 +5,7 @@ import StudentForm from './StudentForm'
 import { Alert, Button, Col, Form, FormGroup, PageHeader } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { handleStudentUpdate } from '../actions'
+import { handleStudentAdd, handleStudentUpdate, handleStudentRemove } from '../actions'
 
 const styles = {
   oddStudentFormGroup:{
@@ -34,14 +34,17 @@ const styles = {
 class StudentsForm extends React.Component {
   constructor(props) {
     super(props)
-    this.handleSubmit = this.handleSubmit.bind(this)
     this.receiveStudentUpdate = this.receiveStudentUpdate.bind(this)
     this.receiveStudentRemoval = this.receiveStudentRemoval.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleAdd = this.handleAdd.bind(this)
   }
 
   static propTypes = {
     profile: PropTypes.object.isRequired,
-    handleStudentUpdate: PropTypes.func.isRequired
+    handleStudentUpdate: PropTypes.func.isRequired,
+    handleStudentAdd: PropTypes.func.isRequired,
+    handleStudentRemove: PropTypes.func.isRequired
   }
 
   static defaultProps = {
@@ -54,9 +57,15 @@ class StudentsForm extends React.Component {
   }
 
   receiveStudentRemoval(student){
-    if(window.confirm(`Are you sure you want to remove ${student.name}?`)){
+    if(student.isEmpty() || window.confirm(`Are you sure you want to remove ${student.name}?`)){
       console.log(`removing student ${JSON.stringify(student)}`)
+      this.props.handleStudentRemove(this.props.profile, student.id)
     }
+  }
+
+  handleAdd(e){
+    e.preventDefault()
+    this.props.handleAdd(this.props.profile)
   }
 
   handleSubmit(e){
@@ -88,6 +97,13 @@ class StudentsForm extends React.Component {
           )}
           <FormGroup>
             <Col sm={6}>
+              <Button type='submit' bsStyle='success' onClick={this.handleAdd} style={styles.saveButton}>
+                Add
+              </Button>
+            </Col>
+          </FormGroup>
+          <FormGroup>
+            <Col sm={6}>
               <Button type='submit' bsStyle='primary' onClick={this.handleSubmit} style={styles.saveButton}>
                 Save
               </Button>
@@ -99,17 +115,13 @@ class StudentsForm extends React.Component {
   }
 }
 
-const dummyProfile = new Profile()
-dummyProfile.addStudent('Billy', '4', 'Smith Elementary', 1)
-dummyProfile.addStudent('Sally', '3', 'Alafia Elementary', 2)
-dummyProfile.addStudent('Molly', '2', 'Mintz Elementary', 3)
-
 export default connect(
   (state) => ({ //mapStateToProps
-    //TODO - wire this into the real state tree
-    profile: dummyProfile
+    profile: state.profile
   }),
   (dispatch) => ({ //mapDispatchToProps
-    handleStudentUpdate: bindActionCreators(handleStudentUpdate, dispatch)
+    handleAdd: bindActionCreators(handleStudentAdd, dispatch),
+    handleStudentUpdate: bindActionCreators(handleStudentUpdate, dispatch),
+    handleStudentRemove: bindActionCreators(handleStudentRemove, dispatch)
   })
 )(StudentsForm)
