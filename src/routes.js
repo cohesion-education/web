@@ -12,7 +12,7 @@ import RequiresAuth from './auth/components/RequiresAuth'
 import Homepage from './homepage/components/Homepage'
 import PageNotFound from './homepage/components/PageNotFound'
 import PrivacyPolicy from './homepage/components/PrivacyPolicy'
-import { LoginCallbackDashboard, LoginDashboard, LogoutDashboard, EarlyRegistrationDashboard, UserProfileDashboard } from './dashboard/components/ComposedDashboards'
+import * as dashboards from './dashboard/components/ComposedDashboards'
 import { homepage } from './homepage/data/'
 
 const logPageView = () => {
@@ -35,12 +35,13 @@ export default () => (
     <ConnectedRouter history={history} handleLocationChange={logPageView}>
       <Switch>
         <Route exact path='/' component={Homepage} />
-        <Route path='/callback' component={LoginCallbackDashboard} />
-        <Route path='/login' component={LoginDashboard} />
+        <Route path='/callback' component={dashboards.LoginCallbackDashboard} />
+        <Route path='/login' component={dashboards.LoginDashboard} />
         <Route path='/privacy' component={PrivacyPolicy} />
-        <Route path='/logout' component={RequiresAuth(LogoutDashboard)} />
-        <Route path='/dashboard' component={RequiresAuth(EarlyRegistrationDashboard)} />
-        <Route path='/profile' component={RequiresAuth(UserProfileDashboard)} />
+        <Route path='/logout' component={RequiresAuth(dashboards.LogoutDashboard)} />
+        <Route path='/dashboard' component={RequiresAuth(dashboards.EarlyRegistrationDashboard)} />
+        <Route path='/profile/students' component={RequiresAuth(dashboards.StudentsFormDashboard)} />
+        <Route path='/profile' component={RequiresAuth(dashboards.ProfileFormDashboard)} />
         <Route component={PageNotFound}/>
       </Switch>
     </ConnectedRouter>

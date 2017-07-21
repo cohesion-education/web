@@ -1,6 +1,6 @@
 import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
-import UserProfile from './UserProfile'
+import ProfileForm from './ProfileForm'
 import Profile from '../../types/Profile'
 import { fetchProfile, handleProfileUpdate, saveProfile } from '../actions'
 
@@ -10,7 +10,7 @@ jest.mock('../actions', () => ({
   saveProfile: jest.fn()
 }))
 
-describe("<UserProfile /> Container", () => {
+describe("<ProfileForm /> Container", () => {
 
   let wrapper
   let _store = {
@@ -23,14 +23,14 @@ describe("<UserProfile /> Container", () => {
 
   beforeAll(() => wrapper = mount(
     <Provider store={_store}>
-      <UserProfile />
+      <ProfileForm />
     </Provider>
   ))
 
   afterEach(() => jest.resetAllMocks())
 
   it("starts off with empty state", () => {
-    expect(wrapper.find('PageHeader').text()).toBe('Your Profile')
+    expect(wrapper.find('PageHeader').text()).toBe('My Profile')
     expect(wrapper.find('Alert').length).toBe(0)
   })
 

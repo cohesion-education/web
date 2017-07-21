@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import Profile from '../types/Profile'
+import Student from '../types/Student'
 import { getIDToken } from '../auth/actions'
 import * as constants from './constants'
 
@@ -38,6 +39,26 @@ export const handlePreferencesUpdate = (profile, key, val) => {
   // console.log(`updated profile: ${JSON.stringify(updated)}`)
 
   return receiveProfile(updated)
+}
+
+export const handleStudentUpdate = (profile, studentID, key, val) => {
+  let { profileValidationErrors, profileValidationState, ...remainingProfileProps } = profile
+  let nextProfile = Object.assign(new Profile(), {...remainingProfileProps})
+
+  nextProfile.students.map(student => {
+    console.log(`student id: ${student.id} - studentID: ${studentID}`)
+    if (student.id === studentID) {
+      let { studentValidationErrors, studentValidationState, ...remainingStudentProps } = student
+      let updatedStudent = Object.assign(new Student(), {...remainingStudentProps})
+      updatedStudent[key]=val
+      return updatedStudent
+    } else {
+      return student
+    }
+  })
+  // console.log(`updated profile: ${JSON.stringify(updated)}`)
+
+  return receiveProfile(nextProfile)
 }
 
 export const receiveProfileFailure = (error) => {

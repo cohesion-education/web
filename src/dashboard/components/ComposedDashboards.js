@@ -1,22 +1,23 @@
 import React from 'react'
 import Dashboard from './Dashboard'
-import { LoginCallback, LoginPage, LogoutPage } from '../../auth/components/containers'
+import * as containers from '../../auth/components/containers'
 import EarlyRegistration from './EarlyRegistration'
-import UserProfile from './UserProfile'
+import ProfileForm from './ProfileForm'
+import StudentsForm from './StudentsForm'
 
 export const LoginCallbackDashboard = () =>
   <Dashboard>
-    <LoginCallback />
+    <containers.LoginCallback />
   </Dashboard>
 
 export const LoginDashboard = () =>
   <Dashboard>
-    <LoginPage />
+    <containers.LoginPage />
   </Dashboard>
 
 export const LogoutDashboard = () =>
   <Dashboard>
-    <LogoutPage />
+    <containers.LogoutPage />
   </Dashboard>
 
 export const EarlyRegistrationDashboard = () =>
@@ -24,7 +25,12 @@ export const EarlyRegistrationDashboard = () =>
     <EarlyRegistration />
   </Dashboard>
 
-export const UserProfileDashboard = () =>
+export const ProfileFormDashboard = () =>
   <Dashboard>
-    <UserProfile />
+    <ProfileForm />
+  </Dashboard>
+
+export const StudentsFormDashboard = () =>
+  <Dashboard>
+    <StudentsForm />
   </Dashboard>

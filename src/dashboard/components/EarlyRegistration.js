@@ -50,24 +50,24 @@ class EarlyRegistration extends React.Component {
         </p>
 
         { profile.errorMessage &&
-          <Alert bsStyle="warning">{profile.errorMessage}</Alert>
+          <Alert bsStyle='warning'>{profile.errorMessage}</Alert>
         }
         { profile.successMessage &&
-          <Alert bsStyle="success">{profile.successMessage}</Alert>
+          <Alert bsStyle='success'>{profile.successMessage}</Alert>
         }
         <form>
           <FormGroup>
-            <Checkbox checked={profile.preferences.newsletter} name="newsletter" onClick={this.handleInputChange}>
+            <Checkbox checked={profile.preferences.newsletter} name='newsletter' onClick={this.handleInputChange}>
               Sign up for our Newsletter
             </Checkbox>
           </FormGroup>
           <FormGroup>
-            <Checkbox checked={profile.preferences.beta_program} name="beta_program" onClick={this.handleInputChange}>
+            <Checkbox checked={profile.preferences.beta_program} name='beta_program' onClick={this.handleInputChange}>
               Sign up for our early access Beta program
             </Checkbox>
           </FormGroup>
           <FormGroup>
-            <Button type="submit" bsStyle="success" onClick={this.handleSubmit}>
+            <Button type='submit' bsStyle='primary' onClick={this.handleSubmit}>
               Save Preferences
             </Button>
           </FormGroup>

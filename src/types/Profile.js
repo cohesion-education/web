@@ -1,3 +1,4 @@
+import Student from './Student'
 const emailRegex = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
 
 export default class Profile{
@@ -10,6 +11,7 @@ export default class Profile{
       newsletter: false,
       beta_program: false,
     }
+    this.students = []
     this.validationErrors = []
     this.validationState = []
     this.successMessage = null
@@ -25,6 +27,10 @@ export default class Profile{
     this.validateTextField('county')
     // console.log(`validation state: ${JSON.stringify(this.validationErrors)}`)
     return this.validationErrors.length === 0
+  }
+
+  addStudent(name, grade, school, id){
+    this.students.push(new Student(name, grade, school, id))
   }
 
   validateInput(key, validator){
