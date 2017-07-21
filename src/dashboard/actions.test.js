@@ -69,16 +69,36 @@ describe("saveProfile action", () => {
 
   })
 
+})
 
+describe("handleStudentAdd action", () => {
+  it('should add an empty student and create a receiveProfile action', () => {
+    const profile = new Profile()
+    const result = actions.handleStudentAdd(profile)
+    expect(result.type).toBe(constants.RECEIVE_PROFILE)
+    expect(result.profile.students.length).toBe(1)
+    expect(profile.students.length).toBe(0)
+  })
+})
 
-  // it('validates with errors with all fields empty', () => {
-  //   const profile = new Profile()
-  //   expect(profile.validate()).toBeFalsy()
-  //   expect(profile.validationErrors.length).toBe(4)
-  //   expect(profile.validationState['name']).toBe('error')
-  //   expect(profile.validationState['email']).toBe('error')
-  //   expect(profile.validationState['state']).toBe('error')
-  //   expect(profile.validationState['county']).toBe('error')
-  // })
+describe("handleStudentUpdate action", () => {
+  const profile = new Profile()
+  profile.addStudent('Billy', '4th', 'Mintz Elementary', 1)
+  const result = actions.handleStudentUpdate(profile, 1, 'name', 'Bill')
+  expect(result.type).toBe(constants.RECEIVE_PROFILE)
+  expect(result.profile.students.length).toBe(1)
+  expect(profile.students.length).toBe(1)
+  expect(result.profile.students[0].name).toBe('Bill')
+  expect(profile.students[0].name).toBe('Billy')
+})
 
+describe("handleStudentRemove action", () => {
+  it('should remove student by id and create a receiveProfile action', () => {
+    const profile = new Profile()
+    profile.addStudent('Billy', '4th', 'Mintz Elementary', 1)
+    const result = actions.handleStudentRemove(profile, 1)
+    expect(result.type).toBe(constants.RECEIVE_PROFILE)
+    expect(result.profile.students.length).toBe(0)
+    expect(profile.students.length).toBe(1)
+  })
 })

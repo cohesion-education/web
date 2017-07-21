@@ -1,7 +1,7 @@
 import Profile from './Profile'
 
 
-describe("Profile type component", () => {
+describe("Profile type", () => {
 
   it('validates without errors with all fields set to valid values', () => {
     const profile = new Profile('name', 'hello@cohesioned.io', 'FL', 'Monroe County')

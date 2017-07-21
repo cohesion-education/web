@@ -40,17 +40,17 @@ export const handlePreferencesUpdate = (profile, key, val) => {
 }
 
 export const handleStudentAdd = (profile) => {
-  let { profileValidationErrors, profileValidationState, ...remainingProfileProps } = profile
-  let nextProfile = Object.assign(new Profile(), {...remainingProfileProps})
-  nextProfile.students.push(new Student('', '', '', nextProfile.students.length))
+  let { profileValidationErrors, profileValidationState, students, ...remainingProfileProps } = profile
+  let nextStudents = students.slice()
+  nextStudents.push(new Student('', '', '', nextStudents.length))
+
+  let nextProfile = Object.assign(new Profile(), {...remainingProfileProps}, {students:nextStudents})
   return receiveProfile(nextProfile)
 }
 
 export const handleStudentUpdate = (profile, studentID, key, val) => {
-  let { profileValidationErrors, profileValidationState, ...remainingProfileProps } = profile
-  let nextProfile = Object.assign(new Profile(), {...remainingProfileProps})
-
-  nextProfile.students = nextProfile.students.map(student => {
+  let { profileValidationErrors, profileValidationState, students, ...remainingProfileProps } = profile
+  let nextStudents = students.map(student => {
     if (student.id === studentID) {
       let { studentValidationErrors, studentValidationState, ...remainingStudentProps } = student
       let updatedStudent = Object.assign(new Student(), {...remainingStudentProps})
@@ -61,15 +61,14 @@ export const handleStudentUpdate = (profile, studentID, key, val) => {
     }
   })
 
+  let nextProfile = Object.assign(new Profile(), {...remainingProfileProps}, {students:nextStudents})
   return receiveProfile(nextProfile)
 }
 
 export const handleStudentRemove = (profile, studentID) => {
-  let { profileValidationErrors, profileValidationState, ...remainingProfileProps } = profile
-  let nextProfile = Object.assign(new Profile(), {...remainingProfileProps})
-
-  nextProfile.students = nextProfile.students.filter(student => student.id !== studentID)
-
+  let { profileValidationErrors, profileValidationState, students, ...remainingProfileProps } = profile
+  let nextStudents = students.filter(student => student.id !== studentID)
+  let nextProfile = Object.assign(new Profile(), {...remainingProfileProps}, {students:nextStudents})
   return receiveProfile(nextProfile)
 }
 

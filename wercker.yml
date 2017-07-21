@@ -9,7 +9,10 @@ build:
           echo "npm version $(npm -v) running"
 
     - npm-install
-    - npm-test
+    - script:
+        name: npm-test
+        code: |
+          npm test -- --coverage
     - script:
         name: npm-build
         code: |
@@ -31,7 +34,7 @@ deploy:
           wget -O autopilot https://github.com/contraband/autopilot/releases/download/0.0.3/autopilot-linux
           chmod +x autopilot
           cf install-plugin autopilot -f
-          
+
     - script:
       name: generate-env-config
       code: |
