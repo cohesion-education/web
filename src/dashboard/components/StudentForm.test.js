@@ -2,11 +2,11 @@ import { mount } from 'enzyme'
 import StudentForm from './StudentForm'
 import Student from '../../types/Student'
 
+const _handleStudentUpdate = jest.mock()
+const _handleStudentRemoval = jest.mock()
 
 it('renders without crashing', () => {
-  const student = new Student('Billy', '3', 'Washington Elementary', 1)
-  const _handleStudentUpdate = jest.mock()
-  const _handleStudentRemoval = jest.mock()
+  let student = new Student('Billy', '3', 'Washington Elementary', 1)
 
   const wrapper = mount(
     <StudentForm
@@ -54,10 +54,8 @@ it('renders without crashing', () => {
 })
 
 it('renders correct validation state', () => {
-  const student = new Student('', '3', '', 1)
+  let student = new Student('', '3', '', 1)
   student.validate()
-  const _handleStudentUpdate = jest.mock()
-  const _handleStudentRemoval = jest.mock()
 
   const wrapper = mount(
     <StudentForm
@@ -95,7 +93,7 @@ it('renders correct validation state', () => {
     .first()
     .props()
     .validationState
-  ).toBeUndefined()
+  ).toBe('error')
 
   expect(wrapper
     .find('FormControl')

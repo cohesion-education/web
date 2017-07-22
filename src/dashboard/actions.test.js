@@ -2,6 +2,7 @@ import thunk from 'redux-thunk'
 import configureMockStore from 'redux-mock-store'
 import nock from 'nock'
 import Profile from '../types/Profile'
+import Student from '../types/Student'
 import * as actions from './actions'
 import * as constants from './constants'
 
@@ -95,8 +96,9 @@ describe("handleStudentUpdate action", () => {
 describe("handleStudentRemove action", () => {
   it('should remove student by id and create a receiveProfile action', () => {
     const profile = new Profile()
-    profile.addStudent('Billy', '4th', 'Mintz Elementary', 1)
-    const result = actions.handleStudentRemove(profile, 1)
+    const student = new Student('Billy', '4th', 'Mintz Elementary', 1)
+    profile.students.push(student)
+    const result = actions.handleStudentRemove(profile, student)
     expect(result.type).toBe(constants.RECEIVE_PROFILE)
     expect(result.profile.students.length).toBe(0)
     expect(profile.students.length).toBe(1)

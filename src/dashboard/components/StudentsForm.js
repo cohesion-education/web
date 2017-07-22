@@ -60,16 +60,13 @@ class StudentsForm extends React.Component {
 
   receiveStudentUpdate(student, propertyName, value) {
     console.log(`received student update: ${JSON.stringify(student)}\n${propertyName}=${value}`)
-    this.props.handleStudentUpdate(this.props.profile, student.id, propertyName, value)
+    this.props.handleStudentUpdate(this.props.profile, student, propertyName, value)
   }
 
-  receiveStudentRemoval(s){
-    const { name, grade, school } = s
-    const student = new Student(name, grade, school)
-
+  receiveStudentRemoval(student){
     if(student.isEmpty() || window.confirm(`Are you sure you want to remove ${student.name}?`)){
       console.log(`removing student ${JSON.stringify(student)}`)
-      this.props.handleStudentRemove(this.props.profile, student.id)
+      this.props.handleStudentRemove(this.props.profile, student)
     }
   }
 
@@ -97,24 +94,27 @@ class StudentsForm extends React.Component {
           <Alert bsStyle='success'>{profile.successMessage}</Alert>
         }
         <Form horizontal>
-          { profile.students.map((student, i) =>
-            <StudentForm
-              student={student}
-              key={i}
-              handleStudentUpdate={this.receiveStudentUpdate}
-              handleStudentRemoval={this.receiveStudentRemoval}
-              style={i % 2 === 0 ? styles.evenStudentFormGroup : styles.oddStudentFormGroup}
-            />
-          )}
+          { profile.students.map((s, i) => {
+            const { name, grade, school } = s
+            const student = new Student(name, grade, school, i)
+
+            return (
+              <StudentForm
+                student={student}
+                key={i}
+                handleStudentUpdate={this.receiveStudentUpdate}
+                handleStudentRemoval={this.receiveStudentRemoval}
+                style={i % 2 === 0 ? styles.evenStudentFormGroup : styles.oddStudentFormGroup}
+              />
+            )
+          })}
           <FormGroup>
-            <Col sm={6}>
+            <Col sm={1}>
               <Button type='submit' id='add' bsStyle='success' onClick={this.handleAdd} style={styles.saveButton}>
                 Add
               </Button>
             </Col>
-          </FormGroup>
-          <FormGroup>
-            <Col sm={6}>
+            <Col sm={1}>
               <Button type='submit' id='save' bsStyle='primary' onClick={this.handleSubmit} style={styles.saveButton}>
                 Save
               </Button>

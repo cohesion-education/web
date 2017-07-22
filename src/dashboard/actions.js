@@ -48,10 +48,10 @@ export const handleStudentAdd = (profile) => {
   return receiveProfile(nextProfile)
 }
 
-export const handleStudentUpdate = (profile, studentID, key, val) => {
+export const handleStudentUpdate = (profile, existingStudent, key, val) => {
   let { profileValidationErrors, profileValidationState, students, ...remainingProfileProps } = profile
   let nextStudents = students.map(student => {
-    if (student.id === studentID) {
+    if (student.name === existingStudent.name) {
       let { studentValidationErrors, studentValidationState, ...remainingStudentProps } = student
       let updatedStudent = Object.assign(new Student(), {...remainingStudentProps})
       updatedStudent[key]=val
@@ -65,9 +65,9 @@ export const handleStudentUpdate = (profile, studentID, key, val) => {
   return receiveProfile(nextProfile)
 }
 
-export const handleStudentRemove = (profile, studentID) => {
+export const handleStudentRemove = (profile, studentToRemove) => {
   let { profileValidationErrors, profileValidationState, students, ...remainingProfileProps } = profile
-  let nextStudents = students.filter(student => student.id !== studentID)
+  let nextStudents = students.filter(student => student.name !== studentToRemove.name)
   let nextProfile = Object.assign(new Profile(), {...remainingProfileProps}, {students:nextStudents})
   return receiveProfile(nextProfile)
 }
