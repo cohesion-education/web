@@ -5,7 +5,7 @@ import StudentForm from './StudentForm'
 import { Alert, Button, Col, Form, FormGroup, PageHeader } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { handleStudentAdd, handleStudentUpdate, handleStudentRemove } from '../actions'
+import { fetchProfile, handleStudentAdd, handleStudentUpdate, handleStudentRemove, saveProfile } from '../actions'
 
 const styles = {
   oddStudentFormGroup:{
@@ -42,13 +42,19 @@ class StudentsForm extends React.Component {
 
   static propTypes = {
     profile: PropTypes.object.isRequired,
+    fetchProfile: PropTypes.func.isRequired,
     handleStudentUpdate: PropTypes.func.isRequired,
     handleStudentAdd: PropTypes.func.isRequired,
-    handleStudentRemove: PropTypes.func.isRequired
+    handleStudentRemove: PropTypes.func.isRequired,
+    handleSave: PropTypes.func.isRequired
   }
 
   static defaultProps = {
     profile: new Profile()
+  }
+
+  componentDidMount() {
+    this.props.fetchProfile()
   }
 
   receiveStudentUpdate(student, propertyName, value) {
@@ -65,12 +71,13 @@ class StudentsForm extends React.Component {
 
   handleAdd(e){
     e.preventDefault()
-    this.props.handleAdd(this.props.profile)
+    this.props.handleStudentAdd(this.props.profile)
   }
 
   handleSubmit(e){
     e.preventDefault()
     console.log('saving students - haha, I know, right? :-)')
+    this.props.handleSave(this.props.profile)
   }
 
   render(){
@@ -97,14 +104,14 @@ class StudentsForm extends React.Component {
           )}
           <FormGroup>
             <Col sm={6}>
-              <Button type='submit' bsStyle='success' onClick={this.handleAdd} style={styles.saveButton}>
+              <Button type='submit' id='add' bsStyle='success' onClick={this.handleAdd} style={styles.saveButton}>
                 Add
               </Button>
             </Col>
           </FormGroup>
           <FormGroup>
             <Col sm={6}>
-              <Button type='submit' bsStyle='primary' onClick={this.handleSubmit} style={styles.saveButton}>
+              <Button type='submit' id='save' bsStyle='primary' onClick={this.handleSubmit} style={styles.saveButton}>
                 Save
               </Button>
             </Col>
@@ -120,8 +127,10 @@ export default connect(
     profile: state.profile
   }),
   (dispatch) => ({ //mapDispatchToProps
-    handleAdd: bindActionCreators(handleStudentAdd, dispatch),
+    fetchProfile:  bindActionCreators(fetchProfile, dispatch),
+    handleStudentAdd: bindActionCreators(handleStudentAdd, dispatch),
     handleStudentUpdate: bindActionCreators(handleStudentUpdate, dispatch),
-    handleStudentRemove: bindActionCreators(handleStudentRemove, dispatch)
+    handleStudentRemove: bindActionCreators(handleStudentRemove, dispatch),
+    handleSave: bindActionCreators(saveProfile, dispatch),
   })
 )(StudentsForm)

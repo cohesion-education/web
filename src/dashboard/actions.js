@@ -41,7 +41,7 @@ export const handlePreferencesUpdate = (profile, key, val) => {
 
 export const handleStudentAdd = (profile) => {
   let { profileValidationErrors, profileValidationState, students, ...remainingProfileProps } = profile
-  let nextStudents = students.slice()
+  let nextStudents = (students !== null ? students.slice() : [])
   nextStudents.push(new Student('', '', '', nextStudents.length))
 
   let nextProfile = Object.assign(new Profile(), {...remainingProfileProps}, {students:nextStudents})
