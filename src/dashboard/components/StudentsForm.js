@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Profile from '../../types/Profile'
+import Student from '../../types/Student'
 import StudentForm from './StudentForm'
 import { Alert, Button, Col, Form, FormGroup, PageHeader } from 'react-bootstrap'
 import { connect } from 'react-redux'
@@ -62,7 +63,10 @@ class StudentsForm extends React.Component {
     this.props.handleStudentUpdate(this.props.profile, student.id, propertyName, value)
   }
 
-  receiveStudentRemoval(student){
+  receiveStudentRemoval(s){
+    const { name, grade, school } = s
+    const student = new Student(name, grade, school)
+
     if(student.isEmpty() || window.confirm(`Are you sure you want to remove ${student.name}?`)){
       console.log(`removing student ${JSON.stringify(student)}`)
       this.props.handleStudentRemove(this.props.profile, student.id)

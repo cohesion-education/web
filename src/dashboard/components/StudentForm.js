@@ -49,7 +49,10 @@ export default class StudentForm extends React.Component {
   }
 
   render(){
-    const { student, style } = this.props
+    const { style } = this.props
+    const { name, grade, school } = this.props.student
+    const student = new Student(name, grade, school)
+
     return(
       <Grid>
         <Row style={style}>

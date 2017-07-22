@@ -54,7 +54,7 @@ it('renders without crashing', () => {
 })
 
 it('renders correct validation state', () => {
-  const student = new Student('Billy', '3', '', 1)
+  const student = new Student('', '3', '', 1)
   student.validate()
   const _handleStudentUpdate = jest.mock()
   const _handleStudentRemoval = jest.mock()
@@ -88,14 +88,14 @@ it('renders correct validation state', () => {
     .first()
     .props()
     .value
-  ).toBe('Billy')
+  ).toBe('')
 
   expect(wrapper
     .find('FormGroup')
     .first()
     .props()
     .validationState
-  ).toBe('success')
+  ).toBeUndefined()
 
   expect(wrapper
     .find('FormControl')
@@ -109,5 +109,5 @@ it('renders correct validation state', () => {
     .last()
     .props()
     .validationState
-  ).toBe('error')
+  ).toBeUndefined()
 })

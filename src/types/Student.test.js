@@ -9,16 +9,16 @@ describe("Student type", () => {
     expect(student.validationErrors.length).toBe(0)
     expect(student.validationState['name']).toBe('success')
     expect(student.validationState['grade']).toBe('success')
-    expect(student.validationState['school']).toBe('success')
+    expect(student.validationState['school']).toBeUndefined()
   })
 
   it('validates with errors with all fields empty', () => {
     const student = new Student()
     expect(student.validate()).toBeFalsy()
-    expect(student.validationErrors.length).toBe(3)
+    expect(student.validationErrors.length).toBe(2)
     expect(student.validationState['name']).toBe('error')
     expect(student.validationState['grade']).toBe('error')
-    expect(student.validationState['school']).toBe('error')
+    expect(student.validationState['school']).toBeUndefined()
   })
 
 })

@@ -15,7 +15,7 @@ export default class Student{
     this.validationState = []
     this.validateTextField('name')
     this.validateTextField('grade')
-    this.validateTextField('school')
+    // this.validateTextField('school')
     return this.validationErrors.length === 0
   }
 
@@ -39,7 +39,7 @@ export default class Student{
         return false
       }
 
-      let valid = (val !== "")
+      let valid = (val !== '')
       return valid
     })
   }
