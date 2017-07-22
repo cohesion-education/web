@@ -84,8 +84,9 @@ describe("handleStudentAdd action", () => {
 
 describe("handleStudentUpdate action", () => {
   const profile = new Profile()
-  profile.addStudent('Billy', '4th', 'Mintz Elementary', 1)
-  const result = actions.handleStudentUpdate(profile, 1, 'name', 'Bill')
+  const student = new Student('Billy', '4th', 'Mintz Elementary', 1)
+  profile.students.push(student)
+  const result = actions.handleStudentUpdate(profile, student, 'name', 'Bill')
   expect(result.type).toBe(constants.RECEIVE_PROFILE)
   expect(result.profile.students.length).toBe(1)
   expect(profile.students.length).toBe(1)
