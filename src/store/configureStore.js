@@ -5,7 +5,7 @@ import { createLogger } from 'redux-logger'
 import history from '../history'
 import { homepageReducer } from '../homepage/reducers'
 import { authResultReducer } from '../auth/reducers'
-import { profileReducer, userinfoReducer } from '../dashboard/reducers'
+import { profileReducer, userinfoReducer } from '../profile/reducers'
 
 const loggerMiddleware = createLogger()
 

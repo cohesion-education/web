@@ -10,7 +10,8 @@ import PrivateRoute from './auth/components/PrivateRoute'
 import Homepage from './homepage/components/Homepage'
 import PageNotFound from './homepage/components/PageNotFound'
 import PrivacyPolicy from './homepage/components/PrivacyPolicy'
-import * as dashboards from './dashboard/components/ComposedDashboards'
+import * as authContainers from './auth/components/containers'
+import * as profilePages from './profile/components/ComposedDashboards'
 import { homepage } from './homepage/data/'
 
 const logPageView = () => {
@@ -33,13 +34,13 @@ export default () => (
     <ConnectedRouter history={history} handleLocationChange={logPageView}>
       <Switch>
         <Route exact path='/' component={Homepage} />
-        <Route path='/callback' component={dashboards.LoginCallbackDashboard} />
-        <Route path='/login' component={dashboards.LoginDashboard} />
+        <Route path='/callback' component={authContainers.LoginCallback} />
+        <Route path='/login' component={authContainers.LoginPage} />
         <Route path='/privacy' component={PrivacyPolicy} />
-        <PrivateRoute path='/logout' component={dashboards.LogoutDashboard} />
-        <PrivateRoute path='/dashboard' component={dashboards.EarlyRegistrationDashboard} />
-        <PrivateRoute path='/profile/students' component={dashboards.StudentsFormDashboard} />
-        <PrivateRoute path='/profile' component={dashboards.ProfileFormDashboard} />
+        <PrivateRoute path='/logout' component={authContainers.LogoutPage} />
+        <PrivateRoute path='/dashboard' component={profilePages.EarlyRegistrationPage} />
+        <PrivateRoute path='/profile/students' component={profilePages.StudentsFormPage} />
+        <PrivateRoute path='/profile' component={profilePages.ProfileFormPage} />
         <Route component={PageNotFound}/>
       </Switch>
     </ConnectedRouter>
