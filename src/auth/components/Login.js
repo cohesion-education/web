@@ -3,11 +3,13 @@ import PropTypes from 'prop-types'
 
 export default class Login extends React.Component {
   static propTypes = {
-    login: PropTypes.func.isRequired
+    login: PropTypes.func.isRequired,
+    from: PropTypes.string
   }
 
   componentWillMount(){
-    this.props.login()
+    // console.log(this.props.from)
+    this.props.login(this.props.from)
   }
 
   render (){

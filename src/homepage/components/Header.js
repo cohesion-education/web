@@ -11,9 +11,9 @@ const styles = {
     borderRadius: '0px',
     zIndex: '999',
     marginBottom: '0px',
-    webkitTransition: 'all 0.5s ease-in-out',
-    mozTransition: 'all 0.5s ease-in-out',
-    oTransition: 'all 0.5s ease-in-out',
+    WebkitTransition: 'all 0.5s ease-in-out',
+    MozTransition: 'all 0.5s ease-in-out',
+    OTransition: 'all 0.5s ease-in-out',
     transition: 'all 0.5s ease-in-out',
   },
   logo:{
@@ -67,8 +67,8 @@ export default class Header extends React.Component {
           <Nav pullRight>
             <NavItem href='#features' style={styles.navLinks}>Features</NavItem>
             <NavItem href='#pricing' style={styles.navLinks}>Plans</NavItem>
-            <NavItem href='/login' onClick={login} style={styles.navLinks}>Login</NavItem>
-            <Button bsStyle="primary" href='/register' onClick={login} style={styles.navCta}>Try for Free</Button>
+            <NavItem href="/login" style={styles.navLinks} onClick={login}>Login</NavItem>
+            <Button bsStyle="primary" href='/register' style={styles.navCta} onClick={login}>Try for Free</Button>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

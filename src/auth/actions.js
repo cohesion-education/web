@@ -1,11 +1,12 @@
 import auth0 from 'auth0-js'
 import history from '../history'
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, RECEIVE_USER_INFO } from './constants'
+import { LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, RECEIVE_USER_INFO } from './constants'
 
 const config = window.config ? window.config : {
   auth0_domain:'cohesioned.auth0.com',
   auth0_client_id: 'abc123',
-  callback_url: 'http://localhost:3000/callback'
+  callback_url: 'http://localhost:3000/callback',
+  logout_return_to: 'http://localhost:3000/'
 }
 
 const webAuth = new auth0.WebAuth({
@@ -17,25 +18,35 @@ const webAuth = new auth0.WebAuth({
   scope: 'openid profile email' /* https://auth0.com/docs/scopes/current, https://auth0.com/docs/scopes */
 })
 
-export function login() {
-  return function (dispatch) {
-    if(isAuthenticated()){
-      history.replace('/dashboard')
-      return
-    }
-
-    dispatch(requestLogin())
-    webAuth.authorize()
+export function login(from = '/dashboard') {
+  console.log(`from: ${JSON.stringify(from)}`)
+  if(isAuthenticated()){
+    history.replace(from)
+    return
   }
+
+  // dispatch(requestLogin(from))
+  let redirectUri = (typeof from === 'string' && from !== '')
+  ? `${config.callback_url}?from=${encodeURI(from)}`
+  : config.callback_url
+  console.log(`redirectUri: ${redirectUri}`)
+  webAuth.authorize({
+    redirectUri: redirectUri
+  })
 }
 
 export function logout() {
   return function (dispatch) {
     // Clear access token and ID token from local storage
+    localStorage.removeItem('auth_result')
     localStorage.removeItem('access_token')
     localStorage.removeItem('id_token')
     localStorage.removeItem('expires_at')
+    localStorage.removeItem('expires_in')
     dispatch(receiveLogout())
+    webAuth.logout({
+      returnTo: config.logout_return_to
+    })
   }
 }
 
@@ -67,17 +78,8 @@ export const getIDToken = () => {
 }
 
 
-export const requestLogin = () => {
-  return {
-    type: LOGIN_REQUEST,
-    webAuth: webAuth,
-    receivedAt: Date.now()
-  }
-}
-
-export const receiveAuthnSuccess = (authResult) => {
-  //TODO - add support for redirecting based on path param
-  history.replace('/dashboard')
+export const receiveAuthnSuccess = (authResult, from) => {
+  history.replace(from ? from : '/dashboard')
   return {
     type: LOGIN_SUCCESS,
     authResult: authResult,
@@ -103,9 +105,6 @@ export const requestLogout = () => {
 }
 
 export const receiveLogout = () => {
-  //TODO - redirect to homepage?
-  history.replace('/')
-
   return {
     type: LOGOUT_SUCCESS,
     receivedAt: Date.now()
@@ -121,7 +120,7 @@ export const receiveUserInfo = (userinfo, err) => {
   }
 }
 
-export function authnHandler() {
+export function authnHandler(from) {
   return function (dispatch) {
     if (/access_token|id_token|error/.test(window.location.hash)) {
       webAuth.parseHash((err, authResult) => {
@@ -141,7 +140,11 @@ export function authnHandler() {
         localStorage.setItem('expires_at', expiresAt)
         localStorage.setItem('expires_in', authResult.expiresIn)
 
-        dispatch(receiveAuthnSuccess(currentUser))
+        dispatch(receiveAuthnSuccess(currentUser, from))
+        webAuth.client.userInfo(authResult.accessToken, (err, userinfo) => {
+          console.log(`received userinfo: ${userinfo}`)
+          dispatch(receiveUserInfo(userinfo, err))
+        })
       })
 
       return
@@ -157,8 +160,8 @@ export const requestUserInfo = () => {
   const accessToken = getAccessToken()
 
   return function (dispatch) {
-    webAuth.client.userInfo(accessToken, (err, profile) => {
-      dispatch(receiveUserInfo(profile, err))
+    webAuth.client.userInfo(accessToken, (err, userinfo) => {
+      dispatch(receiveUserInfo(userinfo, err))
     })
   }
 }

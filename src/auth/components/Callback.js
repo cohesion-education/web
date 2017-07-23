@@ -3,16 +3,17 @@ import PropTypes from 'prop-types'
 
 export default class Callback extends React.Component {
   static propTypes = {
-    handleAuthentication: PropTypes.func.isRequired
+    handleAuthentication: PropTypes.func.isRequired,
+    location: PropTypes.object.isRequired
   }
 
   componentDidMount(){
-    // console.log('Callback.componentDidMount')
-    // console.log(`this.props: ${JSON.stringify(this.props)}`)
-    // console.log(`location.hash: ${JSON.stringify(window.location)}`)
-    // console.log(`location.hash: ${window.location.hash}`)
-    // this.handleAuthentication(this.props)
-    this.props.handleAuthentication()
+    console.log(`this.props.location.search: ${this.props.location.search}`)
+    let from = this.props.location.search
+    if(from !== ''){
+      from = from.replace('?from=', '')
+    }
+    this.props.handleAuthentication(from)
   }
 
   render (){

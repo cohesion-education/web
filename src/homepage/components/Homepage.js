@@ -1,8 +1,10 @@
 import React from 'react'
+import Header from './Header'
 import TopOfPageBackgroundImage from './TopOfPageBackgroundImage'
 import FeatureDescriptionList from './FeatureDescriptionList'
 import Footer from './Footer'
-import { HomepageHeader, Features, Testimonials, Pricing } from './containers'
+import { Features, Testimonials, Pricing } from './containers'
+import * as authActions from '../../auth/actions'
 import '../../css/fonts.css'
 import '../../css/font-awesome.css'
 import '../../css/homepage.css'
@@ -11,7 +13,7 @@ export default class Homepage extends React.Component {
   render(){
     return(
       <div>
-        <HomepageHeader />
+        <Header login={authActions.login}/>
         <TopOfPageBackgroundImage />
         <Features />
         <FeatureDescriptionList />

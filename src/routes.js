@@ -5,10 +5,8 @@ import ReactGA from 'react-ga'
 import { ConnectedRouter } from 'react-router-redux'
 import configureStore from './store/configureStore'
 import history from './history'
-// import Callback from './auth/components/Callback'
-// import Login from './auth/components/Login'
-// import Logout from './auth/components/Logout'
-import RequiresAuth from './auth/components/RequiresAuth'
+// import RequiresAuth from './auth/components/RequiresAuth'
+import PrivateRoute from './auth/components/PrivateRoute'
 import Homepage from './homepage/components/Homepage'
 import PageNotFound from './homepage/components/PageNotFound'
 import PrivacyPolicy from './homepage/components/PrivacyPolicy'
@@ -22,13 +20,13 @@ const logPageView = () => {
 
 const initialState = (localStorage['redux-store'])
   ? JSON.parse(localStorage['redux-store'])
-  : {homepage: homepage, currentUser: null}
+  : { homepage: homepage }
 
 const store = configureStore(initialState)
 
-// store.subscribe(() => {
-//   localStorage['redux-store'] = JSON.stringify(store.getState())
-// })
+store.subscribe(() => {
+  localStorage['redux-store'] = JSON.stringify(store.getState())
+})
 
 export default () => (
   <Provider store={store}>
@@ -38,10 +36,10 @@ export default () => (
         <Route path='/callback' component={dashboards.LoginCallbackDashboard} />
         <Route path='/login' component={dashboards.LoginDashboard} />
         <Route path='/privacy' component={PrivacyPolicy} />
-        <Route path='/logout' component={RequiresAuth(dashboards.LogoutDashboard)} />
-        <Route path='/dashboard' component={RequiresAuth(dashboards.EarlyRegistrationDashboard)} />
-        <Route path='/profile/students' component={RequiresAuth(dashboards.StudentsFormDashboard)} />
-        <Route path='/profile' component={RequiresAuth(dashboards.ProfileFormDashboard)} />
+        <PrivateRoute path='/logout' component={dashboards.LogoutDashboard} />
+        <PrivateRoute path='/dashboard' component={dashboards.EarlyRegistrationDashboard} />
+        <PrivateRoute path='/profile/students' component={dashboards.StudentsFormDashboard} />
+        <PrivateRoute path='/profile' component={dashboards.ProfileFormDashboard} />
         <Route component={PageNotFound}/>
       </Switch>
     </ConnectedRouter>

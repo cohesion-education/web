@@ -14,7 +14,7 @@ export default function configureStore(preloadedState) {
     combineReducers({
       router:routerReducer,
       homepage: homepageReducer,
-      currentUser: authResultReducer,
+      authResult: authResultReducer,
       userinfo: userinfoReducer,
       profile: profileReducer
     }),
