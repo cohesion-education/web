@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 // import { bindActionCreators } from 'redux'
 import { Button, PageHeader, Table } from 'react-bootstrap'
-import Dashboard from '../../dashboard/components/Dashboard'
 
 class VideoList extends React.Component {
   // constructor(props) {
@@ -11,11 +10,11 @@ class VideoList extends React.Component {
   // }
 
   static propTypes = {
-    videoList: PropTypes.array.isRequired
+    videos: PropTypes.array.isRequired
   }
 
   static defaultProps = {
-    videoList: []
+    videos: []
   }
 
   componentDidMount() {
@@ -29,10 +28,10 @@ class VideoList extends React.Component {
     // * Show
     //TODO - add pagination
 
-    const { videoList } = this.props
+    const { videos } = this.props
 
     return(
-      <Dashboard>
+      <div>
         <PageHeader>
           Video Management
           <Button>Add new Video</Button>
@@ -48,12 +47,12 @@ class VideoList extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { videoList.map((video, i) => {
+            { videos.map((video, i) => {
               return (
                 <tr>
                   <td><a href="/admin/video/edit/{video.id}">Edit</a></td>
                   <td><a href="/admin/video/{video.id}">{video.title}</a></td>
-                  <td>{video.taxonomy.id}</td>
+                  <td>{video.taxonomy.name}</td>
                   <td>{video.dateCreated}</td>
                   <td>{video.createdBy.fullName}</td>
                 </tr>
@@ -61,14 +60,14 @@ class VideoList extends React.Component {
             })}
           </tbody>
         </Table>
-      </Dashboard>
+      </div>
     )
   }
 }
 
 export default connect(
   (state) => ({ //mapStateToProps
-    videoList: state.videos.list
+    videos: state.video.list
   }),
   (dispatch) => ({ //mapDispatchToProps
     // fetchProfile: bindActionCreators(fetchProfile, dispatch),

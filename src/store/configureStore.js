@@ -7,6 +7,7 @@ import { homepageReducer } from '../homepage/reducers'
 import { authResultReducer } from '../auth/reducers'
 import { profileReducer, userinfoReducer } from '../profile/reducers'
 import { taxonomyReducer } from '../taxonomy/reducers'
+import { videoReducer } from '../video/reducers'
 
 const loggerMiddleware = createLogger()
 
@@ -19,6 +20,7 @@ export default function configureStore(preloadedState) {
       userinfo: userinfoReducer,
       profile: profileReducer,
       taxonomy: taxonomyReducer,
+      video: videoReducer,
     }),
     preloadedState,
     applyMiddleware(

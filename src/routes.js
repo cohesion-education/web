@@ -13,9 +13,8 @@ import NotAuthorized from './error/components/NotAuthorized'
 import PrivacyPolicy from './homepage/components/PrivacyPolicy'
 import * as authContainers from './auth/components/containers'
 import * as profilePages from './profile/components/ComposedDashboards'
+import * as videoPages from './video/components/ComposedDashboards'
 import TaxonomyForm from './taxonomy/components/TaxonomyForm'
-import VideoList from './video/components/VideoList'
-import VideoForm from './video/components/VideoForm'
 import { homepage } from './homepage/data/'
 
 const logPageView = () => {
@@ -46,8 +45,8 @@ export default () => (
         <PrivateRoute path='/profile/students' component={profilePages.StudentsFormPage} />
         <PrivateRoute path='/profile' component={profilePages.ProfileFormPage} />
         <PrivateRoute path='/taxonomy' component={TaxonomyForm} />
-        <PrivateRoute path='/videos' component={VideoList} />
-        <PrivateRoute path='/video/add' component={VideoForm} />
+        <PrivateRoute path='/videos' component={videoPages.VideoListPage} />
+        <PrivateRoute path='/video/add' component={videoPages.VideoFormPage} />
         <Route path='/401' component={NotAuthorized}/>
         <Route path='/403' component={Forbidden}/>
         <Route component={PageNotFound}/>

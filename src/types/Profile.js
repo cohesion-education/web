@@ -2,7 +2,7 @@ import Student from './Student'
 const emailRegex = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
 
 export default class Profile{
-  constructor(name, email, state, county) {
+  constructor(name='', email='', state='', county='', students = []) {
     this.name = name
     this.email = email
     this.state = state
@@ -11,7 +11,7 @@ export default class Profile{
       newsletter: false,
       beta_program: false,
     }
-    this.students = []
+    this.students = students
     this.validationErrors = []
     this.validationState = []
     this.successMessage = null
