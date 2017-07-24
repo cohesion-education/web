@@ -5,13 +5,17 @@ import ReactGA from 'react-ga'
 import { ConnectedRouter } from 'react-router-redux'
 import configureStore from './store/configureStore'
 import history from './history'
-// import RequiresAuth from './auth/components/RequiresAuth'
 import PrivateRoute from './auth/components/PrivateRoute'
 import Homepage from './homepage/components/Homepage'
-import PageNotFound from './homepage/components/PageNotFound'
+import PageNotFound from './error/components/PageNotFound'
+import Forbidden from './error/components/Forbidden'
+import NotAuthorized from './error/components/NotAuthorized'
 import PrivacyPolicy from './homepage/components/PrivacyPolicy'
 import * as authContainers from './auth/components/containers'
 import * as profilePages from './profile/components/ComposedDashboards'
+import TaxonomyForm from './taxonomy/components/TaxonomyForm'
+import VideoList from './video/components/VideoList'
+import VideoForm from './video/components/VideoForm'
 import { homepage } from './homepage/data/'
 
 const logPageView = () => {
@@ -19,9 +23,9 @@ const logPageView = () => {
   ReactGA.pageview(window.location.pathname + window.location.search)
 }
 
-const initialState = (localStorage['redux-store'])
+ const initialState = /*(localStorage['redux-store'])
   ? JSON.parse(localStorage['redux-store'])
-  : { homepage: homepage }
+  : */ { homepage: homepage }
 
 const store = configureStore(initialState)
 
@@ -41,6 +45,11 @@ export default () => (
         <PrivateRoute path='/dashboard' component={profilePages.EarlyRegistrationPage} />
         <PrivateRoute path='/profile/students' component={profilePages.StudentsFormPage} />
         <PrivateRoute path='/profile' component={profilePages.ProfileFormPage} />
+        <PrivateRoute path='/taxonomy' component={TaxonomyForm} />
+        <PrivateRoute path='/videos' component={VideoList} />
+        <PrivateRoute path='/video/add' component={VideoForm} />
+        <Route path='/401' component={NotAuthorized}/>
+        <Route path='/403' component={Forbidden}/>
         <Route component={PageNotFound}/>
       </Switch>
     </ConnectedRouter>

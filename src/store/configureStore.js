@@ -6,6 +6,7 @@ import history from '../history'
 import { homepageReducer } from '../homepage/reducers'
 import { authResultReducer } from '../auth/reducers'
 import { profileReducer, userinfoReducer } from '../profile/reducers'
+import { taxonomyReducer } from '../taxonomy/reducers'
 
 const loggerMiddleware = createLogger()
 
@@ -16,7 +17,8 @@ export default function configureStore(preloadedState) {
       homepage: homepageReducer,
       authResult: authResultReducer,
       userinfo: userinfoReducer,
-      profile: profileReducer
+      profile: profileReducer,
+      taxonomy: taxonomyReducer,
     }),
     preloadedState,
     applyMiddleware(
