@@ -34,8 +34,8 @@ class VideoList extends React.Component {
       <div>
         <PageHeader>
           Video Management
-          <Button>Add new Video</Button>
         </PageHeader>
+        <Button>Add new Video</Button>
         <Table responsive striped condensed>
           <thead>
             <tr>
@@ -49,12 +49,12 @@ class VideoList extends React.Component {
           <tbody>
             { videos.map((video, i) => {
               return (
-                <tr>
-                  <td><a href="/admin/video/edit/{video.id}">Edit</a></td>
-                  <td><a href="/admin/video/{video.id}">{video.title}</a></td>
+                <tr key={i}>
+                  <td>Edit</td>
+                  <td>{video.title}</td>
                   <td>{video.taxonomy.name}</td>
                   <td>{video.dateCreated}</td>
-                  <td>{video.createdBy.fullName}</td>
+                  <td>{video.createdBy.name}</td>
                 </tr>
               )
             })}
