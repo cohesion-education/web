@@ -8,17 +8,8 @@ import Taxonomy from '../../types/Taxonomy'
 import * as actions from '../actions'
 
 const styles = {
-  grid:{
-    height:'100%',
-  },
-  row:{
-    height:'100%',
-  },
   column:{
-    backgroundColor:'#e0e0e0',
-    border:'1px solid gray',
-    margin:'10px',
-    padding:'10px',
+    padding:'5px',
     height:'100%',
   },
 }
@@ -57,9 +48,10 @@ class TaxonomyForm extends React.Component {
     return(
       <Dashboard>
         <PageHeader>Taxonomy Management</PageHeader>
-        <Grid style={styles.grid}>
-          <Row style={styles.row}>
-            <Col sm={2} style={styles.column}>
+        <Grid fluid>
+          <Row>
+            <Col sm={3} style={styles.column}>
+              <h3>Grade</h3>
               <Nav bsStyle="pills" stacked activeKey={0} onSelect={this.handleSelect}>
                 { list.map((t, i) => {
                   return (
@@ -68,7 +60,8 @@ class TaxonomyForm extends React.Component {
                 })}
               </Nav>
             </Col>
-            <Col sm={2} style={styles.column}>
+            <Col sm={3} style={styles.column}>
+              <h3>Subject</h3>
               <Nav bsStyle="pills" stacked activeKey={1} onSelect={this.handleSelect}>
                 { list[0].children.map((t, i) => {
                   return (
@@ -77,7 +70,8 @@ class TaxonomyForm extends React.Component {
                 })}
               </Nav>
             </Col>
-            <Col sm={2} style={styles.column}>
+            <Col sm={3} style={styles.column}>
+              <h3>Set</h3>
               <Nav bsStyle="pills" stacked activeKey={0} onSelect={this.handleSelect}>
                 { list[0].children[1].children.map((t, i) => {
                   return (
@@ -86,7 +80,8 @@ class TaxonomyForm extends React.Component {
                 })}
               </Nav>
             </Col>
-            <Col sm={2} style={styles.column}>
+            <Col sm={3} style={styles.column}>
+              <h3>Unique Set</h3>
               <Nav bsStyle="pills" stacked activeKey={3} onSelect={this.handleSelect}>
                 { list[0].children[1].children[0].children.map((t, i) => {
                   return (
