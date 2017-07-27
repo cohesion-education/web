@@ -3,7 +3,7 @@ import * as constants from './constants'
 export const receiveTaxonomyList = (list = []) => {
   return {
     type: constants.RECEIVE_TAXONOMY_LIST,
-    taxonomyList: list.slice(),
+    list: list.slice(),
     receivedAt: Date.now()
   }
 }

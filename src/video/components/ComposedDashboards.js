@@ -1,6 +1,6 @@
 import React from 'react'
 import Dashboard from '../../dashboard/components/Dashboard'
-import VideoForm from './VideForm'
+import VideoForm from './VideoForm'
 import VideoList from './VideoList'
 
 export const VideoListPage = () =>
