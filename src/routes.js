@@ -5,6 +5,7 @@ import ReactGA from 'react-ga'
 import { ConnectedRouter } from 'react-router-redux'
 import configureStore from './store/configureStore'
 import history from './history'
+import AdminRoute from './auth/components/AdminRoute'
 import PrivateRoute from './auth/components/PrivateRoute'
 import Homepage from './homepage/components/Homepage'
 import PageNotFound from './error/components/PageNotFound'
@@ -14,7 +15,7 @@ import PrivacyPolicy from './homepage/components/PrivacyPolicy'
 import * as authContainers from './auth/components/containers'
 import * as profilePages from './profile/components/ComposedDashboards'
 import * as videoPages from './video/components/ComposedDashboards'
-import TaxonomyForm from './taxonomy/components/TaxonomyForm'
+import TaxonomyManager from './taxonomy/components/TaxonomyManager'
 import { homepage } from './homepage/data/'
 
 const logPageView = () => {
@@ -28,9 +29,9 @@ const logPageView = () => {
 
 const store = configureStore(initialState)
 
-store.subscribe(() => {
-  localStorage['redux-store'] = JSON.stringify(store.getState())
-})
+// store.subscribe(() => {
+//   localStorage['redux-store'] = JSON.stringify(store.getState())
+// })
 
 export default () => (
   <Provider store={store}>
@@ -44,9 +45,13 @@ export default () => (
         <PrivateRoute path='/dashboard' component={profilePages.EarlyRegistrationPage} />
         <PrivateRoute path='/profile/students' component={profilePages.StudentsFormPage} />
         <PrivateRoute path='/profile' component={profilePages.ProfileFormPage} />
-        <PrivateRoute path='/taxonomy' component={TaxonomyForm} />
-        <PrivateRoute path='/videos' component={videoPages.VideoListPage} />
-        <PrivateRoute path='/video/add' component={videoPages.VideoFormPage} />
+        <AdminRoute path='/taxonomy/:grade/:subject/:set/:subset' component={TaxonomyManager} />
+        <AdminRoute path='/taxonomy/:grade/:subject/:set' component={TaxonomyManager} />
+        <AdminRoute path='/taxonomy/:grade/:subject' component={TaxonomyManager} />
+        <AdminRoute path='/taxonomy/:grade' component={TaxonomyManager} />
+        <AdminRoute path='/taxonomy' component={TaxonomyManager} />
+        <AdminRoute path='/videos' component={videoPages.VideoListPage} />
+        <AdminRoute path='/video/add' component={videoPages.VideoFormPage} />
         <Route path='/401' component={NotAuthorized}/>
         <Route path='/403' component={Forbidden}/>
         <Route component={PageNotFound}/>

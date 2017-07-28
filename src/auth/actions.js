@@ -59,6 +59,20 @@ export const isAuthenticated = () => {
   return new Date().getTime() < expiresAt
 }
 
+export const isAdmin = () => {
+  try{
+    if(!isAuthenticated() || getIDToken() === ''){
+      return false
+    }
+
+    let authResult = JSON.parse(getAuthResult())
+    let email = authResult.idTokenPayload.email ? authResult.idTokenPayload.email : ''
+    return email.endsWith('@cohesioned.io')
+  }catch(e){
+    return false
+  }
+}
+
 export const getAccessToken = () => {
   let token = localStorage.getItem('access_token') || null
   if(!token) {
@@ -75,6 +89,15 @@ export const getIDToken = () => {
   }
 
   return token
+}
+
+export const getAuthResult = () => {
+  let authResult = localStorage.getItem('auth_result') || null
+  if(!authResult) {
+    throw new Error('Not authenticated')
+  }
+
+  return authResult
 }
 
 

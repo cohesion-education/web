@@ -2,12 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Col, Grid, PageHeader, Nav, NavItem, Row } from 'react-bootstrap'
+import { Col, Grid, PageHeader, Row } from 'react-bootstrap'
 import Dashboard from '../../dashboard/components/Dashboard'
 import Taxonomy from '../../types/Taxonomy'
+import TaxonomyList from './TaxonomyList'
 import * as actions from '../actions'
 
 const styles = {
+  fullHeight:{
+    height:'100%',
+  },
   column:{
     padding:'5px',
     height:'100%',
@@ -22,6 +26,7 @@ class TaxonomyForm extends React.Component {
 
   static propTypes = {
     list: PropTypes.array.isRequired,
+    match: PropTypes.object.isRequired,
     fetchTaxonomyList: PropTypes.func.isRequired
   }
 
@@ -39,56 +44,55 @@ class TaxonomyForm extends React.Component {
   }
 
   render(){
-    //TODO - needed handlers:
-    // • showChildren
-    // • add
-    const { list } = this.props
-    // console.log(`taxonomyList: ${JSON.stringify(list)}`)
+    const { match, list } = this.props
+    const { grade, subject, set } = match.params
+    console.log(`grade: ${grade} subject: ${subject} set: ${set}`)
+
+    const grades = list
+    let subjects = (grade !== undefined) ? grades.find((t) => t.name === grade).children : []
+    let sets = (subject !== undefined) ? subjects.find((t) => t.name === subject).children : []
+    let subsets = (set !== undefined) ? sets.find((t) => t.name === set).children : []
+
+    console.log(`grades: ${grades}`)
+    console.log(`subjects: ${subjects}`)
+    console.log(`sets: ${sets}`)
+    console.log(`subsets: ${subsets}`)
 
     return(
       <Dashboard>
         <PageHeader>Taxonomy Management</PageHeader>
-        <Grid fluid>
-          <Row>
+        <Grid fluid style={styles.fullHeight}>
+          <Row style={styles.fullHeight}>
             <Col sm={3} style={styles.column}>
-              <h3>Grade</h3>
-              <Nav bsStyle="pills" stacked activeKey={0} onSelect={this.handleSelect}>
-                { list.map((t, i) => {
-                  return (
-                    <NavItem eventKey={i} title={t.name}>{t.name}</NavItem>
-                  )
-                })}
-              </Nav>
+              <TaxonomyList
+                title='Grade'
+                list={grades}
+                selectedItem={grade}
+                baseURI='/taxonomy/'
+              />
             </Col>
             <Col sm={3} style={styles.column}>
-              <h3>Subject</h3>
-              <Nav bsStyle="pills" stacked activeKey={1} onSelect={this.handleSelect}>
-                { list[0].children.map((t, i) => {
-                  return (
-                    <NavItem eventKey={i} title={t.name}>{t.name}</NavItem>
-                  )
-                })}
-              </Nav>
+              <TaxonomyList
+                title='Subject'
+                list={subjects}
+                selectedItem={subject}
+                baseURI={'/taxonomy/' + grade + '/'}
+              />
             </Col>
             <Col sm={3} style={styles.column}>
-              <h3>Set</h3>
-              <Nav bsStyle="pills" stacked activeKey={0} onSelect={this.handleSelect}>
-                { list[0].children[1].children.map((t, i) => {
-                  return (
-                    <NavItem eventKey={i} title={t.name}>{t.name}</NavItem>
-                  )
-                })}
-              </Nav>
+              <TaxonomyList
+                title='Set'
+                list={sets}
+                selectedItem={set}
+                baseURI={'/taxonomy/' + grade + '/' + subject + '/'}
+              />
             </Col>
             <Col sm={3} style={styles.column}>
-              <h3>Unique Set</h3>
-              <Nav bsStyle="pills" stacked activeKey={3} onSelect={this.handleSelect}>
-                { list[0].children[1].children[0].children.map((t, i) => {
-                  return (
-                    <NavItem eventKey={i} title={t.name}>{t.name}</NavItem>
-                  )
-                })}
-              </Nav>
+              <TaxonomyList
+                title='Unique Set'
+                list={subsets}
+                baseURI={'/taxonomy/' + grade + '/' + subject + '/' + set + '/'}
+              />
             </Col>
           </Row>
         </Grid>
