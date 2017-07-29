@@ -15,7 +15,7 @@ import PrivacyPolicy from './homepage/components/PrivacyPolicy'
 import * as authContainers from './auth/components/containers'
 import * as profilePages from './profile/components/ComposedDashboards'
 import * as videoPages from './video/components/ComposedDashboards'
-import * as taxonomyPages from './taxonomy/components/ComposedDashboards'
+import TaxonomyManager from './taxonomy/components/TaxonomyManager'
 import { homepage } from './homepage/data/'
 
 const logPageView = () => {
@@ -45,11 +45,11 @@ export default () => (
         <PrivateRoute path='/dashboard' component={profilePages.EarlyRegistrationPage} />
         <PrivateRoute path='/profile/students' component={profilePages.StudentsFormPage} />
         <PrivateRoute path='/profile' component={profilePages.ProfileFormPage} />
-        <AdminRoute path='/taxonomy/:grade/:subject/:unit/:set' component={taxonomyPages.TaxonomyManagerPage} />
-        <AdminRoute path='/taxonomy/:grade/:subject/:unit' component={taxonomyPages.TaxonomyManagerPage} />
-        <AdminRoute path='/taxonomy/:grade/:subject' component={taxonomyPages.TaxonomyManagerPage} />
-        <AdminRoute path='/taxonomy/:grade' component={taxonomyPages.TaxonomyManagerPage} />
-        <AdminRoute path='/taxonomy' component={taxonomyPages.TaxonomyManagerPage} />
+        <AdminRoute path='/taxonomy/:grade/:subject/:unit/:set' component={TaxonomyManager} />
+        <AdminRoute path='/taxonomy/:grade/:subject/:unit' component={TaxonomyManager} />
+        <AdminRoute path='/taxonomy/:grade/:subject' component={TaxonomyManager} />
+        <AdminRoute path='/taxonomy/:grade' component={TaxonomyManager} />
+        <AdminRoute path='/taxonomy' component={TaxonomyManager} />
         <AdminRoute path='/videos' component={videoPages.VideoListPage} />
         <AdminRoute path='/video/add' component={videoPages.VideoFormPage} />
         <Route path='/401' component={NotAuthorized}/>

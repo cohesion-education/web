@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { Col, Grid, PageHeader, Row } from 'react-bootstrap'
 import TaxonomyList from './TaxonomyList'
 import Taxonomy from '../../types/Taxonomy'
+import Dashboard from '../../dashboard/components/Dashboard'
 import * as actions from '../actions'
 
 const styles = {
@@ -105,7 +106,7 @@ class TaxonomyForm extends React.Component {
     const setBaseURI = unitBaseURI + unit + '/'
 
     return(
-      <div>
+      <Dashboard>
         <PageHeader>Taxonomy Management</PageHeader>
         <Grid fluid style={styles.fullHeight}>
           <Row style={styles.fullHeight}>
@@ -150,7 +151,7 @@ class TaxonomyForm extends React.Component {
             </Col>
           </Row>
         </Grid>
-      </div>
+      </Dashboard>
     )
   }
 }
