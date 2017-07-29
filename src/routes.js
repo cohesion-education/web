@@ -45,11 +45,11 @@ export default () => (
         <PrivateRoute path='/dashboard' component={profilePages.EarlyRegistrationPage} />
         <PrivateRoute path='/profile/students' component={profilePages.StudentsFormPage} />
         <PrivateRoute path='/profile' component={profilePages.ProfileFormPage} />
-        <AdminRoute path='/taxonomy/:grade/:subject/:unit/:set' component={taxonomyPages.TaxonomyManager} />
-        <AdminRoute path='/taxonomy/:grade/:subject/:unit' component={taxonomyPages.TaxonomyManager} />
-        <AdminRoute path='/taxonomy/:grade/:subject' component={taxonomyPages.TaxonomyManager} />
-        <AdminRoute path='/taxonomy/:grade' component={taxonomyPages.TaxonomyManager} />
-        <AdminRoute path='/taxonomy' component={taxonomyPages.TaxonomyManager} />
+        <AdminRoute path='/taxonomy/:grade/:subject/:unit/:set' component={taxonomyPages.TaxonomyManagerPage} />
+        <AdminRoute path='/taxonomy/:grade/:subject/:unit' component={taxonomyPages.TaxonomyManagerPage} />
+        <AdminRoute path='/taxonomy/:grade/:subject' component={taxonomyPages.TaxonomyManagerPage} />
+        <AdminRoute path='/taxonomy/:grade' component={taxonomyPages.TaxonomyManagerPage} />
+        <AdminRoute path='/taxonomy' component={taxonomyPages.TaxonomyManagerPage} />
         <AdminRoute path='/videos' component={videoPages.VideoListPage} />
         <AdminRoute path='/video/add' component={videoPages.VideoFormPage} />
         <Route path='/401' component={NotAuthorized}/>
