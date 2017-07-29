@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Col, Grid, PageHeader, Row } from 'react-bootstrap'
 import Dashboard from '../../dashboard/components/Dashboard'
-import Taxonomy from '../../types/Taxonomy'
 import TaxonomyList from './TaxonomyList'
+import Taxonomy from '../../types/Taxonomy'
 import * as actions from '../actions'
 
 const styles = {
@@ -21,13 +21,16 @@ const styles = {
 class TaxonomyForm extends React.Component {
   constructor(props) {
     super(props)
-    this.handleSelect = this.handleSelect.bind(this)
+    this.getChildren = this.getChildren.bind(this)
+    this.handleAddFormSubmit = this.handleAddFormSubmit.bind(this)
   }
 
   static propTypes = {
     list: PropTypes.array.isRequired,
     match: PropTypes.object.isRequired,
-    fetchTaxonomyList: PropTypes.func.isRequired
+    fetchTaxonomyList: PropTypes.func.isRequired,
+    addTaxonomy: PropTypes.func.isRequired,
+    updateTaxonomy: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -38,25 +41,73 @@ class TaxonomyForm extends React.Component {
     this.props.fetchTaxonomyList()
   }
 
-  handleSelect(e){
-    e.preventDefault()
-    alert('selected!')
+  getChildren(list = [], selected = ''){
+    let children = []
+
+    if(selected !== undefined && selected !== ''){
+      const item = list.find((t) => t.name === selected)
+      if(item != null && item.children != null){
+        children = item.children
+      }
+    }
+    return children
+  }
+
+  handleAddFormSubmit(name, value){
+    console.log(`handleFormSubmit: ${value}`)
+    const { list, match } = this.props
+    const { grade, subject, set } = match.params
+
+    const subjects = this.getChildren(list, grade)
+    const sets = this.getChildren(subjects, subject)
+    const subsets = this.getChildren(sets, set)
+
+    switch(name){
+      case 'grade':
+        this.props.addTaxonomy(new Taxonomy(value))
+        this.props.fetchTaxonomyList()
+
+        break
+      case 'subject':
+        const selectedGrade = list.find((t) => t.name === grade)
+        const taxonomy = Object.assign(new Taxonomy(), {...selectedGrade})
+        taxonomy.addChild(value)
+        this.props.updateTaxonomy(taxonomy)
+        this.props.fetchTaxonomyList()
+
+        break
+      case 'set':
+        //TODO
+
+        break
+      case 'subset':
+        //TODO
+
+        break
+      default:
+        console.log(`unknown value sent as input name: ${name}`)
+    }
+
+
   }
 
   render(){
-    const { match, list } = this.props
+    const { list, match } = this.props
     const { grade, subject, set } = match.params
-    console.log(`grade: ${grade} subject: ${subject} set: ${set}`)
 
-    const grades = list
-    let subjects = (grade !== undefined) ? grades.find((t) => t.name === grade).children : []
-    let sets = (subject !== undefined) ? subjects.find((t) => t.name === subject).children : []
-    let subsets = (set !== undefined) ? sets.find((t) => t.name === set).children : []
+    const subjects = this.getChildren(list, grade)
+    const sets = this.getChildren(subjects, subject)
+    const subsets = this.getChildren(sets, set)
 
-    console.log(`grades: ${grades}`)
+    console.log(`grades: ${list}`)
     console.log(`subjects: ${subjects}`)
     console.log(`sets: ${sets}`)
     console.log(`subsets: ${subsets}`)
+
+    const gradeBaseURI = '/taxonomy/'
+    const subjectBaseURI = gradeBaseURI + grade + '/'
+    const setBaseURI = gradeBaseURI + subject + '/'
+    const subsetBaseURI = setBaseURI + set + '/'
 
     return(
       <Dashboard>
@@ -66,9 +117,11 @@ class TaxonomyForm extends React.Component {
             <Col sm={3} style={styles.column}>
               <TaxonomyList
                 title='Grade'
-                list={grades}
+                list={list}
                 selectedItem={grade}
-                baseURI='/taxonomy/'
+                handleFormSubmit={this.handleAddFormSubmit}
+                showAddForm={true}
+                baseURI={gradeBaseURI}
               />
             </Col>
             <Col sm={3} style={styles.column}>
@@ -76,7 +129,9 @@ class TaxonomyForm extends React.Component {
                 title='Subject'
                 list={subjects}
                 selectedItem={subject}
-                baseURI={'/taxonomy/' + grade + '/'}
+                handleFormSubmit={this.handleAddFormSubmit}
+                showAddForm={grade}
+                baseURI={subjectBaseURI}
               />
             </Col>
             <Col sm={3} style={styles.column}>
@@ -84,14 +139,18 @@ class TaxonomyForm extends React.Component {
                 title='Set'
                 list={sets}
                 selectedItem={set}
-                baseURI={'/taxonomy/' + grade + '/' + subject + '/'}
+                handleFormSubmit={this.handleAddFormSubmit}
+                showAddForm={subject}
+                baseURI={setBaseURI}
               />
             </Col>
             <Col sm={3} style={styles.column}>
               <TaxonomyList
-                title='Unique Set'
+                title='Subset'
                 list={subsets}
-                baseURI={'/taxonomy/' + grade + '/' + subject + '/' + set + '/'}
+                handleFormSubmit={this.handleAddFormSubmit}
+                showAddForm={set}
+                baseURI={subsetBaseURI}
               />
             </Col>
           </Row>
@@ -101,32 +160,13 @@ class TaxonomyForm extends React.Component {
   }
 }
 
-let fakeID = 1
-const grade = new Taxonomy(fakeID++, 'Kindergarten')
-grade.addChild('ELA', fakeID++)
-const subject = grade.addChild('Math', fakeID++)
-const unit = subject.addChild('Place Value', fakeID++)
-unit.addChild('Represent, Read, Write and Count Numbers One to Five', fakeID++)
-unit.addChild('Compare Numbers To Five', fakeID++)
-unit.addChild('Represent, Read, Write and Count Numbers 6-8', fakeID++)
-unit.addChild('Represent and Compare Numbers to Ten', fakeID++)
-unit.addChild('Addition', fakeID++)
-unit.addChild('Subtraction', fakeID++)
-
-
 export default connect(
-  //TODO - map to real state.taxonomy.list
   (state) => ({ //mapStateToProps
-    list: [
-      grade,
-      new Taxonomy(fakeID++, '1st'),
-      new Taxonomy(fakeID++, '2nd'),
-      new Taxonomy(fakeID++, '3rd'),
-      new Taxonomy(fakeID++, '4th'),
-      new Taxonomy(fakeID++, '5th'),
-    ]
+    list: state.taxonomy.list
   }),
   (dispatch) => ({ //mapDispatchToProps
     fetchTaxonomyList: bindActionCreators(actions.fetchTaxonomyList, dispatch),
+    addTaxonomy: bindActionCreators(actions.addTaxonomy, dispatch),
+    updateTaxonomy: bindActionCreators(actions.updateTaxonomy, dispatch),
   })
 )(TaxonomyForm)

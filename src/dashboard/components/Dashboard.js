@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Row, Col, Clearfix } from 'react-bootstrap'
+import { Grid, Row, Col } from 'react-bootstrap'
 import TopBar from './TopBar'
 import LeftMenu from './LeftMenu'
 import Footer from './Footer'
@@ -21,10 +21,17 @@ const styles = {
   },
   contentArea:{
     marginTop:'-3em',
-    paddingBottom:'2em',
     paddingLeft:'2em',
-    height:'100%',
+    minHeight:'100%',
+    paddingBottom:'50px',
   },
+  footer:{
+    position: 'absolute',
+    right: '0',
+    bottom: '0',
+    left: '0',
+    height: '50px',
+  }
 }
 
 export default class Dashboard extends React.Component {
@@ -45,9 +52,8 @@ export default class Dashboard extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Clearfix visibleSmBlock></Clearfix>
           <Col xs={12}>
-            <Footer />
+            <Footer style={styles.footer}/>
           </Col>
         </Row>
       </Grid>

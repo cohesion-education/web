@@ -1,14 +1,28 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Nav } from 'react-bootstrap'
+import { Form, FormControl, Nav } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
+const styles = {
+  addForm:{
+    padding:'15px 0px',
+  },
+}
+
 export default class TaxonomyForm extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
 
   static propTypes = {
     list: PropTypes.array.isRequired,
     title: PropTypes.string.isRequired,
     baseURI: PropTypes.string.isRequired,
+    handleFormSubmit: PropTypes.func.isRequired,
+    showAddForm: PropTypes.bool,
     selectedItem: PropTypes.string,
   }
 
@@ -18,14 +32,38 @@ export default class TaxonomyForm extends React.Component {
     title: ''
   }
 
+  handleInputChange(event) {
+    //no need to really do anything
+  }
+
+  handleSubmit(e){
+    e.preventDefault()
+    const name = this.addInput.name
+    const value = this.addInput.value
+    this.props.handleFormSubmit(name,value)
+    this.addInput.value = ''
+  }
 
   render(){
-    //TODO - need an 'add' handler
-    const { title, list, baseURI, selectedItem } = this.props
+    const { title, showAddForm, list, baseURI, selectedItem } = this.props
 
     return(
       <div>
         <h3>{title}</h3>
+
+        { showAddForm &&
+          <Form horizontal style={styles.addForm} onSubmit={this.handleSubmit}>
+            <FormControl
+              type='text'
+              bsSize='large'
+              name={title.toLowerCase()}
+              placeholder={'New ' + title}
+              onChange={this.handleInputChange}
+              inputRef={ref => { this.addInput = ref }}
+            />
+          </Form>
+        }
+
         <Nav bsStyle="pills" stacked>
           { list.map((t, i) => {
             return (
@@ -35,6 +73,7 @@ export default class TaxonomyForm extends React.Component {
             )
           }) }
         </Nav>
+
       </div>
     )
   }

@@ -1,21 +1,19 @@
 import React from 'react'
-import { Navbar } from 'react-bootstrap'
 
 const styles = {
   footer:{
     backgroundColor: '#e2e2e2',
     borderColor: '#cecece',
+    padding: '10px'
   }
 }
 
 export default class Footer extends React.Component {
   render (){
     return(
-      <Navbar fluid style={styles.footer}>
-        <Navbar.Text>
-          &copy; 2017 Cohesion Education, Inc. All rights reserved.
-        </Navbar.Text>
-      </Navbar>
+      <footer style={styles.footer}>
+        &copy; 2017 Cohesion Education, Inc. All rights reserved.
+      </footer>
     )
   }
 }
