@@ -7,7 +7,7 @@ import Video from '../../types/Video'
 
 describe("<VideoList /> Container", () => {
   const video = new Video(1, 'Test Video')
-  video.taxonomy = new Taxonomy(1, 'text-taxonomy')
+  video.taxonomy = new Taxonomy('test-taxonomy')
   video.createdBy = new Profile('Big John', 'john@cohesioned.io', 'FL', 'Monroe')
   video.dateCreated = Date.now()
 
@@ -37,7 +37,7 @@ describe("<VideoList /> Container", () => {
     expect(wrapper.find('tbody').find('tr').length).toBe(1)
     expect(wrapper.find('tbody').find('tr').childAt(0).text()).toBe('Edit')
     expect(wrapper.find('tbody').find('tr').childAt(1).text()).toBe('Test Video')
-    expect(wrapper.find('tbody').find('tr').childAt(2).text()).toBe('text-taxonomy')
+    expect(wrapper.find('tbody').find('tr').childAt(2).text()).toBe('test-taxonomy')
     // expect(wrapper.find('tbody').find('tr')[3].text()).toBe('Edit')
     expect(wrapper.find('tbody').find('tr').childAt(4).text()).toBe('Big John')
   })

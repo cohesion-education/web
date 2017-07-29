@@ -34,7 +34,6 @@ export function fetchTaxonomyList() {
           return
         }
 
-        console.log(`received taxonomy list: ${JSON.stringify(json)}`)
         dispatch(receiveTaxonomyList(json))
       })
       .catch(error => {
@@ -47,8 +46,6 @@ export function fetchTaxonomyList() {
 
 
 export function addTaxonomy(taxonomy) {
-  // console.log(`saveTaxonomy::${JSON.stringify(taxonomy)}`)
-
   const token = getIDToken()
   const opts = {
     method: 'post',
@@ -65,7 +62,6 @@ export function addTaxonomy(taxonomy) {
       .then(response => response.json())
       .then(json => {
         if(json){
-          console.log(`POST /api/taxonomy result: ${JSON.stringify(json)}`)
           if(json.error){
             //TODO - dispatch
             alert(`failed to save taxonomy: ${json.error}`)
@@ -84,8 +80,6 @@ export function addTaxonomy(taxonomy) {
 }
 
 export function updateTaxonomy(taxonomy) {
-  // console.log(`saveTaxonomy::${JSON.stringify(taxonomy)}`)
-
   const token = getIDToken()
   const opts = {
     method: 'put',
@@ -102,13 +96,13 @@ export function updateTaxonomy(taxonomy) {
       .then(response => response.json())
       .then(json => {
         if(json){
-          console.log(`PUT /api/taxonomy result: ${JSON.stringify(json)}`)
           if(json.error){
             //TODO - dispatch
             alert(`failed to update taxonomy: ${json.error}`)
             return
           }
 
+          console.log(`updated taxonomy ${taxonomy.name}`)
           dispatch(receiveTaxonomySaveSuccess(json))
         }
       })

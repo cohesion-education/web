@@ -73,7 +73,6 @@ export default class TaxonomyForm extends React.Component {
             )
           }) }
         </Nav>
-
       </div>
     )
   }

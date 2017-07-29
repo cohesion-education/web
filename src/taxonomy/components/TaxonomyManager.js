@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Col, Grid, PageHeader, Row } from 'react-bootstrap'
-import Dashboard from '../../dashboard/components/Dashboard'
 import TaxonomyList from './TaxonomyList'
 import Taxonomy from '../../types/Taxonomy'
 import * as actions from '../actions'
@@ -54,34 +53,35 @@ class TaxonomyForm extends React.Component {
   }
 
   handleAddFormSubmit(name, value){
-    console.log(`handleFormSubmit: ${value}`)
-    const { list, match } = this.props
-    const { grade, subject, set } = match.params
+    if(value === '' || value === undefined){
+      console.log('value was empty - ignoring')
+      return
+    }
 
-    const subjects = this.getChildren(list, grade)
-    const sets = this.getChildren(subjects, subject)
-    const subsets = this.getChildren(sets, set)
+    console.log(`handleFormSubmit ${name}=${value}`)
+
+    const { list, match } = this.props
+    const { grade, subject, unit } = match.params
+
+    const selectedGrade = list.find((t) => t.name === grade)
+    const taxonomy = Object.assign(new Taxonomy(), {...selectedGrade})
 
     switch(name){
       case 'grade':
-        this.props.addTaxonomy(new Taxonomy(value))
-        this.props.fetchTaxonomyList()
-
+        this.props.addTaxonomy(new Taxonomy(value)).then(() => this.props.fetchTaxonomyList())
         break
       case 'subject':
-        const selectedGrade = list.find((t) => t.name === grade)
-        const taxonomy = Object.assign(new Taxonomy(), {...selectedGrade})
         taxonomy.addChild(value)
-        this.props.updateTaxonomy(taxonomy)
-        this.props.fetchTaxonomyList()
+        this.props.updateTaxonomy(taxonomy).then(() => this.props.fetchTaxonomyList())
+        break
+      case 'unit':
+        taxonomy.findChild(subject).addChild(value)
+        this.props.updateTaxonomy(taxonomy).then(() => this.props.fetchTaxonomyList())
 
         break
       case 'set':
-        //TODO
-
-        break
-      case 'subset':
-        //TODO
+        taxonomy.findChild(subject).findChild(unit).addChild(value)
+        this.props.updateTaxonomy(taxonomy).then(() => this.props.fetchTaxonomyList())
 
         break
       default:
@@ -93,24 +93,19 @@ class TaxonomyForm extends React.Component {
 
   render(){
     const { list, match } = this.props
-    const { grade, subject, set } = match.params
+    const { grade, subject, unit } = match.params
 
     const subjects = this.getChildren(list, grade)
-    const sets = this.getChildren(subjects, subject)
-    const subsets = this.getChildren(sets, set)
-
-    console.log(`grades: ${list}`)
-    console.log(`subjects: ${subjects}`)
-    console.log(`sets: ${sets}`)
-    console.log(`subsets: ${subsets}`)
+    const units = this.getChildren(subjects, subject)
+    const sets = this.getChildren(units, unit)
 
     const gradeBaseURI = '/taxonomy/'
     const subjectBaseURI = gradeBaseURI + grade + '/'
-    const setBaseURI = gradeBaseURI + subject + '/'
-    const subsetBaseURI = setBaseURI + set + '/'
+    const unitBaseURI = subjectBaseURI + subject + '/'
+    const setBaseURI = unitBaseURI + unit + '/'
 
     return(
-      <Dashboard>
+      <div>
         <PageHeader>Taxonomy Management</PageHeader>
         <Grid fluid style={styles.fullHeight}>
           <Row style={styles.fullHeight}>
@@ -130,32 +125,32 @@ class TaxonomyForm extends React.Component {
                 list={subjects}
                 selectedItem={subject}
                 handleFormSubmit={this.handleAddFormSubmit}
-                showAddForm={grade}
+                showAddForm={grade !== undefined && grade !== ''}
                 baseURI={subjectBaseURI}
+              />
+            </Col>
+            <Col sm={3} style={styles.column}>
+              <TaxonomyList
+                title='Unit'
+                list={units}
+                selectedItem={unit}
+                handleFormSubmit={this.handleAddFormSubmit}
+                showAddForm={subject !== undefined && subject !== ''}
+                baseURI={unitBaseURI}
               />
             </Col>
             <Col sm={3} style={styles.column}>
               <TaxonomyList
                 title='Set'
                 list={sets}
-                selectedItem={set}
                 handleFormSubmit={this.handleAddFormSubmit}
-                showAddForm={subject}
+                showAddForm={unit !== undefined && unit !== ''}
                 baseURI={setBaseURI}
-              />
-            </Col>
-            <Col sm={3} style={styles.column}>
-              <TaxonomyList
-                title='Subset'
-                list={subsets}
-                handleFormSubmit={this.handleAddFormSubmit}
-                showAddForm={set}
-                baseURI={subsetBaseURI}
               />
             </Col>
           </Row>
         </Grid>
-      </Dashboard>
+      </div>
     )
   }
 }

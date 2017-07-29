@@ -13,7 +13,6 @@ export default class Taxonomy{
     this.validationState = []
     this.validateTextField('name')
 
-    // console.log(`validation state: ${JSON.stringify(this.validationErrors)}`)
     return this.validationErrors.length === 0
   }
 
@@ -34,9 +33,14 @@ export default class Taxonomy{
       }
 
       let valid = (val !== "")
-      // console.log(`${key}=${val} valid? ${valid}`)
       return valid
     })
+  }
+
+  findChild(name = ''){
+    const child = this.children.find((c) => c.name === name)
+    console.log(`${name} = ${child}`)
+    return child
   }
 
   addChild(name = ''){
