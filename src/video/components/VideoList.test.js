@@ -1,12 +1,15 @@
 import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'react-router-redux'
+import history from '../../history'
 import VideoList from './VideoList'
 import Profile from '../../types/Profile'
 import Taxonomy from '../../types/Taxonomy'
 import Video from '../../types/Video'
 
+
 describe("<VideoList /> Container", () => {
-  const video = new Video(1, 'Test Video')
+  const video = new Video('Test Video')
   video.taxonomy = new Taxonomy('test-taxonomy')
   video.createdBy = new Profile('Big John', 'john@cohesioned.io', 'FL', 'Monroe')
   video.dateCreated = Date.now()
@@ -26,14 +29,16 @@ describe("<VideoList /> Container", () => {
 
   beforeAll(() => wrapper = mount(
     <Provider store={_store}>
-      <VideoList />
+      <ConnectedRouter history={history}>
+        <VideoList />
+      </ConnectedRouter>
     </Provider>
   ))
 
   afterEach(() => jest.resetAllMocks())
 
   it('renders without crashing', () => {
-    expect(wrapper.find('PageHeader').text()).toBe('Video Management')
+    expect(wrapper.find('PageHeader').text()).toBe('Video ManagementAdd Video')
     expect(wrapper.find('tbody').find('tr').length).toBe(1)
     expect(wrapper.find('tbody').find('tr').childAt(0).text()).toBe('Edit')
     expect(wrapper.find('tbody').find('tr').childAt(1).text()).toBe('Test Video')

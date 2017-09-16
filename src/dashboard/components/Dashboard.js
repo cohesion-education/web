@@ -2,7 +2,9 @@ import React from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
 import TopBar from './TopBar'
 import LeftMenu from './LeftMenu'
+import AdminLeftMenu from './AdminLeftMenu'
 import Footer from './Footer'
+import { isAdmin } from '../../auth/actions'
 
 const styles = {
   containerFluid:{
@@ -46,6 +48,9 @@ export default class Dashboard extends React.Component {
         <Row style={styles.main}>
           <Col sm={3} xsHidden style={styles.leftSideMenu}>
             <LeftMenu />
+            { isAdmin() &&
+              <AdminLeftMenu />
+            }
           </Col>
           <Col sm={8} xs={12} style={styles.contentArea}>
             {this.props.children}

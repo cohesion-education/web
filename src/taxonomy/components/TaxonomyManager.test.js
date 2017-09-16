@@ -1,10 +1,12 @@
-import { shallow } from 'enzyme'
+import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'react-router-redux'
+import history from '../../history'
 import TaxonomyManager from './TaxonomyManager'
 import Profile from '../../types/Profile'
 import Taxonomy from '../../types/Taxonomy'
 
-jest.mock('./TaxonomyList')
+// jest.mock('./TaxonomyList')
 
 describe("<TaxonomyManager /> Container", () => {
   const taxonomy = new Taxonomy('test-taxonomy')
@@ -24,16 +26,17 @@ describe("<TaxonomyManager /> Container", () => {
 
   const match = { params : {} }
 
-  beforeAll(() => wrapper = shallow(
+  beforeAll(() => wrapper = mount(
     <Provider store={_store}>
-      <TaxonomyManager match={match}/>
+      <ConnectedRouter history={history}>
+        <TaxonomyManager match={match}/>
+      </ConnectedRouter>
     </Provider>
   ))
 
   afterEach(() => jest.resetAllMocks())
 
   it('renders without crashing', () => {
-    // expect(wrapper.find('PageHeader').text()).toBe('Taxonomy Management')
-    // expect(wrapper.find('TaxonomyList').length).toBe(4)
+    expect(wrapper.find('PageHeader').text()).toBe('Taxonomy Management')
   })
 })

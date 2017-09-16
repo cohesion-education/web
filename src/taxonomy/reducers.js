@@ -6,10 +6,43 @@ export const taxonomyReducer = (state = {list:[]}, action) => {
     case constants.RECEIVE_TAXONOMY_LIST:
       // console.log(`receiving taxonomy list: ${action.list}`)
       const taxonomyList = adapt(action.list)
-      return Object.assign({}, state, {list:taxonomyList})
+      const flattened = flattenTaxonomyList(taxonomyList)
+      return Object.assign({}, state, {list:taxonomyList, flattened: flattened})
     default:
       return state
   }
+}
+
+const flattenTaxonomyList = (list = []) => {
+  const flattened = []
+
+  list.map((t) => {
+    flatten(t).map((taxonomy) => {
+      flattened.push(taxonomy)
+    })
+  })
+
+  return flattened
+}
+
+export const flatten = (taxonomy = new Taxonomy()) => {
+  console.log(`flattening: ${JSON.stringify(taxonomy)}`)
+  const flattened = []
+
+  if(taxonomy.children.length === 0){
+    flattened.push(Object.assign(new Taxonomy(), {...taxonomy}))
+    return flattened
+  }
+
+  taxonomy.children.map((c) => {
+    const child = Object.assign(new Taxonomy(), {...c})
+    child.name = `${taxonomy.name} > ${child.name}`
+    flatten(child).map((fc) => {
+      flattened.push(fc)
+    })
+  })
+
+  return flattened
 }
 
 const adapt = (list = []) => {

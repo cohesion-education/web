@@ -1,8 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 // import { bindActionCreators } from 'redux'
-import { Button, PageHeader, Table } from 'react-bootstrap'
+import { PageHeader, Table } from 'react-bootstrap'
+
+const styles = {
+  addVideoLink:{
+    textAlign:'right',
+    float:'right',
+    fontSize:'18px',
+  },
+}
 
 class VideoList extends React.Component {
   // constructor(props) {
@@ -34,8 +43,9 @@ class VideoList extends React.Component {
       <div>
         <PageHeader>
           Video Management
+          <Link to="/video/add" style={styles.addVideoLink} className='btn btn-success'>Add Video</Link>
         </PageHeader>
-        <Button>Add new Video</Button>
+
         <Table responsive striped condensed>
           <thead>
             <tr>

@@ -3,10 +3,10 @@ import { Route, Redirect } from 'react-router'
 import { isAuthenticated, isAdmin } from '../actions'
 
 const AdminRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={props =>
+  <Route {...rest} render={ props =>
     isAuthenticated() ? (
       isAdmin() ? (
-        <Component {...props}/>
+        <Component {...props} />
       ) : (
         <Redirect to={{
           pathname: '/403',

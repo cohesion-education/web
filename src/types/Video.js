@@ -1,13 +1,12 @@
-import Profile from './Profile'
-import Taxonomy from './Taxonomy'
-
-
 export default class Video{
-  constructor(id, title, createdBy = new Profile(), taxonomy = new Taxonomy()) {
-    this.id = id
+  constructor(title, createdBy, taxonomy) {
     this.title = title
     this.createdBy = createdBy
     this.taxonomy = taxonomy
+    this.file = null
+    this.stateStandards = []
+    this.commonCoreStandards = []
+    this.keyTerms = []
     this.validationErrors = []
     this.validationState = []
     this.successMessage = null
@@ -18,8 +17,15 @@ export default class Video{
     this.validationErrors = []
     this.validationState = []
     this.validateTextField('title')
+    this.validateTextField('taxonomy')
+    if(!this.file){
+      this.validationErrors.push({fieldName:'file', valid:false})
+      this.validationState['file'] = 'error'
+    }else{
+      this.validationState['file'] = 'success'
+    }
 
-    // console.log(`validation state: ${JSON.stringify(this.validationErrors)}`)
+    console.log(`validation state: ${JSON.stringify(this.validationErrors)}`)
     return this.validationErrors.length === 0
   }
 
@@ -44,4 +50,5 @@ export default class Video{
       return valid
     })
   }
+
 }

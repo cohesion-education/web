@@ -12,10 +12,11 @@ import PageNotFound from './error/components/PageNotFound'
 import Forbidden from './error/components/Forbidden'
 import NotAuthorized from './error/components/NotAuthorized'
 import PrivacyPolicy from './homepage/components/PrivacyPolicy'
+import TermsOfService from './homepage/components/TermsOfService'
 import * as authContainers from './auth/components/containers'
 import * as profilePages from './profile/components/ComposedDashboards'
 import * as videoPages from './video/components/ComposedDashboards'
-import TaxonomyManager from './taxonomy/components/TaxonomyManager'
+import* as taxonomyPages from './taxonomy/components/ComposedDashboards'
 import { homepage } from './homepage/data/'
 
 const logPageView = () => {
@@ -41,15 +42,16 @@ export default () => (
         <Route path='/callback' component={authContainers.LoginCallback} />
         <Route path='/login' component={authContainers.LoginPage} />
         <Route path='/privacy' component={PrivacyPolicy} />
+        <Route path='/terms' component={TermsOfService} />
         <PrivateRoute path='/logout' component={authContainers.LogoutPage} />
         <PrivateRoute path='/dashboard' component={profilePages.EarlyRegistrationPage} />
         <PrivateRoute path='/profile/students' component={profilePages.StudentsFormPage} />
         <PrivateRoute path='/profile' component={profilePages.ProfileFormPage} />
-        <AdminRoute path='/taxonomy/:grade/:subject/:unit/:set' component={TaxonomyManager} />
-        <AdminRoute path='/taxonomy/:grade/:subject/:unit' component={TaxonomyManager} />
-        <AdminRoute path='/taxonomy/:grade/:subject' component={TaxonomyManager} />
-        <AdminRoute path='/taxonomy/:grade' component={TaxonomyManager} />
-        <AdminRoute path='/taxonomy' component={TaxonomyManager} />
+        <AdminRoute path='/taxonomy/:grade/:subject/:unit/:set' component={taxonomyPages.TaxonomyManagerPage} />
+        <AdminRoute path='/taxonomy/:grade/:subject/:unit' component={taxonomyPages.TaxonomyManagerPage} />
+        <AdminRoute path='/taxonomy/:grade/:subject' component={taxonomyPages.TaxonomyManagerPage} />
+        <AdminRoute path='/taxonomy/:grade' component={taxonomyPages.TaxonomyManagerPage} />
+        <AdminRoute path='/taxonomy' component={taxonomyPages.TaxonomyManagerPage} />
         <AdminRoute path='/videos' component={videoPages.VideoListPage} />
         <AdminRoute path='/video/add' component={videoPages.VideoFormPage} />
         <Route path='/401' component={NotAuthorized}/>

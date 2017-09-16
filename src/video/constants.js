@@ -1,1 +1,3 @@
 export const RECEIVE_VIDEO_LIST = 'RECEIVE_VIDEO_LIST'
+export const NEW_VIDEO = 'NEW_VIDEO'
+export const VIDEO_UPDATE = 'VIDEO_UPDATE'
