@@ -99,7 +99,7 @@ class TaxonomyManager extends React.Component {
     const units = this.getChildren(subjects, subject)
     const sets = this.getChildren(units, unit)
 
-    const gradeBaseURI = '/taxonomy/'
+    const gradeBaseURI = '/admin/taxonomy/'
     const subjectBaseURI = gradeBaseURI + grade + '/'
     const unitBaseURI = subjectBaseURI + subject + '/'
     const setBaseURI = unitBaseURI + unit + '/'

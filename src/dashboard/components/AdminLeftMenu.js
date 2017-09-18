@@ -6,9 +6,9 @@ export default class LeftMenu extends React.Component {
   render (){
     return(
       <ListGroup>
-        <ListGroupItem>Administrative Functions</ListGroupItem>
-        <ListGroupItem><Link to="/taxonomy">Taxonomy</Link></ListGroupItem>
-        <ListGroupItem><Link to="/videos">Videos</Link></ListGroupItem>
+        <ListGroupItem>Admin Functions</ListGroupItem>
+        <ListGroupItem><Link to="/admin/taxonomy">Taxonomy</Link></ListGroupItem>
+        <ListGroupItem><Link to="/admin/videos">Videos</Link></ListGroupItem>
       </ListGroup>
     )
   }

@@ -26,7 +26,7 @@ const flattenTaxonomyList = (list = []) => {
 }
 
 export const flatten = (taxonomy = new Taxonomy()) => {
-  console.log(`flattening: ${JSON.stringify(taxonomy)}`)
+  // console.log(`flattening: ${JSON.stringify(taxonomy)}`)
   const flattened = []
 
   if(taxonomy.children.length === 0){

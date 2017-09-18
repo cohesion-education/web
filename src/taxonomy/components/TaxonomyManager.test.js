@@ -6,7 +6,6 @@ import TaxonomyManager from './TaxonomyManager'
 import Profile from '../../types/Profile'
 import Taxonomy from '../../types/Taxonomy'
 
-// jest.mock('./TaxonomyList')
 
 describe("<TaxonomyManager /> Container", () => {
   const taxonomy = new Taxonomy('test-taxonomy')

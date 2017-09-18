@@ -24,7 +24,7 @@ export function fetchTaxonomyList() {
   }
 
   return (dispatch) => {
-    console.log('fetching taxonomy list')
+    // console.log('fetching taxonomy list')
     return fetch(`${window.config.api_base}/api/taxonomy`, opts)
       .then(response => response.json())
       .then(json => {
@@ -102,7 +102,7 @@ export function updateTaxonomy(taxonomy) {
             return
           }
 
-          console.log(`updated taxonomy ${taxonomy.name}`)
+          // console.log(`updated taxonomy ${taxonomy.name}`)
           dispatch(receiveTaxonomySaveSuccess(json))
         }
       })

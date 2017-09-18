@@ -1,11 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import { Alert, Button, Col, ControlLabel, Form, FormControl, FormGroup, PageHeader } from 'react-bootstrap'
 import Video from '../../types/Video'
+import { Link } from 'react-router-dom'
 import * as actions from '../actions'
-import {fetchTaxonomyList} from '../../taxonomy/actions'
 import TagsInput from 'react-tagsinput'
 import 'react-tagsinput/react-tagsinput.css'
 import history from '../../history'
@@ -15,104 +13,115 @@ const styles = {
     textAlign:'left',
     fontSize:'18px',
   },
+  breadCrumb:{
+    fontWeight: 'normal',
+  },
 }
 
-class VideoForm extends React.Component {
+export default class VideoForm extends React.Component {
   constructor(props) {
     super(props)
+    this.videoWithoutValidationOrMessages = this.videoWithoutValidationOrMessages.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleCommonCoreStandardsChange = this.handleCommonCoreStandardsChange.bind(this)
-    this.handleStateStandardsChange = this.handleStateStandardsChange.bind(this)
-    this.handleKeyTermsChange = this.handleKeyTermsChange.bind(this)
+    this.handleFileChange = this.handleFileChange.bind(this)
     this.handleTagsChange = this.handleTagsChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   static propTypes = {
     video: PropTypes.object.isRequired,
+    pageTitle: PropTypes.string.isRequired,
     flattenedTaxonomy: PropTypes.array.isRequired,
-    fetchTaxonomyList: PropTypes.func.isRequired,
-    videoUpdateHandler: PropTypes.func.isRequired,
-    saveVideoMetadata: PropTypes.func.isRequired,
-    uploadVideo: PropTypes.func.isRequired,
-    dispatch: PropTypes.func.isRequired,
+    formUpdateHandler: PropTypes.func.isRequired,
+    saveHandler: PropTypes.func.isRequired,
+    uploadHandler: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
     video: new Video(),
+    pageTitle: 'Page Title Not Set',
     flattenedTaxonomy: [],
   }
 
-  componentDidMount() {
-    this.props.fetchTaxonomyList()
+  videoWithoutValidationOrMessages(){
+    let { validationErrors, validationState, errorMessage, successMessage, ...remainingProps } = this.props.video
+    let video = Object.assign(new Video(), {...remainingProps})
+    return video
   }
 
   handleInputChange(event) {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
-    const name = target.name
-    this.props.videoUpdateHandler(this.props.video, name, value)
-  }
+    const updated = this.videoWithoutValidationOrMessages()
+    updated[target.name] = value
 
-  handleCommonCoreStandardsChange(tags, changed, changedIndexes){
-    this.handleTagsChange('commonCoreStandards', tags, changed, changedIndexes)
-  }
-
-  handleStateStandardsChange(tags, changed, changedIndexes){
-    this.handleTagsChange('stateStandards', tags, changed, changedIndexes)
-  }
-
-  handleKeyTermsChange(tags, changed, changedIndexes){
-    this.handleTagsChange('keyTerms', tags, changed, changedIndexes)
+    this.props.formUpdateHandler(updated)
   }
 
   handleTagsChange(fieldName, tags, changed, changedIndexes){
-    let { validationErrors, validationState, errorMessage, successMessage, ...remainingProps } = this.props.video
-    let updated = Object.assign(new Video(), {...remainingProps})
+    const updated = this.videoWithoutValidationOrMessages()
     updated[fieldName] = tags
-    this.props.dispatch(actions.updateVideo(updated))
+    this.props.formUpdateHandler(updated)
+  }
+
+  handleFileChange(event) {
+    const target = event.target
+    const updated = this.videoWithoutValidationOrMessages()
+    const file = target.files[0]
+    updated.file = file
+    updated.file_name = file.name
+    updated.file_size = file.size
+    updated.file_type = file.type
+    this.props.formUpdateHandler(updated)
   }
 
   handleSubmit(e){
     e.preventDefault()
 
-    const { successMessage, errorMessage, validationErrors, validationState, file, ...remainingProps } = this.props.video
-    const video = Object.assign(new Video(), {...remainingProps})
-    video.file = this.fileInput.files[0]
+    const video = this.videoWithoutValidationOrMessages()
 
     if(!video.validate()){
       video.errorMessage = 'Oops! Looks like you\'re missing some information'
-      console.log(video.errorMessage)
-      this.props.dispatch(actions.updateVideo(video))
+      this.props.dispatch(actions.validationFailed(video))
       return
     }
 
-    this.props.saveVideoMetadata(video).then((savedVideo) => {
+    video.successMessage = 'Creating video record.'
+    this.props.dispatch(actions.update(video))
+    this.props.saveHandler(video).then((savedVideo) => {
       if(savedVideo.errorMessage){
         console.log(`failed to save video metadata: ${savedVideo.errorMessage}`)
-        this.props.dispatch(actions.updateVideo(savedVideo))
+        this.props.dispatch(actions.saveFailed(savedVideo))
         return
       }
 
-      console.log(`saved video metadata; ready to upload file`)
-      this.props.uploadVideo(savedVideo, this.fileInput.files[0]).then((uploadedVideo) => {
+      if(!video.file){
+        history.replace(`/admin/video/${savedVideo.id}`)
+        return
+      }
+
+      video.successMessage = 'Video record successfully created. Uploading video to server.'
+      this.props.dispatch(actions.update(video))
+      this.props.uploadHandler(savedVideo, video.file).then((uploadedVideo) => {
         if(uploadedVideo.errorMessage){
           console.log(`failed to upload video: ${uploadedVideo.errorMessage}`)
-          this.props.dispatch(actions.updateVideo(uploadedVideo))
+          this.props.dispatch(actions.uploadFailed(uploadedVideo))
           return
         }
 
-        history.replace(`/video/${uploadedVideo.id}`)
+        history.replace(`/admin/video/${uploadedVideo.id}`)
       })
     })
   }
 
   render(){
-    const { video, flattenedTaxonomy } = this.props
+    const { pageTitle, video, flattenedTaxonomy } = this.props
 
     return(
       <div>
-        <PageHeader>Add new Video</PageHeader>
+        <PageHeader>
+          <Link to="/admin/videos/">Videos</Link> <span style={styles.breadCrumb}>&gt;</span> {pageTitle}
+        </PageHeader>
         { video.errorMessage &&
           <Alert bsStyle='warning'>{video.errorMessage}</Alert>
         }
@@ -133,7 +142,6 @@ class VideoForm extends React.Component {
                 placeholder='Title'
                 value={video.title}
                 onChange={this.handleInputChange}
-                inputRef={ref => { this.titleInput = ref }}
               />
               <FormControl.Feedback />
             </Col>
@@ -147,14 +155,13 @@ class VideoForm extends React.Component {
               <FormControl
                 componentClass='select'
                 bsSize='large'
-                name='taxonomy'
-                value={video.category}
-                onChange={this.handleInputChange}
-                inputRef={ref => { this.taxonomySelect = ref }}>
+                name='flattened_taxonomy'
+                value={video.flattened_taxonomy}
+                onChange={this.handleInputChange}>
                 <option value=''>- Taxonomy -</option>
                 { flattenedTaxonomy.map((taxonomy, i) => {
                   return (
-                    <option key={i} value={taxonomy}>{taxonomy.name}</option>
+                    <option key={i} value={taxonomy.name}>{taxonomy.name}</option>
                   )
                 })}
               </FormControl>
@@ -166,7 +173,11 @@ class VideoForm extends React.Component {
               Key Terms
             </Col>
             <Col sm={6}>
-              <TagsInput onChange={this.handleKeyTermsChange} value={video.keyTerms} addKeys={[9, 13, 188]}/>
+              <TagsInput
+                onChange={(tags, changed, changedIndexes) => this.handleTagsChange('key_terms', tags, changed, changedIndexes)}
+                value={video.key_terms}
+                addKeys={[9, 13, 188]}
+              />
             </Col>
           </FormGroup>
           <FormGroup>
@@ -174,7 +185,11 @@ class VideoForm extends React.Component {
               Common Core Standards
             </Col>
             <Col sm={6}>
-              <TagsInput onChange={this.handleCommonCoreStandardsChange} value={video.commonCoreStandards} addKeys={[9, 13, 188]} />
+              <TagsInput
+                onChange={(tags, changed, changedIndexes) => this.handleTagsChange('common_core_standards', tags, changed, changedIndexes)}
+                value={video.common_core_standards}
+                addKeys={[9, 13, 188]}
+              />
             </Col>
           </FormGroup>
           <FormGroup>
@@ -182,7 +197,11 @@ class VideoForm extends React.Component {
               State Standards
             </Col>
             <Col sm={6}>
-              <TagsInput onChange={this.handleStateStandardsChange} value={video.stateStandards} addKeys={[9, 13, 188]}/>
+              <TagsInput
+                onChange={(tags, changed, changedIndexes) => this.handleTagsChange('state_standards', tags, changed, changedIndexes)}
+                value={video.state_standards}
+                addKeys={[9, 13, 188]}
+              />
             </Col>
           </FormGroup>
 
@@ -196,8 +215,7 @@ class VideoForm extends React.Component {
                 name='file'
                 data-iconname='fa fa-cloud-upload'
                 className='filestyle'
-                onChange={this.handleInputChange}
-                inputRef={ref => { this.fileInput = ref }}
+                onChange={this.handleFileChange}
               />
               <FormControl.Feedback />
             </Col>
@@ -215,17 +233,3 @@ class VideoForm extends React.Component {
     )
   }
 }
-
-export default connect(
-  (state) => ({ //mapStateToProps
-    video: state.video.formBackingObject,
-    flattenedTaxonomy: state.taxonomy.flattened,
-  }),
-  (dispatch) => ({ //mapDispatchToProps
-    dispatch: dispatch,
-    fetchTaxonomyList: bindActionCreators(fetchTaxonomyList, dispatch),
-    videoUpdateHandler: bindActionCreators(actions.videoUpdateHandler, dispatch),
-    saveVideoMetadata: bindActionCreators(actions.saveVideoMetadata, dispatch),
-    uploadVideo: bindActionCreators(actions.uploadVideo, dispatch),
-  })
-)(VideoForm)
