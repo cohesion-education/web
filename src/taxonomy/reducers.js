@@ -14,9 +14,7 @@ export const taxonomyReducer = (state = {list:[]}, action) => {
 }
 
 const flattenTaxonomyList = (list = []) => {
-  const flattened = []
-
-  flattened = list.map((t) => flatten(t).map((taxonomy) => taxonomy))
+  const flattened = list.map((t) => flatten(t).map((taxonomy) => taxonomy))
 
   return flattened
 }
