@@ -14,11 +14,21 @@ export const taxonomyReducer = (state = {list:[]}, action) => {
 }
 
 const flattenTaxonomyList = (list = []) => {
-  return list.map((t) => flatten(t))
+  const flattened = []
+
+  list.map((t) => {
+    return flatten(t).map((taxonomy) => {
+      flattened.push(taxonomy)
+      return taxonomy
+    })
+  })
+
+  return flattened
 }
 
 export const flatten = (taxonomy = new Taxonomy()) => {
-  let flattened = []
+  // console.log(`flattening: ${JSON.stringify(taxonomy)}`)
+  const flattened = []
 
   if(taxonomy.children.length === 0){
     flattened.push(Object.assign(new Taxonomy(), {...taxonomy}))
@@ -28,8 +38,10 @@ export const flatten = (taxonomy = new Taxonomy()) => {
   taxonomy.children.map((c) => {
     const child = Object.assign(new Taxonomy(), {...c})
     child.name = `${taxonomy.name} > ${child.name}`
-    flattened = flattened.concat(flatten(child))
-    return flattened
+    return flatten(child).map((fc) => {
+      flattened.push(fc)
+      return fc
+    })
   })
 
   return flattened
