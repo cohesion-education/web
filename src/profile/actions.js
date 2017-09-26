@@ -12,6 +12,14 @@ export const receiveProfile = (profile) => {
   }
 }
 
+export const receiveStudents = (profile) => {
+  return {
+    type: constants.RECEIVE_STUDENTS,
+    profile: Object.assign(new Profile(), {...profile}),
+    receivedAt: Date.now()
+  }
+}
+
 export const handleProfileUpdate = (profile, key, val) => {
   // console.log(`updating profile with ${key}=${val}`)
   let { validationErrors, validationState, ...remainingProps } = profile
@@ -40,18 +48,18 @@ export const handlePreferencesUpdate = (profile, key, val) => {
 }
 
 export const handleStudentAdd = (profile) => {
-  let { profileValidationErrors, profileValidationState, students, ...remainingProfileProps } = profile
-  let nextStudents = (students !== null ? students.slice() : [])
+  const { profileValidationErrors, profileValidationState, students, ...remainingProfileProps } = profile
+  const nextStudents = (students !== null ? students.slice() : [])
   nextStudents.push(new Student('', '', '', nextStudents.length))
 
-  let nextProfile = Object.assign(new Profile(), {...remainingProfileProps}, {students:nextStudents})
+  const nextProfile = Object.assign(new Profile(), {...remainingProfileProps}, {students:nextStudents})
   return receiveProfile(nextProfile)
 }
 
 export const handleStudentUpdate = (profile, existingStudent, key, val) => {
   let { profileValidationErrors, profileValidationState, students, ...remainingProfileProps } = profile
   let nextStudents = students.map(student => {
-    if (student.name === existingStudent.name) {
+    if (student.id === existingStudent.id) {
       let { studentValidationErrors, studentValidationState, ...remainingStudentProps } = student
       let updatedStudent = Object.assign(new Student(), {...remainingStudentProps})
       updatedStudent[key]=val
@@ -108,6 +116,35 @@ export function fetchProfile() {
   }
 }
 
+export function fetchStudents() {
+  const token = getIDToken()
+  const apiURL = `${window.config.api_base}/api/profile/students`
+  const opts = {
+    method: 'get',
+    mode: 'cors',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }
+
+  return (dispatch) => {
+    return fetch(apiURL, opts)
+      .then(response => response.json())
+      .then(json => {
+        if(json){
+          console.log(`fetch students response: ${JSON.stringify(json.profile)}`)
+          const profile = Object.assign(new Profile(), {...json.profile})
+          // console.log(`fetch students response: ${JSON.stringify(profile)}`)
+          dispatch(receiveStudents(profile))
+        }
+      })
+      .catch(error => {
+        console.log(`error fetching students: ${error}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
+        dispatch(receiveProfileFailure(error))
+      })
+  }
+}
+
 export const saveProfile = (p) => {
   return (dispatch) => {
     const { successMessage, errorMessage, validationErrors, validationState, ...remainingProps } = p
@@ -119,7 +156,7 @@ export const saveProfile = (p) => {
 
     const token = getIDToken()
     const opts = {
-      method: 'post',
+      method: 'put',
       mode: 'cors',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -165,18 +202,53 @@ export const savePreferences = (profile) => {
     .then(response => response.json())
     .then(json => {
       if(json.error){
-        json.errorMessage = `Failed to update profile: ${json.error}`
-        dispatch(receiveProfile(json))
+        json.profile.errorMessage = `Failed to update profile: ${json.error}`
+        dispatch(receiveProfile(json.profile))
         return
       }
 
-      json.successMessage = 'Thank you! Your preferences have been updated'
-      dispatch(receiveProfile(json))
+      json.profile.successMessage = 'Thank you! Your preferences have been updated'
+      dispatch(receiveProfile(json.profile))
     })
     .catch(err => {
       profile.errorMessage = `An error occurred while updating your profile: ${err}`
       dispatch(receiveProfile(profile))
       return
+    })
+  }
+}
+
+export const saveStudents = (profile) => {
+  return (dispatch) => {
+    const { students } = profile
+
+    const token = getIDToken()
+    const apiURL = `${window.config.api_base}/api/profile/students`
+    const opts = {
+      method: 'post',
+      mode: 'cors',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(students)
+    }
+
+    return fetch(apiURL, opts)
+    .then(response => response.json())
+    .then(json => {
+      if(json.error){
+        json.errorMessage = `Failed to save students: ${json.error}`
+        return dispatch(receiveProfile(json))
+      }
+
+      json.successMessage = 'Your students have been saved'
+      return dispatch(receiveProfile(json))
+    })
+    .catch(err => {
+      profile.errorMessage = `An error occurred while trying to save your student list: ${err}`
+      console.log(`error:${profile.errorMessage}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
+      return dispatch(receiveProfile(profile))
     })
   }
 }

@@ -163,7 +163,9 @@ export function authnHandler(from) {
         localStorage.setItem('expires_at', expiresAt)
         localStorage.setItem('expires_in', authResult.expiresIn)
 
+        dispatch(saveProfile(authResult.idTokenPayload))
         dispatch(receiveAuthnSuccess(currentUser, from))
+
         webAuth.client.userInfo(authResult.accessToken, (err, userinfo) => {
           console.log(`received userinfo: ${userinfo}`)
           dispatch(receiveUserInfo(userinfo, err))
@@ -175,6 +177,32 @@ export function authnHandler(from) {
 
     console.log(`unable to find access_token, id_token, or error. Assuming invalid authn attempt: ${window.location.hash}`)
     dispatch(receiveAuthnFailure('Invalid authentication attempt.'))
+  }
+}
+
+export function saveProfile(profile) {
+  const token = getIDToken()
+  const apiURL = `${window.config.api_base}/api/profile`
+  const opts = {
+    method: 'post',
+    mode: 'cors',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(profile)
+  }
+
+  return (dispatch) => {
+    console.log(`saving profile ${JSON.stringify(profile)}`)
+    return fetch(apiURL, opts)
+      .then(response => response.json())
+      .then(json => {
+        console.log(`save profile result: ${JSON.stringify(json)}`)
+      })
+      .catch(error => {
+        console.log(`error saving profile: ${error}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
+      })
   }
 }
 

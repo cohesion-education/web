@@ -1,4 +1,4 @@
-import { RECEIVE_PROFILE } from './constants'
+import { RECEIVE_PROFILE, RECEIVE_STUDENTS } from './constants'
 import { RECEIVE_USER_INFO } from '../auth/constants'
 import Profile from '../types/Profile'
 
@@ -15,6 +15,8 @@ export const userinfoReducer = (state = {}, action) => {
 export const profileReducer = (state = new Profile(), action) => {
   switch(action.type){
     case RECEIVE_PROFILE:
+      return Object.assign({}, state, {...action.profile})
+    case RECEIVE_STUDENTS:
       return Object.assign({}, state, {...action.profile})
     default:
       return state

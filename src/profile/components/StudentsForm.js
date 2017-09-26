@@ -6,7 +6,7 @@ import StudentForm from './StudentForm'
 import { Alert, Button, Col, Form, FormGroup, PageHeader } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { fetchProfile, handleStudentAdd, handleStudentUpdate, handleStudentRemove, saveProfile } from '../actions'
+import { fetchStudents, handleStudentAdd, handleStudentUpdate, handleStudentRemove, saveStudents } from '../actions'
 
 const styles = {
   oddStudentFormGroup:{
@@ -43,7 +43,7 @@ class StudentsForm extends React.Component {
 
   static propTypes = {
     profile: PropTypes.object.isRequired,
-    fetchProfile: PropTypes.func.isRequired,
+    fetchStudents: PropTypes.func.isRequired,
     handleStudentUpdate: PropTypes.func.isRequired,
     handleStudentAdd: PropTypes.func.isRequired,
     handleStudentRemove: PropTypes.func.isRequired,
@@ -55,7 +55,7 @@ class StudentsForm extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchProfile()
+    this.props.fetchStudents()
   }
 
   receiveStudentUpdate(student, propertyName, value) {
@@ -83,6 +83,8 @@ class StudentsForm extends React.Component {
 
   render(){
     const { profile } = this.props
+    let { students } = profile
+    students = students === null ? [] : students
 
     return(
       <div>
@@ -94,7 +96,7 @@ class StudentsForm extends React.Component {
           <Alert bsStyle='success'>{profile.successMessage}</Alert>
         }
         <Form horizontal>
-          { profile.students.map((s, i) => {
+          { students.map((s, i) => {
             const { name, grade, school } = s
             const student = new Student(name, grade, school, i)
 
@@ -131,10 +133,10 @@ export default connect(
     profile: state.profile
   }),
   (dispatch) => ({ //mapDispatchToProps
-    fetchProfile:  bindActionCreators(fetchProfile, dispatch),
+    fetchStudents:  bindActionCreators(fetchStudents, dispatch),
     handleStudentAdd: bindActionCreators(handleStudentAdd, dispatch),
     handleStudentUpdate: bindActionCreators(handleStudentUpdate, dispatch),
     handleStudentRemove: bindActionCreators(handleStudentRemove, dispatch),
-    handleSave: bindActionCreators(saveProfile, dispatch),
+    handleSave: bindActionCreators(saveStudents, dispatch),
   })
 )(StudentsForm)
