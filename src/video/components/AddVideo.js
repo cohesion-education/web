@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import VideoForm from './VideoForm'
 import Video from '../../types/Video'
 import * as actions from '../actions'
-import {fetchTaxonomyList} from '../../taxonomy/actions'
+import {fetchFlattenedTaxonomyList} from '../../taxonomy/actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -12,7 +12,7 @@ class AddVideo extends React.Component {
   static propTypes = {
     video: PropTypes.object.isRequired,
     flattenedTaxonomy: PropTypes.array.isRequired,
-    fetchTaxonomyList: PropTypes.func.isRequired,
+    fetchFlattenedTaxonomyList: PropTypes.func.isRequired,
     saveHandler: PropTypes.func.isRequired,
     uploadHandler: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired,
@@ -28,7 +28,7 @@ class AddVideo extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchTaxonomyList()
+    this.props.fetchFlattenedTaxonomyList()
   }
 
   render(){
@@ -55,7 +55,7 @@ export default connect(
   }),
   (dispatch) => ({ //mapDispatchToProps
     dispatch: dispatch,
-    fetchTaxonomyList: bindActionCreators(fetchTaxonomyList, dispatch),
+    fetchFlattenedTaxonomyList: bindActionCreators(fetchFlattenedTaxonomyList, dispatch),
     saveHandler: bindActionCreators(actions.saveVideoMetadata, dispatch),
     uploadHandler: bindActionCreators(actions.uploadVideo, dispatch),
   })

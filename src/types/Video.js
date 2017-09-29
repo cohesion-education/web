@@ -4,7 +4,7 @@ export default class Video{
     this.Key = undefined
 
     this.title = undefined
-    this.flattened_taxonomy = undefined
+    this.taxonomy_id = undefined
     this.state_standards = []
     this.common_core_standards = []
     this.key_terms = []
@@ -34,7 +34,13 @@ export default class Video{
     this.validationErrors = []
     this.validationState = []
     this.validateTextField('title')
-    this.validateTextField('flattened_taxonomy')
+    
+    if(!this.taxonomy_id){
+      this.validationErrors.push({fieldName:'taxonomy_id', valid:false})
+      this.validationState['taxonomy_id'] = 'error'
+    }else{
+      this.validationState['taxonomy_id'] = 'success'
+    }
 
     if(!this.id && !this.file){
       this.validationErrors.push({fieldName:'file', valid:false})

@@ -63,7 +63,7 @@ export default class VideoList extends React.Component {
             <tr>
               <th></th>
               <th></th>
-              <th>Key</th>
+              <th>ID</th>
               <th>Title</th>
               <th>Taxonomy</th>
               <th>Date Created</th>
@@ -79,11 +79,11 @@ export default class VideoList extends React.Component {
                 <tr key={i}>
                   <td><Link to={`/admin/video/edit/${video.id}`}>Edit</Link></td>
                   <td><Link to={`${video.id}`} id={video.id} onClick={this.delete}>Delete</Link></td>
-                  <td><Link to={`/admin/video/${video.id}`}>{video.Key}</Link></td>
+                  <td><Link to={`/admin/video/${video.id}`}>{video.id}</Link></td>
                   <td>{video.title}</td>
-                  <td>{video.flattened_taxonomy}</td>
+                  <td>{video.taxonomy_id}</td>
                   <td>{video.created.toString()}</td>
-                  <td>{video.created_by.name}</td>
+                  <td>{video.created_by}</td>
                   <td>{video.bucket}</td>
                   <td>{video.object_name}</td>
                   <td>{video.file_name}</td>

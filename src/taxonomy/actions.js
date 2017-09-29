@@ -9,6 +9,14 @@ export const receiveTaxonomyList = (list = []) => {
   }
 }
 
+export const receiveFlattenedTaxonomyList = (list = []) => {
+  return {
+    type: constants.RECEIVE_FLATTENED_TAXONOMY_LIST,
+    list: list.slice(),
+    receivedAt: Date.now()
+  }
+}
+
 export const receiveTaxonomySaveSuccess = (taxonomy) => {
   return {
     type: constants.RECEIVE_TAXONOMY_SAVE_SUCCESS,
@@ -39,6 +47,34 @@ export function fetchTaxonomyList() {
       })
       .catch(error => {
         console.log(`error fetching taxonomy list: ${error}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
+        //TODO - dispatch error
+        //dispatch(receiveProfileFailure(error))
+      })
+  }
+}
+
+export function fetchFlattenedTaxonomyList() {
+  const apiURL = `${window.config.api_base}/api/taxonomy/flatten`
+  const opts = {
+    method: 'get',
+    mode: 'cors'
+  }
+
+  return (dispatch) => {
+    // console.log('fetching taxonomy list')
+    return fetch(apiURL, opts)
+      .then(response => response.json())
+      .then(json => {
+        if(json.error){
+          //TODO - dispatch instead
+          alert(`failed to retrieve flattened taxonomy list: ${json.error}`)
+          return
+        }
+
+        dispatch(receiveFlattenedTaxonomyList(json))
+      })
+      .catch(error => {
+        console.log(`error fetching flattened taxonomy list: ${error}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
         //TODO - dispatch error
         //dispatch(receiveProfileFailure(error))
       })

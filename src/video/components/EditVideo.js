@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Video from '../../types/Video'
 import * as actions from '../actions'
-import {fetchTaxonomyList} from '../../taxonomy/actions'
+import {fetchFlattenedTaxonomyList} from '../../taxonomy/actions'
 import VideoForm from './VideoForm'
 
 class EditVideo extends React.Component {
@@ -16,7 +16,7 @@ class EditVideo extends React.Component {
     flattenedTaxonomy: PropTypes.array.isRequired,
     saveHandler: PropTypes.func.isRequired,
     uploadHandler: PropTypes.func.isRequired,
-    fetchTaxonomyList: PropTypes.func.isRequired,
+    fetchFlattenedTaxonomyList: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired,
   }
 
@@ -26,7 +26,7 @@ class EditVideo extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchTaxonomyList()
+    this.props.fetchFlattenedTaxonomyList()
     const { id } = this.props.match.params
     this.props.fetchVideoByID(id).then((video) => {
       this.props.dispatch(actions.receiveVideoToEdit(video))
@@ -58,7 +58,7 @@ export default connect(
   (dispatch) => ({ //mapDispatchToProps
     dispatch: dispatch,
     fetchVideoByID: bindActionCreators(actions.fetchVideoByID, dispatch),
-    fetchTaxonomyList: bindActionCreators(fetchTaxonomyList, dispatch),
+    fetchFlattenedTaxonomyList: bindActionCreators(fetchFlattenedTaxonomyList, dispatch),
     saveHandler: bindActionCreators(actions.updateVideoMetadata, dispatch),
     uploadHandler: bindActionCreators(actions.uploadVideo, dispatch),
   })

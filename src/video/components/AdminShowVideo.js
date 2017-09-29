@@ -69,16 +69,12 @@ class AdminShowVideo extends React.Component {
               <td>{video.id}</td>
             </tr>
             <tr>
-              <td>Key</td>
-              <td>{video.Key}</td>
-            </tr>
-            <tr>
               <td>Title</td>
               <td>{video.title}</td>
             </tr>
             <tr>
               <td>Taxonomy</td>
-              <td>{video.flattened_taxonomy}</td>
+              <td>{video.taxonomy_id}</td>
             </tr>
             <tr>
               <td>Key Terms</td>
@@ -97,17 +93,17 @@ class AdminShowVideo extends React.Component {
               <td>{video.file_name}</td>
             </tr>
             <tr>
-              <td>GCP Storage Bucket</td>
+              <td>Storage Bucket</td>
               <td>{video.bucket}</td>
             </tr>
             <tr>
-              <td>GCP Storage Object</td>
+              <td>Storage Object</td>
               <td>{video.object_name}</td>
             </tr>
             { video.created_by &&
               <tr>
                 <td>Created By</td>
-                <td>{video.created_by.name}</td>
+                <td>{video.created_by}</td>
               </tr>
             }
             <tr>
@@ -117,7 +113,7 @@ class AdminShowVideo extends React.Component {
             { video.updated_by &&
               <tr>
                 <td>Updated By</td>
-                <td>{video.updated_by.name}</td>
+                <td>{video.updated_by}</td>
               </tr>
             }
             { video.updated &&

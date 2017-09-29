@@ -126,6 +126,7 @@ export const updateVideoMetadata = (video) => {
 export const uploadVideo = (video, file) => {
   return (dispatch) => {
     const token = getIDToken()
+    const apiURL = `${window.config.api_base}/api/video/upload/${video.id}`
     const opts = {
       method: 'post',
       mode: 'cors',
@@ -137,7 +138,7 @@ export const uploadVideo = (video, file) => {
       body: file
     }
 
-    return fetch(`${window.config.api_base}/api/video/upload/${video.id}`, opts)
+    return fetch(apiURL, opts)
     .then(response => response.json())
     .then(json => {
       if(json.error){
@@ -152,7 +153,7 @@ export const uploadVideo = (video, file) => {
     })
     .catch(err => {
       video.errorMessage = `An error occurred while trying to upload video: ${err}`
-      console.log(`error:${video.errorMessage}\nuri: ${window.config.api_base}/api/video/upload/${video.id}\nopts: ${JSON.stringify(opts)}`)
+      console.log(`error:${video.errorMessage}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
       return video
     })
   }
@@ -204,11 +205,11 @@ export function fetchVideoByID(id) {
       .then(response => response.json())
       .then(json => {
         if(json.error){
-          json.video.errorMessage = `failed to get video by id ${id}: ${json.error}`
+          json.errorMessage = `failed to get video by id ${id}: ${json.error}`
           return json
         }
 
-        const video = Object.assign(new Video(), {...json.video})
+        const video = Object.assign(new Video(), {...json})
         return video
       })
       .catch(error => {

@@ -53,10 +53,15 @@ export default class VideoForm extends React.Component {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
     const updated = this.videoWithoutValidationOrMessages()
+
     updated[target.name] = value
+    if(target.name === 'taxonomy_id'){
+        updated[target.name] = Number(value)
+    }
 
     this.props.formUpdateHandler(updated)
   }
+
 
   handleTagsChange(fieldName, tags, changed, changedIndexes){
     const updated = this.videoWithoutValidationOrMessages()
@@ -155,13 +160,13 @@ export default class VideoForm extends React.Component {
               <FormControl
                 componentClass='select'
                 bsSize='large'
-                name='flattened_taxonomy'
-                value={video.flattened_taxonomy}
+                name='taxonomy_id'
+                value={video.taxonomy_id}
                 onChange={this.handleInputChange}>
                 <option value=''>- Taxonomy -</option>
                 { flattenedTaxonomy.map((taxonomy, i) => {
                   return (
-                    <option key={i} value={taxonomy.name}>{taxonomy.name}</option>
+                    <option key={i} value={taxonomy.id}>{taxonomy.name}</option>
                   )
                 })}
               </FormControl>

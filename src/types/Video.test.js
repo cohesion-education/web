@@ -7,7 +7,7 @@ describe("Video type", () => {
     const video = new Video()
     video.title = 'Test Title'
     video.id = 1234
-    video.flattened_taxonomy = 'test taxonomy'
+    video.taxonomy_id = 1
     expect(video.validate()).toBeTruthy()
     expect(video.validationErrors.length).toBe(0)
     expect(video.validationState['title']).toBe('success')
@@ -18,7 +18,7 @@ describe("Video type", () => {
     expect(video.validate()).toBeFalsy()
     expect(video.validationErrors.length).toBe(3)
     expect(video.validationState['title']).toBe('error')
-    expect(video.validationState['flattened_taxonomy']).toBe('error')
+    expect(video.validationState['taxonomy_id']).toBe('error')
     expect(video.validationState['file']).toBe('error')
   })
 
