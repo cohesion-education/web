@@ -202,13 +202,13 @@ export const savePreferences = (profile) => {
     .then(response => response.json())
     .then(json => {
       if(json.error){
-        json.profile.errorMessage = `Failed to update profile: ${json.error}`
-        dispatch(receiveProfile(json.profile))
+        json.errorMessage = `Failed to update profile: ${json.error}`
+        dispatch(receiveProfile(json))
         return
       }
 
-      json.profile.successMessage = 'Thank you! Your preferences have been updated'
-      dispatch(receiveProfile(json.profile))
+      json.successMessage = 'Thank you! Your preferences have been updated'
+      dispatch(receiveProfile(json))
     })
     .catch(err => {
       profile.errorMessage = `An error occurred while updating your profile: ${err}`

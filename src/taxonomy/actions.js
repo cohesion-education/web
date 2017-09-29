@@ -18,6 +18,7 @@ export const receiveTaxonomySaveSuccess = (taxonomy) => {
 }
 
 export function fetchTaxonomyList() {
+  const apiURL = `${window.config.api_base}/api/taxonomy/recursive`
   const opts = {
     method: 'get',
     mode: 'cors'
@@ -25,7 +26,7 @@ export function fetchTaxonomyList() {
 
   return (dispatch) => {
     // console.log('fetching taxonomy list')
-    return fetch(`${window.config.api_base}/api/taxonomy`, opts)
+    return fetch(apiURL, opts)
       .then(response => response.json())
       .then(json => {
         if(json.error){
@@ -37,7 +38,7 @@ export function fetchTaxonomyList() {
         dispatch(receiveTaxonomyList(json))
       })
       .catch(error => {
-        console.log(`error fetching taxonomy list: ${error}\nuri: ${window.config.api_base}/api/profile\nopts: ${JSON.stringify(opts)}`)
+        console.log(`error fetching taxonomy list: ${error}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
         //TODO - dispatch error
         //dispatch(receiveProfileFailure(error))
       })
@@ -46,7 +47,11 @@ export function fetchTaxonomyList() {
 
 
 export function addTaxonomy(taxonomy) {
+  console.log(`adding taxonomy with parent_id: ${taxonomy.parent_id}`)
+  console.log(`taxonomy: ${JSON.stringify(taxonomy)}`)
+
   const token = getIDToken()
+  const apiURL = `${window.config.api_base}/api/taxonomy`
   const opts = {
     method: 'post',
     mode: 'cors',
@@ -58,7 +63,7 @@ export function addTaxonomy(taxonomy) {
   }
 
   return (dispatch) => {
-    return fetch(`${window.config.api_base}/api/taxonomy`, opts)
+    return fetch(apiURL, opts)
       .then(response => response.json())
       .then(json => {
         if(json){
@@ -72,7 +77,7 @@ export function addTaxonomy(taxonomy) {
         }
       })
       .catch(error => {
-        console.log(`error updating taxonomy: ${error}\nuri: ${window.config.api_base}/api/taxonomy\nopts: ${JSON.stringify(opts)}`)
+        console.log(`error updating taxonomy: ${error}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
         //TODO - dispatch error
         //dispatch(receiveProfileFailure(error))
       })

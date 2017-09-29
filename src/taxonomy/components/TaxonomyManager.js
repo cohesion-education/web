@@ -64,31 +64,27 @@ class TaxonomyManager extends React.Component {
     const { grade, subject, unit } = match.params
 
     const selectedGrade = list.find((t) => t.name === grade)
-    const taxonomy = Object.assign(new Taxonomy(), {...selectedGrade})
+    const topLevelTaxonomy = Object.assign(new Taxonomy(), {...selectedGrade})
+    let taxonomyToAdd
 
     switch(name){
       case 'grade':
-        this.props.addTaxonomy(new Taxonomy(value)).then(() => this.props.fetchTaxonomyList())
+        taxonomyToAdd = new Taxonomy(value)
         break
       case 'subject':
-        taxonomy.addChild(value)
-        this.props.updateTaxonomy(taxonomy).then(() => this.props.fetchTaxonomyList())
+        taxonomyToAdd = topLevelTaxonomy.addChild(value)
         break
       case 'unit':
-        taxonomy.findChild(subject).addChild(value)
-        this.props.updateTaxonomy(taxonomy).then(() => this.props.fetchTaxonomyList())
-
+        taxonomyToAdd = topLevelTaxonomy.findChild(subject).addChild(value)
         break
       case 'set':
-        taxonomy.findChild(subject).findChild(unit).addChild(value)
-        this.props.updateTaxonomy(taxonomy).then(() => this.props.fetchTaxonomyList())
-
+        taxonomyToAdd = topLevelTaxonomy.findChild(subject).findChild(unit).addChild(value)
         break
       default:
         console.log(`unknown value sent as input name: ${name}`)
     }
 
-
+    this.props.addTaxonomy(taxonomyToAdd).then(() => this.props.fetchTaxonomyList())
   }
 
   render(){

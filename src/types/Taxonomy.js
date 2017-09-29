@@ -1,11 +1,13 @@
 export default class Taxonomy{
   constructor(name = '', children = []) {
+    this.id = undefined 
     this.name = name
     this.children = children
+    this.parent_id = undefined
     this.validationErrors = []
     this.validationState = []
-    this.successMessage = null
-    this.errorMessage = null
+    this.successMessage = undefined
+    this.errorMessage = undefined
   }
 
   validate(){
@@ -45,6 +47,7 @@ export default class Taxonomy{
 
   addChild(name = ''){
     const child = new Taxonomy(name)
+    child.parent_id = this.id
     this.children = this.children ? this.children : []
     this.children.push(child)
     return child
