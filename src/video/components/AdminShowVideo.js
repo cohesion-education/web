@@ -2,11 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import * as actions from '../actions'
 import { PageHeader, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import VideoPlayer from './VideoPlayer'
 import Video from '../../types/Video'
-import * as actions from '../actions'
+
 
 const styles = {
   editVideoLink:{

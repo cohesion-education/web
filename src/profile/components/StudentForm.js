@@ -51,6 +51,8 @@ export default class StudentForm extends React.Component {
   render(){
     const { style, student } = this.props
 
+    console.log(`student id: ${student.id} - name: ${student.name}`)
+
     return(
       <Grid>
         <Row style={style}>
@@ -71,12 +73,12 @@ export default class StudentForm extends React.Component {
               <Col sm={10}>
                 <FormControl componentClass='select' bsSize='large' name='grade' placeholder='Grade' value={student.grade} onChange={this.handleUpdate}>
                   <option value=''>Grade</option>
-                  <option value='K'>Kindergarten</option>
-                  <option value='1'>1st</option>
-                  <option value='2'>2nd</option>
-                  <option value='3'>3rd</option>
-                  <option value='4'>4th</option>
-                  <option value='5'>5th</option>
+                  <option value='Kindergarten'>Kindergarten</option>
+                  <option value='1st'>1st</option>
+                  <option value='2nd'>2nd</option>
+                  <option value='3rd'>3rd</option>
+                  <option value='4th'>4th</option>
+                  <option value='5th'>5th</option>
                 </FormControl>
                 <FormControl.Feedback />
               </Col>

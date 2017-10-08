@@ -97,8 +97,8 @@ class StudentsForm extends React.Component {
         }
         <Form horizontal>
           { students.map((s, i) => {
-            const { name, grade, school } = s
-            const student = new Student(name, grade, school, i)
+            // instantiating new student object to ensure that validation methods, etc can be called further down the stack
+            const student = Object.assign(new Student(), {...s})
 
             return (
               <StudentForm

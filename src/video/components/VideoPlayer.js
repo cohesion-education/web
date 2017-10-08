@@ -23,7 +23,9 @@ export default class VideoPlayer extends React.Component {
   render() {
     return (
       <div data-vjs-player>
-        <video ref={ node => this.videoNode = node } className="video-js"></video>
+        <video
+          ref={ node => this.videoNode = node }
+          className="video-js vjs-big-play-centered"></video>
       </div>
     )
   }

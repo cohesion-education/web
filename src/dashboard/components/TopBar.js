@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import logo from '../../images/cohesion-logo.png'
 import defaultAvatar from '../../images/default-avatar.png'
+import Profile from '../../types/Profile'
 
 const styles = {
   nav:{
@@ -29,19 +30,16 @@ const styles = {
 
 class TopBar extends React.Component {
   static propTypes = {
-    userinfo: PropTypes.object.isRequired,
+    profile: PropTypes.object.isRequired,
     error: PropTypes.object
   }
 
   static defaultProps =  {
-    userinfo: { picture:defaultAvatar }
+    profile: new Profile()
   }
 
   render (){
-    //TODO - check for error
-    // console.log(`userinfo: ${JSON.stringify(this.props.userinfo)}`)
-    // console.log(`picture: ${JSON.stringify(this.props.userinfo.picture)}`)
-    const { picture } = this.props.userinfo
+    const { profile } = this.props
     return(
       <Navbar fluid style={styles.nav}>
         <Navbar.Header>
@@ -54,7 +52,11 @@ class TopBar extends React.Component {
           <Nav pullRight>
             <Navbar.Text>
               <Link to="/profile" className='navbar-link' style={styles.navLinks}>
-                <img src={picture} alt="user-img" className="img-circle" style={styles.profilePicture}/>
+                <img
+                  src={profile.picture ? profile.picture : defaultAvatar} 
+                  alt="user-img"
+                  className="img-circle"
+                  style={styles.profilePicture}/>
               </Link>
             </Navbar.Text>
             <Link to="/logout" className='btn btn-primary' style={styles.navLinks}>Logout</Link>
@@ -66,6 +68,11 @@ class TopBar extends React.Component {
 }
 
 export default connect(
-  (state) => ({userinfo: state.userinfo}), //mapStateToProps
-  (dispatch) => ({}) //mapDispatchToProps
+  (state) => ({
+    //mapStateToProps
+    profile: state.profile
+  }),
+  (dispatch) => ({
+    //mapDispatchToProps
+  })
 )(TopBar)

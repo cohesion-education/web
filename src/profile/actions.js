@@ -88,6 +88,14 @@ export const receiveProfileFailure = (error) => {
   }
 }
 
+function shouldFetchProfile(state) {
+  return state.profile === undefined
+}
+
+function shouldFetchStudents(state) {
+  return state.profile.students.length == 0 
+}
+
 export function fetchProfile() {
   const token = getIDToken()
   const opts = {
@@ -98,7 +106,11 @@ export function fetchProfile() {
     }
   }
 
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    if(!shouldFetchProfile(getState())){
+      return dispatch(receiveStudents(getState().profile))
+    }
+
     // console.log('fetching profile')
     return fetch(`${window.config.api_base}/api/profile`, opts)
       .then(response => response.json())
@@ -127,13 +139,17 @@ export function fetchStudents() {
     }
   }
 
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    if(!shouldFetchStudents(getState())){
+      return dispatch(receiveStudents(getState().profile))
+    }
+
     return fetch(apiURL, opts)
       .then(response => response.json())
       .then(json => {
         if(json){
-          console.log(`fetch students response: ${JSON.stringify(json.profile)}`)
-          const profile = Object.assign(new Profile(), {...json.profile})
+          console.log(`fetch students response: ${JSON.stringify(json)}`)
+          const profile = Object.assign(new Profile(), {...json})
           // console.log(`fetch students response: ${JSON.stringify(profile)}`)
           dispatch(receiveStudents(profile))
         }
