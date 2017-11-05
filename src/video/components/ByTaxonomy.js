@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Row, Col, PageHeader, Thumbnail } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import VideoPlayer from './VideoPlayer'
 
 const styles = {
   containerFluid:{
@@ -98,86 +97,6 @@ export default class ByTaxonomy extends React.Component {
               Unit > Set
             </Col>
           </Row>
-          <Row style={styles.videoRow}>
-            <Col sm={3} style={styles.videoCell}>
-              <Link to="">
-                <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                 <h5>Video Title</h5>
-               </Thumbnail>
-             </Link>
-            </Col>
-            <Col sm={3} style={styles.videoCell}>
-              <Link to="">
-                <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                 <h5>Video Title</h5>
-               </Thumbnail>
-             </Link>
-            </Col>
-            <Col sm={3} style={styles.videoCell}>
-              <Link to="">
-                <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                 <h5>Video Title</h5>
-               </Thumbnail>
-             </Link>
-            </Col>
-            <Col sm={3} style={styles.videoCell}>
-              <Link to="">
-                <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                 <h5>Video Title</h5>
-               </Thumbnail>
-             </Link>
-            </Col>
-            <Col sm={3} style={styles.videoCell}>
-              <Link to="">
-                <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                 <h5>Video Title</h5>
-               </Thumbnail>
-             </Link>
-            </Col>
-            <Col sm={3} style={styles.videoCell}>
-              <Link to="">
-                <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                 <h5>Video Title</h5>
-               </Thumbnail>
-             </Link>
-            </Col>
-            <Col sm={3} style={styles.videoCell}>
-              <Link to="">
-                <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                 <h5>Video Title</h5>
-               </Thumbnail>
-             </Link>
-            </Col>
-            <Col sm={3} style={styles.videoCell}>
-              <Link to="">
-                <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                 <h5>Video Title</h5>
-               </Thumbnail>
-             </Link>
-            </Col>
-            <Col sm={3} style={styles.videoCell}>
-              <Link to="">
-                <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                 <h5>Video Title</h5>
-               </Thumbnail>
-             </Link>
-            </Col>
-            <Col sm={3} style={styles.videoCell}>
-              <Link to="">
-                <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                 <h5>Video Title</h5>
-               </Thumbnail>
-             </Link>
-            </Col>
-            <Col sm={3} style={styles.videoCell}>
-              <Link to="">
-                <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                 <h5>Video Title</h5>
-               </Thumbnail>
-             </Link>
-            </Col>
-          </Row>
-
           <Row style={styles.videoRow}>
             <Col style={styles.videoGroupTitle}>
               Unit > Set

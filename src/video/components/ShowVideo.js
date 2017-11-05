@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Row, Col, ListGroup, ListGroupItem, PageHeader, Table, Image } from 'react-bootstrap'
+import { Grid, Row, Col, ListGroup, ListGroupItem, PageHeader, Image } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import VideoPlayer from './VideoPlayer'
 import Video from '../../types/Video'

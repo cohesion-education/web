@@ -6,7 +6,7 @@ import StudentForm from './StudentForm'
 import { Alert, Button, Col, Form, FormGroup, PageHeader } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { fetchStudents, handleStudentAdd, handleStudentUpdate, handleStudentRemove, saveStudents } from '../actions'
+import * as actions from '../actions'
 
 const styles = {
   oddStudentFormGroup:{
@@ -32,7 +32,7 @@ const styles = {
   }
 }
 
-class StudentsForm extends React.Component {
+export class StudentsForm extends React.Component {
   constructor(props) {
     super(props)
     this.receiveStudentUpdate = this.receiveStudentUpdate.bind(this)
@@ -133,10 +133,10 @@ export default connect(
     profile: state.profile
   }),
   (dispatch) => ({ //mapDispatchToProps
-    fetchStudents:  bindActionCreators(fetchStudents, dispatch),
-    handleStudentAdd: bindActionCreators(handleStudentAdd, dispatch),
-    handleStudentUpdate: bindActionCreators(handleStudentUpdate, dispatch),
-    handleStudentRemove: bindActionCreators(handleStudentRemove, dispatch),
-    handleSave: bindActionCreators(saveStudents, dispatch),
+    fetchStudents:  bindActionCreators(actions.fetchStudents, dispatch),
+    handleStudentAdd: bindActionCreators(actions.handleStudentAdd, dispatch),
+    handleStudentUpdate: bindActionCreators(actions.handleStudentUpdate, dispatch),
+    handleStudentRemove: bindActionCreators(actions.handleStudentRemove, dispatch),
+    handleSave: bindActionCreators(actions.saveStudents, dispatch),
   })
 )(StudentsForm)

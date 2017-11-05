@@ -43,6 +43,10 @@ export default class VideoForm extends React.Component {
     flattenedTaxonomy: [],
   }
 
+  componentWillUnmount(){
+    
+  }
+
   videoWithoutValidationOrMessages(){
     let { validationErrors, validationState, errorMessage, successMessage, ...remainingProps } = this.props.video
     let video = Object.assign(new Video(), {...remainingProps})

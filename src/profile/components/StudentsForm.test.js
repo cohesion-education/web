@@ -1,40 +1,32 @@
 import { mount } from 'enzyme'
-import { Provider } from 'react-redux'
-import StudentsForm from './StudentsForm'
+import { StudentsForm } from './StudentsForm'
 import Profile from '../../types/Profile'
 import Student from '../../types/Student'
-import { fetchProfile, handleStudentAdd, handleStudentUpdate, handleStudentRemove, saveProfile } from '../actions'
 
-jest.mock('../actions', () => ({
-  fetchProfile: jest.fn(),
-  handleStudentAdd: jest.fn(),
-  handleStudentUpdate: jest.fn(),
-  handleStudentRemove: jest.fn(),
-  saveProfile: jest.fn()
-}))
+const _fetchStudents = jest.fn()
+const _handleStudentAdd = jest.fn()
+const _handleStudentUpdate = jest.fn()
+const _handleStudentRemove = jest.fn()
+const _handleSave = jest.fn()
+
 
 describe("<StudentsForm /> Container", () => {
+  const _profile = new Profile()
+  _profile.addStudent('Billy', '3', 'Treasure Island')
+  _profile.addStudent('Sally', '1', 'Treasure Island')
 
   let wrapper
-  let _store = {
-    dispatch: jest.fn(),
-    subscribe: jest.fn(),
-    getState: jest.fn(() => {
-      const profile = new Profile()
-      profile.addStudent('Billy', '3', 'Treasure Island')
-      profile.addStudent('Sally', '1', 'Treasure Island')
-      return {
-        profile: profile
-      }
-    })
-  }
 
   beforeAll(() => wrapper = mount(
-    <Provider store={_store}>
-      <StudentsForm />
-    </Provider>
+    <StudentsForm
+      profile={_profile}
+      fetchStudents={_fetchStudents}
+      handleStudentUpdate={_handleStudentUpdate}
+      handleStudentAdd={_handleStudentAdd}
+      handleStudentRemove={_handleStudentRemove}
+      handleSave={_handleSave}
+    />
   ))
-
   afterEach(() => jest.resetAllMocks())
 
   it("starts off with empty state", () => {
@@ -45,8 +37,8 @@ describe("<StudentsForm /> Container", () => {
   })
 
   it("clicking add causes handleStudentAdd to be invoked", () => {
-    expect(handleStudentAdd.mock.calls.length).toBe(0)
+    expect(_handleStudentAdd.mock.calls.length).toBe(0)
     wrapper.find('#add').simulate('click')
-    expect(handleStudentAdd.mock.calls.length).toBe(1)
+    expect(_handleStudentAdd.mock.calls.length).toBe(1)
   })
 })

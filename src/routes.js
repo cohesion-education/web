@@ -19,6 +19,7 @@ import * as videoPages from './video/components/ComposedDashboards'
 import* as taxonomyPages from './taxonomy/components/ComposedDashboards'
 import { homepage } from './homepage/data/'
 
+
 const logPageView = () => {
   ReactGA.set({ page: window.location.pathname + window.location.search })
   ReactGA.pageview(window.location.pathname + window.location.search)
@@ -47,6 +48,7 @@ export default () => (
         <PrivateRoute path='/logout' component={authContainers.LogoutPage} />
         <PrivateRoute path='/dashboard' component={profilePages.EarlyRegistrationPage} />
         <PrivateRoute path='/profile/students' component={profilePages.StudentsFormPage} />
+        <Route path='/profile/payment' component={profilePages.PaymentFormPage} />
         <PrivateRoute path='/profile' component={profilePages.ProfileFormPage} />
         <PrivateRoute path='/videos/:grade/:subject/:unit/:set' component={videoPages.BySetPage} />
         <PrivateRoute path='/videos/:grade/:subject/:unit' component={videoPages.ByUnitPage} />

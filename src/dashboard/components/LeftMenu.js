@@ -35,12 +35,8 @@ class LeftMenu extends React.Component {
               <ListGroup key={i}>
                 <ListGroupItem>
                   <Link to={`/videos/${student.grade}`}>
-                    {student.name}'s {student.grade} {student.grade !== 'Kindergarten' ? 'Grade' : ''} Videos
+                    {student.name}'s Videos
                   </Link>
-                  <ListGroup>
-                    <ListGroupItem><Link to={`/videos/${student.grade}/Math`}>Math</Link></ListGroupItem>
-                    <ListGroupItem><Link to={`/videos/${student.grade}/ELA`}>ELA</Link></ListGroupItem>
-                  </ListGroup>
                 </ListGroupItem>
               </ListGroup>
             )

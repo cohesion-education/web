@@ -3,6 +3,7 @@ import Dashboard from '../../dashboard/components/Dashboard'
 import EarlyRegistration from './EarlyRegistration'
 import ProfileForm from './ProfileForm'
 import StudentsForm from './StudentsForm'
+import PaymentForm from './PaymentForm'
 
 export const EarlyRegistrationPage = () =>
   <Dashboard>
@@ -17,4 +18,9 @@ export const ProfileFormPage = () =>
 export const StudentsFormPage = () =>
   <Dashboard>
     <StudentsForm />
+  </Dashboard>
+
+export const PaymentFormPage = () =>
+  <Dashboard>
+    <PaymentForm />
   </Dashboard>

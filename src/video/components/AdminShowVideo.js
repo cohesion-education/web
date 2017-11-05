@@ -46,6 +46,7 @@ class AdminShowVideo extends React.Component {
     const videoJsOptions = {
       autoplay: false,
       controls: true,
+      fluid: true,
       sources: [{
         src: video.signed_url,
         type: 'video/mp4'

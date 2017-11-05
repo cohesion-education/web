@@ -6,8 +6,8 @@ import Student from '../types/Student'
 import * as actions from './actions'
 import * as constants from './constants'
 
-window.config={
-  api_base:'http://testing'
+window.config = {
+  api_base: 'http://localhost:3000'
 }
 
 localStorage.setItem('id_token', 'test-token')
@@ -53,8 +53,8 @@ describe("saveProfile action", () => {
     sentProfile.errorMessage = previousErrorMessage
     sentProfile.validationErrors = previousValidationErrors
 
-    nock(window.config.api_base)
-      .post('/api/profile')
+    nock('http://localhost:3000')
+      .put('/api/profile')
       .reply(200, { body: { profile: sentProfile } })
 
     const store = mockStore({ profile: sentProfile })
