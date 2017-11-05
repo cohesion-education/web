@@ -48,14 +48,18 @@ export default class VideoList extends React.Component {
 
   render(){
     //TODO - add pagination
-
     const { videos } = this.props
 
     return(
       <div>
         <PageHeader>
           Video Management
-          <Link to="/admin/video/add" style={styles.addVideoLink} className='btn btn-success'>Add Video</Link>
+          <Link
+            to="/admin/video/add"
+            style={styles.addVideoLink}
+            className='btn btn-success'>
+            Add Video
+          </Link>
         </PageHeader>
 
         <Table responsive striped condensed>
@@ -77,13 +81,21 @@ export default class VideoList extends React.Component {
             { videos.map((video, i) => {
               return (
                 <tr key={i}>
-                  <td><Link to={`/admin/video/edit/${video.id}`}>Edit</Link></td>
-                  <td><Link to={`${video.id}`} id={video.id} onClick={this.delete}>Delete</Link></td>
-                  <td><Link to={`/admin/video/${video.id}`}>{video.id}</Link></td>
-                  <td>{video.title}</td>
+                  <td>
+                    <Link to={`/admin/video/edit/${video.id}`}>Edit</Link>
+                  </td>
+                  <td>
+                    <Link to={`${video.id}`}
+                      id={video.id}
+                      onClick={this.delete}>Delete</Link>
+                  </td>
+                  <td>
+                    <Link to={`/admin/video/${video.id}`}>{video.id}</Link>
+                  </td>
+                  <td>{video.name}</td>
                   <td>{video.taxonomy_id}</td>
                   <td>{video.created.toString()}</td>
-                  <td>{video.created_by}</td>
+                  <td>{video.created_by.name}</td>
                   <td>{video.bucket}</td>
                   <td>{video.object_name}</td>
                   <td>{video.file_name}</td>

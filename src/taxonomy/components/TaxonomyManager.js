@@ -17,7 +17,7 @@ const styles = {
   },
 }
 
-class TaxonomyManager extends React.Component {
+export class TaxonomyManager extends React.Component {
   constructor(props) {
     super(props)
     this.getChildren = this.getChildren.bind(this)
