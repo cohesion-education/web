@@ -40,6 +40,9 @@ export default class ByTaxonomy extends React.Component {
     const { videos, match } = this.props
     const { grade, subject, unit, set } = match.params
 
+    //TODO - display list of videos
+    console.log(`videos: ${videos}`)
+
     let title = `${grade} ${grade !== 'Kindergarten' ? 'Grade' : ''}`
     if(subject){
       title += ` > ${subject}`
