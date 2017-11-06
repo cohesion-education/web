@@ -93,7 +93,7 @@ function shouldFetchProfile(state) {
 }
 
 function shouldFetchStudents(state) {
-  return state.profile.students.length === 0 
+  return state.profile.students === null || state.profile.students.length === 0 
 }
 
 export function fetchProfile() {

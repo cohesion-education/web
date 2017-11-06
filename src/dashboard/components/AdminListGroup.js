@@ -2,7 +2,7 @@ import React from 'react'
 import { ListGroup, ListGroupItem } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
-export default class LeftMenu extends React.Component {
+export default class AdminListGroup extends React.Component {
   render (){
     return(
       <ListGroup>

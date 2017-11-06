@@ -101,8 +101,7 @@ export const getAuthResult = () => {
 }
 
 
-export const receiveAuthnSuccess = (authResult, from) => {
-  history.replace(from ? from : '/dashboard')
+export const receiveAuthnSuccess = (authResult) => {
   return {
     type: LOGIN_SUCCESS,
     authResult: authResult,
@@ -163,12 +162,23 @@ export function authnHandler(from) {
         localStorage.setItem('expires_at', expiresAt)
         localStorage.setItem('expires_in', authResult.expiresIn)
 
-        dispatch(saveProfile(authResult.idTokenPayload))
-        dispatch(receiveAuthnSuccess(currentUser, from))
+        dispatch(getOrCreateProfile(authResult.idTokenPayload)).then((profile) => {
+          if(profile.error){
+            alert(profile.error)
+            //TODO - direct user to error page?
+            return
+          }
 
-        webAuth.client.userInfo(authResult.accessToken, (err, userinfo) => {
-          console.log(`received userinfo: ${userinfo}`)
-          dispatch(receiveUserInfo(userinfo, err))
+          dispatch(receiveAuthnSuccess(currentUser))
+
+          //TODO - if the user is new, redirect them to user onboarding section
+          history.replace(from ? from : '/dashboard')
+
+          //TODO - what does user info have that we didn't already have before?
+          webAuth.client.userInfo(authResult.accessToken, (err, userinfo) => {
+            console.log(`received userinfo: ${userinfo}`)
+            dispatch(receiveUserInfo(userinfo, err))
+          })
         })
       })
 
@@ -180,9 +190,9 @@ export function authnHandler(from) {
   }
 }
 
-export function saveProfile(profile) {
+export function getOrCreateProfile(profile) {
   const token = getIDToken()
-  const apiURL = `${window.config.api_base}/api/profile`
+  const apiURL = `${window.config.api_base}/api/profile/get_or_create`
   const opts = {
     method: 'post',
     mode: 'cors',
@@ -194,14 +204,17 @@ export function saveProfile(profile) {
   }
 
   return (dispatch) => {
-    console.log(`saving profile ${JSON.stringify(profile)}`)
+    console.log(`get_or_create profile ${JSON.stringify(profile)}`)
     return fetch(apiURL, opts)
       .then(response => response.json())
       .then(json => {
-        console.log(`save profile result: ${JSON.stringify(json)}`)
+        console.log(`get_or_create profile result: ${JSON.stringify(json)}`)
+        return json
       })
       .catch(error => {
-        console.log(`error saving profile: ${error}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
+        console.log(`error get_or_create profile: ${error}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
+        profile.error = error
+        return profile
       })
   }
 }

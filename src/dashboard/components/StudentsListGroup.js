@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import * as profileActions from '../../profile/actions'
 import Profile from '../../types/Profile'
 
-class LeftMenu extends React.Component {
+export class StudentsListGroup extends React.Component {
 
   static propTypes = {
     profile: PropTypes.object.isRequired,
@@ -24,12 +24,9 @@ class LeftMenu extends React.Component {
 
   render (){
     const { profile } = this.props
+    console.log(profile)
     return(
       <ListGroup>
-        <ListGroupItem><Link to="/dashboard">Welcome</Link></ListGroupItem>
-        <ListGroupItem><Link to="/profile">Profile</Link></ListGroupItem>
-        <ListGroupItem><Link to="/profile/students">Students</Link></ListGroupItem>
-
         { profile.students && profile.students.map((student, i) => {
             return (!student) ? ( null ) : (
               <ListGroup key={i}>
@@ -56,4 +53,4 @@ export default connect(
     //mapDispatchToProps
     fetchStudents: bindActionCreators(profileActions.fetchStudents, dispatch),
   })
-)(LeftMenu)
+)(StudentsListGroup)

@@ -47,6 +47,7 @@ export default () => (
 
         <PrivateRoute path='/logout' component={authContainers.LogoutPage} />
         <PrivateRoute path='/dashboard' component={profilePages.EarlyRegistrationPage} />
+        <PrivateRoute path='/onboarding' component={profilePages.OnboardingPage} />
         <PrivateRoute path='/profile/students' component={profilePages.StudentsFormPage} />
         <Route path='/profile/payment' component={profilePages.PaymentFormPage} />
         <PrivateRoute path='/profile' component={profilePages.ProfileFormPage} />
