@@ -2,13 +2,13 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
-import { Alert, PageHeader } from 'react-bootstrap'
-import { fetchProfileIfNeeded, saveProfile, saveStudents } from '../actions'
+import { PageHeader } from 'react-bootstrap'
+import { fetchProfileIfNeeded, saveProfile, saveStudents, savePaymentDetails } from '../actions'
 import Profile from '../../types/Profile'
 import { ProfileForm } from './ProfileForm'
 import { StudentsForm } from './StudentsForm'
 import PaymentForm from './PaymentForm'
-import styles from './onboarding.css'
+import './onboarding.css'
 
 const states = {
   WELCOME: 0,
@@ -42,6 +42,7 @@ export class Onboarding extends React.Component {
     fetchProfileIfNeeded: PropTypes.func.isRequired,
     saveProfile: PropTypes.func.isRequired,
     saveStudents: PropTypes.func.isRequired,
+    savePaymentDetails: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -68,9 +69,20 @@ export class Onboarding extends React.Component {
     })
   }
 
-  handleSavePaymentDetails(paymentDetails){
-    console.log(`payment details: ${JSON.stringify(paymentDetails)}`)
-    // TODO Send the token to the server
+  handleSavePaymentDetails(payment_details){
+    console.log(`payment details: ${JSON.stringify(payment_details)}`)
+    this.props.savePaymentDetails(payment_details).then((result) => {
+      if(result.errorMessage){
+        alert(`Failed to save your payment details: ${result.errorMessage}`)
+        return
+      }
+
+      alert('Your payment details have been saved')
+
+      //TODO - mark 'onboarded' as true for this user
+
+      //TODO - after marking user as onboarded, direct the user to the students video dashboard
+    })
   }
 
   render(){
@@ -146,5 +158,6 @@ export default connect(
     fetchProfileIfNeeded: bindActionCreators(fetchProfileIfNeeded, dispatch),
     saveProfile: bindActionCreators(saveProfile, dispatch),
     saveStudents: bindActionCreators(saveStudents, dispatch),
+    savePaymentDetails: bindActionCreators(savePaymentDetails, dispatch)
   })
 )(Onboarding)

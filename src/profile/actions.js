@@ -288,3 +288,40 @@ export const saveStudents = (students) => {
     })
   }
 }
+
+export const savePaymentDetails = (payment_details) => {
+  return (dispatch) => {
+    const apiURL = `${window.config.api_base}/api/profile/paymentdetails`
+    const token = getIDToken()
+    const opts = {
+      method: 'post',
+      mode: 'cors',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payment_details)
+    }
+
+    return fetch(apiURL, opts)
+    .then(response => response.json())
+    .then(json => {
+      if(json.error){
+        json.errorMessage = `Failed to save payment details: ${json.error}`
+        //TODO - anything need to be dispatched?
+        return json
+      }
+
+      json.successMessage = 'Successfully saved payment details'
+
+      //TODO - anything need to be dispatched?
+      return json
+    })
+    .catch(err => {
+      payment_details.errorMessage = `An error occurred while trying to save your payment details: ${err}`
+      console.log(`error:${payment_details.errorMessage}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
+      //TODO - anything need to be dispatched?
+      return payment_details
+    })
+  }
+}
