@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import { Alert, PageHeader } from 'react-bootstrap'
-import { fetchProfile } from '../actions'
+import { fetchProfileIfNeeded, saveProfile, saveStudents } from '../actions'
 import Profile from '../../types/Profile'
-import ProfileForm from './ProfileForm'
-import StudentsForm from './StudentsForm'
+import { ProfileForm } from './ProfileForm'
+import { StudentsForm } from './StudentsForm'
 import PaymentForm from './PaymentForm'
 import styles from './onboarding.css'
 
@@ -20,20 +20,28 @@ const states = {
 export class Onboarding extends React.Component {
   constructor(props) {
     super(props)
+
     this.transition = this.transition.bind(this)
     this.renderCurrentState = this.renderCurrentState.bind(this)
     this.renderWelcome = this.renderWelcome.bind(this)
     this.renderStudentsForm = this.renderStudentsForm.bind(this)
     this.renderPaymentForm = this.renderPaymentForm.bind(this)
 
+    this.handleSaveProfile = this.handleSaveProfile.bind(this)
+    this.handleSaveStudents = this.handleSaveStudents.bind(this)
+    this.handleSavePaymentDetails = this.handleSavePaymentDetails.bind(this)
+
     this.state = {
-      current: states.WELCOME
+      current: states.WELCOME,
+      profile: props.profile,
     }
   }
 
   static propTypes = {
     profile: PropTypes.object.isRequired,
-    fetchProfile: PropTypes.func.isRequired,
+    fetchProfileIfNeeded: PropTypes.func.isRequired,
+    saveProfile: PropTypes.func.isRequired,
+    saveStudents: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -41,23 +49,39 @@ export class Onboarding extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchProfile()
+    this.props.fetchProfileIfNeeded()
   }
 
   transition(to) {
     this.setState({current: to})
   }
 
+  handleSaveProfile(profile){
+    this.props.saveProfile(profile).then(() => {
+      this.transition(states.STUDENTS)
+    })
+  }
+
+  handleSaveStudents(profile){
+    this.props.saveStudents(profile).then(() => {
+      this.transition(states.PAYMENT)
+    })
+  }
+
+  handleSavePaymentDetails(paymentDetails){
+    console.log(`payment details: ${JSON.stringify(paymentDetails)}`)
+    // TODO Send the token to the server
+  }
+
   render(){
-    const { profile } = this.props
     return (
       <div>
         <PageHeader>Welcome to Cohesion Education</PageHeader>
         <div className='onboarding-container'>
           <ul className='onboarding-progressbar'>
-            <li className={this.state.current === states.WELCOME ? 'active' : ''}>Welcome</li>
-            <li className={this.state.current === states.STUDENTS ? 'active' : ''}>Students</li>
-            <li className={this.state.current === states.PAYMENT ? 'active' : ''}>Billing</li>
+            <li className={this.state.current >= states.WELCOME ? 'active' : ''}>Welcome</li>
+            <li className={this.state.current >= states.STUDENTS ? 'active' : ''}>Students</li>
+            <li className={this.state.current >= states.PAYMENT ? 'active' : ''}>Billing</li>
           </ul>
         </div>
         <p>
@@ -84,27 +108,20 @@ export class Onboarding extends React.Component {
 
   renderWelcome(){
     return(
-      <div>
-        <ProfileForm />
-
-        <button onClick={() => this.transition(states.STUDENTS)}>
-          Next
-        </button>
-      </div>
+      <ProfileForm
+        profile={this.props.profile}
+        saveProfile={this.handleSaveProfile}
+      />
     )
   }
 
   renderStudentsForm(){
     return(
       <div>
-        <StudentsForm />
-
-        <button onClick={() => this.transition(states.WELCOME)}>
-          Back
-        </button>
-        <button onClick={() => this.transition(states.PAYMENT)}>
-          Next
-        </button>
+        <StudentsForm
+          profile={this.props.profile.students}
+          handleSave={this.handleSaveStudents}
+        />
       </div>
     )
   }
@@ -112,11 +129,10 @@ export class Onboarding extends React.Component {
   renderPaymentForm(){
     return(
       <div>
-        <PaymentForm />
-
-        <button onClick={() => this.transition(states.STUDENTS)}>
-          Back
-        </button>
+        <PaymentForm
+          profile={this.props.profile}
+          savePaymentDetails={this.handleSavePaymentDetails}
+        />
       </div>
     )
   }
@@ -127,6 +143,8 @@ export default connect(
     profile:state.profile
   }),
   (dispatch) => ({ //mapDispatchToProps
-    fetchProfile: bindActionCreators(fetchProfile, dispatch),
+    fetchProfileIfNeeded: bindActionCreators(fetchProfileIfNeeded, dispatch),
+    saveProfile: bindActionCreators(saveProfile, dispatch),
+    saveStudents: bindActionCreators(saveStudents, dispatch),
   })
 )(Onboarding)

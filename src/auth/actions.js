@@ -1,6 +1,7 @@
 import auth0 from 'auth0-js'
 import history from '../history'
 import { LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, RECEIVE_USER_INFO } from './constants'
+import * as profileActions from '../profile/actions'
 
 const config = window.config ? window.config : {
   auth0_domain:'cohesioned.auth0.com',
@@ -165,13 +166,19 @@ export function authnHandler(from) {
         dispatch(getOrCreateProfile(authResult.idTokenPayload)).then((profile) => {
           if(profile.error){
             alert(profile.error)
+            console.log(`failed to get or create profile: ${profile.error}`)
             //TODO - direct user to error page?
             return
           }
 
+          dispatch(profileActions.receiveProfile(profile))
           dispatch(receiveAuthnSuccess(currentUser))
 
-          //TODO - if the user is new, redirect them to user onboarding section
+          if(!profile.onboarded){
+            history.replace('/onboarding')
+            return
+          }
+
           history.replace(from ? from : '/dashboard')
 
           //TODO - what does user info have that we didn't already have before?

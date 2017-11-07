@@ -51,8 +51,6 @@ export default class StudentForm extends React.Component {
   render(){
     const { style, student } = this.props
 
-    console.log(`student id: ${student.id} - name: ${student.name}`)
-
     return(
       <Grid>
         <Row style={style}>

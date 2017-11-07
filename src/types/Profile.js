@@ -7,11 +7,18 @@ export default class Profile{
     this.email = email
     this.state = state
     this.county = county
+
     this.preferences = {
       newsletter: false,
       beta_program: false,
     }
+
     this.students = students
+
+    this.onboarded = false
+    this.trial_start = null
+    this.billing_status = null
+
     this.validationErrors = []
     this.validationState = []
     this.successMessage = null

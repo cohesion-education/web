@@ -1,8 +1,25 @@
 import fetch from 'isomorphic-fetch'
 import Profile from '../types/Profile'
-import Student from '../types/Student'
 import { getIDToken } from '../auth/actions'
 import * as constants from './constants'
+
+export const invalidateProfile = () => {
+  return {
+    type: constants.INVALIDATE_PROFILE,
+  }
+}
+
+export const requestProfile = () => {
+  return {
+    type: constants.REQUEST_PROFILE,
+  }
+}
+
+export const requestStudents = () => {
+  return {
+    type: constants.REQUEST_STUDENTS,
+  }
+}
 
 export const receiveProfile = (profile) => {
   return {
@@ -12,16 +29,22 @@ export const receiveProfile = (profile) => {
   }
 }
 
-export const receiveStudents = (profile) => {
+export const receiveProfileFailure = (error) => {
   return {
-    type: constants.RECEIVE_STUDENTS,
-    profile: Object.assign(new Profile(), {...profile}),
+    type: constants.RECEIVE_PROFILE_FAILURE,
+    error: error,
     receivedAt: Date.now()
   }
 }
 
+export const receiveStudents = (students) => {
+  return {
+    type: constants.RECEIVE_STUDENTS,
+    students: students
+  }
+}
+
 export const handleProfileUpdate = (profile, key, val) => {
-  // console.log(`updating profile with ${key}=${val}`)
   let { validationErrors, validationState, ...remainingProps } = profile
   let updated = Object.assign(new Profile(), {...remainingProps})
 
@@ -33,7 +56,6 @@ export const handleProfileUpdate = (profile, key, val) => {
   }
 
   updated.validate()
-  // console.log(`updated profile: ${JSON.stringify(updated)}`)
 
   return receiveProfile(updated)
 }
@@ -47,53 +69,56 @@ export const handlePreferencesUpdate = (profile, key, val) => {
   return receiveProfile(updated)
 }
 
-export const handleStudentAdd = (profile) => {
-  const { profileValidationErrors, profileValidationState, students, ...remainingProfileProps } = profile
-  const nextStudents = (students !== null ? students.slice() : [])
-  nextStudents.push(new Student('', '', '', nextStudents.length))
-
-  const nextProfile = Object.assign(new Profile(), {...remainingProfileProps}, {students:nextStudents})
-  return receiveProfile(nextProfile)
-}
-
-export const handleStudentUpdate = (profile, existingStudent, key, val) => {
-  let { profileValidationErrors, profileValidationState, students, ...remainingProfileProps } = profile
-  let nextStudents = students.map(student => {
-    if (student.id === existingStudent.id) {
-      let { studentValidationErrors, studentValidationState, ...remainingStudentProps } = student
-      let updatedStudent = Object.assign(new Student(), {...remainingStudentProps})
-      updatedStudent[key]=val
-      return updatedStudent
-    } else {
-      return student
-    }
-  })
-
-  let nextProfile = Object.assign(new Profile(), {...remainingProfileProps}, {students:nextStudents})
-  return receiveProfile(nextProfile)
-}
-
-export const handleStudentRemove = (profile, studentToRemove) => {
-  let { profileValidationErrors, profileValidationState, students, ...remainingProfileProps } = profile
-  let nextStudents = students.filter(student => student.name !== studentToRemove.name)
-  let nextProfile = Object.assign(new Profile(), {...remainingProfileProps}, {students:nextStudents})
-  return receiveProfile(nextProfile)
-}
-
-export const receiveProfileFailure = (error) => {
-  return {
-    type: constants.RECEIVE_PROFILE_FAILURE,
-    error: error,
-    receivedAt: Date.now()
-  }
-}
 
 function shouldFetchProfile(state) {
-  return state.profile === undefined
+  const profile = state.profile
+
+  if(!profile){
+    return true
+  }else if(profile.isFetching){
+    return false
+  }else if(!profile.id || profile.id === -1){
+    return true
+  }
+
+  return profile.didInvalidate
 }
 
 function shouldFetchStudents(state) {
-  return state.profile.students === null || state.profile.students.length === 0 
+  if(shouldFetchProfile(state)){
+    return true
+  }
+
+  const students = state.profile.students
+  if(!students){
+    return true
+  }else if(state.profile.isFetchingStudents){
+    return false
+  }else if(students.length === 0){
+    return true
+  }
+
+  return false
+}
+
+export function fetchProfileIfNeeded(){
+  return (dispatch, getState) => {
+    if(shouldFetchProfile(getState())){
+      return dispatch(fetchProfile())
+    }
+
+    return dispatch(receiveProfile(getState().profile))
+  }
+}
+
+export function fetchStudentsIfNeeded(){
+  return (dispatch, getState) => {
+    if(shouldFetchStudents(getState())){
+      return dispatch(fetchStudents())
+    }
+
+    return dispatch(receiveStudents(getState().profile.students))
+  }
 }
 
 export function fetchProfile() {
@@ -106,11 +131,8 @@ export function fetchProfile() {
     }
   }
 
-  return (dispatch, getState) => {
-    if(!shouldFetchProfile(getState())){
-      return dispatch(receiveStudents(getState().profile))
-    }
-
+  return (dispatch) => {
+    dispatch(requestProfile())
     // console.log('fetching profile')
     return fetch(`${window.config.api_base}/api/profile`, opts)
       .then(response => response.json())
@@ -139,11 +161,8 @@ export function fetchStudents() {
     }
   }
 
-  return (dispatch, getState) => {
-    if(!shouldFetchStudents(getState())){
-      return dispatch(receiveStudents(getState().profile))
-    }
-
+  return (dispatch) => {
+    dispatch(requestStudents())
     return fetch(apiURL, opts)
       .then(response => response.json())
       .then(json => {
@@ -151,7 +170,7 @@ export function fetchStudents() {
           console.log(`fetch students response: ${JSON.stringify(json)}`)
           const profile = Object.assign(new Profile(), {...json})
           // console.log(`fetch students response: ${JSON.stringify(profile)}`)
-          dispatch(receiveStudents(profile))
+          dispatch(receiveStudents(profile.students))
         }
       })
       .catch(error => {
@@ -190,6 +209,7 @@ export const saveProfile = (p) => {
       }
 
       json.successMessage = 'Your profile has been updated'
+      dispatch(invalidateProfile())
       return dispatch(receiveProfile(json))
     })
     .catch(err => {
@@ -224,6 +244,7 @@ export const savePreferences = (profile) => {
       }
 
       json.successMessage = 'Thank you! Your preferences have been updated'
+      dispatch(invalidateProfile())
       dispatch(receiveProfile(json))
     })
     .catch(err => {
@@ -234,10 +255,8 @@ export const savePreferences = (profile) => {
   }
 }
 
-export const saveStudents = (profile) => {
+export const saveStudents = (students) => {
   return (dispatch) => {
-    const { students } = profile
-
     const token = getIDToken()
     const apiURL = `${window.config.api_base}/api/profile/students`
     const opts = {
@@ -255,16 +274,17 @@ export const saveStudents = (profile) => {
     .then(json => {
       if(json.error){
         json.errorMessage = `Failed to save students: ${json.error}`
-        return dispatch(receiveProfile(json))
+        return dispatch(receiveStudents(json))
       }
 
       json.successMessage = 'Your students have been saved'
-      return dispatch(receiveProfile(json))
+      dispatch(invalidateProfile())
+      return dispatch(receiveStudents(json))
     })
     .catch(err => {
-      profile.errorMessage = `An error occurred while trying to save your student list: ${err}`
-      console.log(`error:${profile.errorMessage}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
-      return dispatch(receiveProfile(profile))
+      students.errorMessage = `An error occurred while trying to save your student list: ${err}`
+      console.log(`error:${students.errorMessage}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
+      return dispatch(receiveStudents(students))
     })
   }
 }

@@ -2,6 +2,8 @@ import React from 'react'
 // import { connect } from 'react-redux'
 // import { bindActionCreators } from 'redux'
 import { Alert, Button, Col, ControlLabel, Form, FormControl, FormGroup, PageHeader } from 'react-bootstrap'
+import PropTypes from 'prop-types'
+import Profile from '../../types/Profile'
 
 const styles = {
   formField:{
@@ -27,18 +29,45 @@ export default class PaymentForm extends React.Component {
     super(props)
 
     this.state = {
-      'name': '',
-      'address_line1': '',
-      'address_line2': '',
-      'address_city': '',
-      'address_state': '',
-      'address_zip': '',
-      'address_country': 'US',
-      'currency': 'usd'
+      name: props.profile.name,
+      address_line1: '',
+      address_line2: '',
+      address_city: '',
+      address_state: props.profile.state,
+      address_zip: '',
+      address_country: 'US',
+      currency: 'usd',
+      card_errors: '',
+      profile: props.profile,
     }
 
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.setCardError = this.setCardError.bind(this)
+  }
+
+  static propTypes = {
+    profile: PropTypes.object.isRequired,
+    savePaymentDetails: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    profile: new Profile()
+  }
+
+  componentWillReceiveProps(nextProps){
+    this.setState({
+      name: nextProps.profile.name,
+      address_line1: '',
+      address_line2: '',
+      address_city: '',
+      address_state: nextProps.profile.state,
+      address_zip: '',
+      address_country: 'US',
+      currency: 'usd',
+      card_errors: '',
+      profile: nextProps.profile,
+    })
   }
 
   componentDidMount() {
@@ -50,18 +79,17 @@ export default class PaymentForm extends React.Component {
     postalCode.mount('#card-postal-code-element')
 
     const creditCardElementOnChangeListener = ({error}) => {
-      const displayError = document.getElementById('card-errors')
-        if (error) {
-          displayError.textContent = error.message
-        } else {
-          displayError.textContent = ''
-        }
+      this.setCardError(error ? error.message : '')
     }
 
     cardNumber.addEventListener('change', creditCardElementOnChangeListener)
     cardExpiry.addEventListener('change', creditCardElementOnChangeListener)
     cardCvc.addEventListener('change', creditCardElementOnChangeListener)
     postalCode.addEventListener('change', creditCardElementOnChangeListener)
+  }
+
+  setCardError(error){
+    this.setState(Object.assign(this.state, {card_errors: error ? error : ''}))
   }
 
   handleInputChange(prop, val){
@@ -73,26 +101,27 @@ export default class PaymentForm extends React.Component {
   handleSubmit(e){
     e.preventDefault()
 
-    console.log(`card data: ${JSON.stringify(this.state)}`)
-
-    stripe.createToken(cardNumber, this.state).then(function(result) {
-      if (result.error) {
-        // Inform the user if there was an error
-        var errorElement = document.getElementById('card-errors')
-        errorElement.textContent = result.error.message
+    stripe.createToken(cardNumber, this.state).then((result) => {
+      if(result.error){
+        this.setCardError(result.error.message)
       } else {
-        // Send the token to your server
-        console.log(`token: ${JSON.stringify(result.token)}`)
+        this.props.savePaymentDetails(result)
       }
     })
   }
 
   render(){
+    const { profile } = this.state
 
     return(
       <div>
         <PageHeader>Payment Details</PageHeader>
-        <Alert id="card-errors" bsStyle="warning"></Alert>
+        { this.state.card_errors !== '' &&
+          <Alert bsStyle="warning">{this.state.card_errors}</Alert>
+        }
+        { profile.successMessage &&
+          <Alert bsStyle='success'>{profile.successMessage}</Alert>
+        }
         <Form onSubmit={this.handleSubmit} horizontal>
           <FormGroup>
             <Col componentClass={ControlLabel} sm={2}>Name</Col>
@@ -100,6 +129,7 @@ export default class PaymentForm extends React.Component {
               <FormControl
                 type="text"
                 placeholder="Jane Doe"
+                value={this.state.name}
                 onChange={(e) => { this.handleInputChange('name', e.target.value) }}
               />
               <FormControl.Feedback />
@@ -111,6 +141,7 @@ export default class PaymentForm extends React.Component {
               <FormControl
                 type="text"
                 placeholder="555 Cohesion Ed Dr."
+                value={this.state.address_line1}
                 onChange={(e) => { this.handleInputChange('address_line1', e.target.value) }}
               />
               <FormControl.Feedback />
@@ -122,6 +153,7 @@ export default class PaymentForm extends React.Component {
               <FormControl
                 type="text"
                 placeholder=""
+                value={this.state.address_line2}
                 onChange={(e) => { this.handleInputChange('address_line2', e.target.value) }}
               />
               <FormControl.Feedback />
@@ -133,7 +165,8 @@ export default class PaymentForm extends React.Component {
               <FormControl
                 type="text"
                 placeholder="Islamorada"
-                onChange={(e) => { this.handleInputChange('city', e.target.value) }}
+                value={this.state.address_city}
+                onChange={(e) => { this.handleInputChange('address_city', e.target.value) }}
               />
               <FormControl.Feedback />
             </Col>
@@ -143,9 +176,8 @@ export default class PaymentForm extends React.Component {
             <Col sm={10}>
               <FormControl
                 componentClass='select'
-                name='state'
-                placeholder='State'
-              >
+                value={this.state.address_state}
+                onChange={(e) => { this.handleInputChange('address_state', e.target.value) }}>
                 <option value=''>State</option>
                 <option value='AL'>Alabama</option>
                 <option value='AK'>Alaska</option>

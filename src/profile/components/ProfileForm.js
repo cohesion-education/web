@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Alert, Button, Col, ControlLabel, Form, FormControl, FormGroup, PageHeader } from 'react-bootstrap'
 import PropTypes from 'prop-types'
-import { fetchProfile, handleProfileUpdate, saveProfile } from '../actions'
+import { saveProfile, fetchProfileIfNeeded } from '../actions'
 import Profile from '../../types/Profile'
 
 const styles = {
@@ -13,17 +13,19 @@ const styles = {
   },
 }
 
-class ProfileForm extends React.Component {
+export class ProfileForm extends React.Component {
   constructor(props) {
     super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
+
+    this.state = {
+      profile: props.profile,
+    }
   }
 
   static propTypes = {
     profile: PropTypes.object.isRequired,
-    fetchProfile: PropTypes.func.isRequired,
-    handleProfileUpdate: PropTypes.func.isRequired,
     saveProfile: PropTypes.func.isRequired,
   }
 
@@ -32,23 +34,41 @@ class ProfileForm extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchProfile()
+    if(this.props.fetchProfileIfNeeded){
+      this.props.fetchProfileIfNeeded()
+    }
+  }
+
+  componentWillReceiveProps(nextProps){
+    this.setState({profile: nextProps.profile})
   }
 
   handleInputChange(event) {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
-    const name = target.name
-    this.props.handleProfileUpdate(this.props.profile, name, value)
+    const key = target.name
+
+    let { validationErrors, validationState, ...remainingProps } = this.state.profile
+    let updated = Object.assign(new Profile(), {...remainingProps})
+
+    if(key.indexOf('.') !== -1){
+      let splitKey = key.split('.')
+      updated[splitKey[0]][splitKey[1]] = value
+    }else{
+      updated[key] = value
+    }
+
+    updated.validate()
+    this.setState(Object.assign(this.state, {profile:updated}))
   }
 
   handleSubmit(e){
     e.preventDefault()
-    this.props.saveProfile(this.props.profile)
+    this.props.saveProfile(this.state.profile)
   }
 
   render(){
-    const { profile } = this.props
+    const { profile } = this.state
 
     return(
       <div>
@@ -172,8 +192,7 @@ export default connect(
     profile: state.profile
   }),
   (dispatch) => ({ //mapDispatchToProps
-    fetchProfile: bindActionCreators(fetchProfile, dispatch),
-    handleProfileUpdate: bindActionCreators(handleProfileUpdate, dispatch),
+    fetchProfileIfNeeded: bindActionCreators(fetchProfileIfNeeded, dispatch),
     saveProfile: bindActionCreators(saveProfile, dispatch),
   })
 )(ProfileForm)

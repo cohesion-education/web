@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Profile from '../../types/Profile'
 import Student from '../../types/Student'
 import StudentForm from './StudentForm'
 import { Alert, Button, Col, Form, FormGroup, PageHeader } from 'react-bootstrap'
@@ -39,61 +38,92 @@ export class StudentsForm extends React.Component {
     this.receiveStudentRemoval = this.receiveStudentRemoval.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleAdd = this.handleAdd.bind(this)
+
+    this.state = {
+      students: props.students,
+      errorMessage: '',
+      successMessage: '',
+    }
   }
 
   static propTypes = {
-    profile: PropTypes.object.isRequired,
-    fetchStudents: PropTypes.func.isRequired,
-    handleStudentUpdate: PropTypes.func.isRequired,
-    handleStudentAdd: PropTypes.func.isRequired,
-    handleStudentRemove: PropTypes.func.isRequired,
+    students: PropTypes.array.isRequired,
     handleSave: PropTypes.func.isRequired
   }
 
   static defaultProps = {
-    profile: new Profile()
+    students: []
   }
 
   componentDidMount() {
-    this.props.fetchStudents()
-  }
-
-  receiveStudentUpdate(student, propertyName, value) {
-    console.log(`received student update: ${JSON.stringify(student)}\n${propertyName}=${value}`)
-    this.props.handleStudentUpdate(this.props.profile, student, propertyName, value)
-  }
-
-  receiveStudentRemoval(student){
-    if(student.isEmpty() || window.confirm(`Are you sure you want to remove ${student.name}?`)){
-      console.log(`removing student ${JSON.stringify(student)}`)
-      this.props.handleStudentRemove(this.props.profile, student)
+    if(this.props.fetchStudentsIfNeeded){
+      this.props.fetchStudentsIfNeeded()
     }
+  }
+
+  componentWillReceiveProps(nextProps){
+    this.setState({
+      students: nextProps.students,
+      errorMessage: '',
+      successMessage: '',
+    })
   }
 
   handleAdd(e){
     e.preventDefault()
-    this.props.handleStudentAdd(this.props.profile)
+    const { students } = this.state
+    const nextStudents = (students !== null ? students.slice() : [])
+    nextStudents.push(new Student('', '', '', nextStudents.length))
+
+    this.setState(Object.assign(this.state, {students:nextStudents}))
+  }
+
+  receiveStudentUpdate(existingStudent, propertyKey, value) {
+    // console.log(`received student update: ${JSON.stringify(existingStudent)}\n${propertyKey}=${value}`)
+
+    let { students } = this.state
+    let nextStudents = students.map(student => {
+      if (student.id === existingStudent.id) {
+        let { studentValidationErrors, studentValidationState, ...remainingStudentProps } = student
+        let updatedStudent = Object.assign(new Student(), {...remainingStudentProps})
+        updatedStudent[propertyKey]=value
+        return updatedStudent
+      } else {
+        return student
+      }
+    })
+
+    this.setState(Object.assign(this.state, {students:nextStudents}))
+  }
+
+  receiveStudentRemoval(studentToRemove){
+    if(studentToRemove.isEmpty() || window.confirm(`Are you sure you want to remove ${studentToRemove.name}?`)){
+      console.log(`removing student ${JSON.stringify(studentToRemove)}`)
+      let { students } = this.state
+      let nextStudents = students.filter(student => student.name !== studentToRemove.name)
+
+      this.setState(Object.assign(this.state, {students:nextStudents}))
+    }
   }
 
   handleSubmit(e){
     e.preventDefault()
     console.log('saving students - haha, I know, right? :-)')
-    this.props.handleSave(this.props.profile)
+    this.props.handleSave(this.state.students)
   }
 
   render(){
-    const { profile } = this.props
-    let { students } = profile
+    let { students } = this.state
     students = students === null ? [] : students
 
     return(
       <div>
         <PageHeader>My Students</PageHeader>
-        { profile.errorMessage &&
-          <Alert bsStyle='warning'>{profile.errorMessage}</Alert>
+        { this.state.errorMessage !== '' &&
+          <Alert bsStyle='warning'>{this.state.errorMessage}</Alert>
         }
-        { profile.successMessage &&
-          <Alert bsStyle='success'>{profile.successMessage}</Alert>
+        { this.state.successMessage !== '' &&
+          <Alert bsStyle='success'>{this.state.successMessage}</Alert>
         }
         <Form horizontal>
           { students.map((s, i) => {
@@ -130,13 +160,10 @@ export class StudentsForm extends React.Component {
 
 export default connect(
   (state) => ({ //mapStateToProps
-    profile: state.profile
+    students: state.profile.students
   }),
   (dispatch) => ({ //mapDispatchToProps
-    fetchStudents:  bindActionCreators(actions.fetchStudents, dispatch),
-    handleStudentAdd: bindActionCreators(actions.handleStudentAdd, dispatch),
-    handleStudentUpdate: bindActionCreators(actions.handleStudentUpdate, dispatch),
-    handleStudentRemove: bindActionCreators(actions.handleStudentRemove, dispatch),
+    fetchStudentsIfNeeded:  bindActionCreators(actions.fetchStudentsIfNeeded, dispatch),
     handleSave: bindActionCreators(actions.saveStudents, dispatch),
   })
 )(StudentsForm)

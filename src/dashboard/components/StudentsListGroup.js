@@ -24,7 +24,7 @@ export class StudentsListGroup extends React.Component {
 
   render (){
     const { profile } = this.props
-    console.log(profile)
+    
     return(
       <ListGroup>
         { profile.students && profile.students.map((student, i) => {
@@ -51,6 +51,6 @@ export default connect(
   }),
   (dispatch) => ({
     //mapDispatchToProps
-    fetchStudents: bindActionCreators(profileActions.fetchStudents, dispatch),
+    fetchStudents: bindActionCreators(profileActions.fetchStudentsIfNeeded, dispatch),
   })
 )(StudentsListGroup)
