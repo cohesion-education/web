@@ -1,42 +1,33 @@
 import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
-import ProfileForm from './ProfileForm'
+import { ProfileForm } from './ProfileForm'
 import Profile from '../../types/Profile'
-import { fetchProfile, handleProfileUpdate, saveProfile } from '../actions'
 
-jest.mock('../actions', () => ({
-  fetchProfile: jest.fn(),
-  handleProfileUpdate: jest.fn(),
-  saveProfile: jest.fn()
-}))
+const _fetchProfileIfNeeded = jest.fn()
+const _saveProfile = jest.fn()
 
 describe("<ProfileForm /> Container", () => {
+  const _profile = new Profile()
 
   let wrapper
-  let _store = {
-    dispatch: jest.fn(),
-    subscribe: jest.fn(),
-    getState: jest.fn(() => ({
-      profile: new Profile()
-    }))
-  }
-
   beforeAll(() => wrapper = mount(
-    <Provider store={_store}>
-      <ProfileForm />
-    </Provider>
+    <ProfileForm
+      profile={_profile}
+      saveProfile={_saveProfile}
+      fetchProfileIfNeeded={_fetchProfileIfNeeded}
+    />
   ))
 
   afterEach(() => jest.resetAllMocks())
 
-  it("starts off with empty state", () => {
+  it("starts off with default state - no alerts", () => {
     expect(wrapper.find('PageHeader').text()).toBe('My Profile')
     expect(wrapper.find('Alert').length).toBe(0)
   })
 
   it("clicking save causes saveProfile to be invoked", () => {
-    expect(saveProfile.mock.calls.length).toBe(0)
+    expect(_saveProfile.mock.calls.length).toBe(0)
     wrapper.find('button.btn').simulate('click')
-    expect(saveProfile.mock.calls.length).toBe(1)
+    expect(_saveProfile.mock.calls.length).toBe(1)
   })
 })

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Alert, Button, Col, ControlLabel, Form, FormControl, FormGroup, PageHeader } from 'react-bootstrap'
 import Video from '../../types/Video'
 import { Link } from 'react-router-dom'
-import * as actions from '../actions'
 import TagsInput from 'react-tagsinput'
 import 'react-tagsinput/react-tagsinput.css'
 import history from '../../history'
@@ -21,6 +20,11 @@ const styles = {
 export default class VideoForm extends React.Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      video: props.video
+    }
+
     this.videoWithoutValidationOrMessages = this.videoWithoutValidationOrMessages.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleFileChange = this.handleFileChange.bind(this)
@@ -32,7 +36,6 @@ export default class VideoForm extends React.Component {
     video: PropTypes.object.isRequired,
     pageTitle: PropTypes.string.isRequired,
     flattenedTaxonomy: PropTypes.array.isRequired,
-    formUpdateHandler: PropTypes.func.isRequired,
     saveHandler: PropTypes.func.isRequired,
     uploadHandler: PropTypes.func.isRequired,
   }
@@ -43,12 +46,12 @@ export default class VideoForm extends React.Component {
     flattenedTaxonomy: [],
   }
 
-  componentWillUnmount(){
-    
+  componentWillReceiveProps(nextProps){
+    this.setState(Object.assign(this.state, {video:nextProps.video}))
   }
 
   videoWithoutValidationOrMessages(){
-    let { validationErrors, validationState, errorMessage, successMessage, ...remainingProps } = this.props.video
+    let { validationErrors, validationState, errorMessage, successMessage, ...remainingProps } = this.state.video
     let video = Object.assign(new Video(), {...remainingProps})
     return video
   }
@@ -63,14 +66,14 @@ export default class VideoForm extends React.Component {
         updated[target.name] = Number(value)
     }
 
-    this.props.formUpdateHandler(updated)
+    this.setState(Object.assign(this.state, {video: updated}))
   }
 
 
   handleTagsChange(fieldName, tags, changed, changedIndexes){
     const updated = this.videoWithoutValidationOrMessages()
     updated[fieldName] = tags
-    this.props.formUpdateHandler(updated)
+    this.setState(Object.assign(this.state, {video: updated}))
   }
 
   handleFileChange(event) {
@@ -81,7 +84,7 @@ export default class VideoForm extends React.Component {
     updated.file_name = file.name
     updated.file_size = file.size
     updated.file_type = file.type
-    this.props.formUpdateHandler(updated)
+    this.setState(Object.assign(this.state, {video: updated}))
   }
 
   handleSubmit(e){
@@ -91,16 +94,16 @@ export default class VideoForm extends React.Component {
 
     if(!video.validate()){
       video.errorMessage = 'Oops! Looks like you\'re missing some information'
-      this.props.dispatch(actions.validationFailed(video))
+      this.setState(Object.assign(this.state, {video: video}))
       return
     }
 
     video.successMessage = 'Creating video record.'
-    this.props.dispatch(actions.update(video))
+    this.setState(Object.assign(this.state, {video: video}))
     this.props.saveHandler(video).then((savedVideo) => {
       if(savedVideo.errorMessage){
         console.log(`failed to save video metadata: ${savedVideo.errorMessage}`)
-        this.props.dispatch(actions.saveFailed(savedVideo))
+        this.setState(Object.assign(this.state, {video: savedVideo}))
         return
       }
 
@@ -110,11 +113,11 @@ export default class VideoForm extends React.Component {
       }
 
       video.successMessage = 'Video record successfully created. Uploading video to server.'
-      this.props.dispatch(actions.update(video))
+      this.setState(Object.assign(this.state, {video: video}))
       this.props.uploadHandler(savedVideo, video.file).then((uploadedVideo) => {
         if(uploadedVideo.errorMessage){
           console.log(`failed to upload video: ${uploadedVideo.errorMessage}`)
-          this.props.dispatch(actions.uploadFailed(uploadedVideo))
+          this.setState(Object.assign(this.state, {video: uploadedVideo}))
           return
         }
 
@@ -124,7 +127,8 @@ export default class VideoForm extends React.Component {
   }
 
   render(){
-    const { pageTitle, video, flattenedTaxonomy } = this.props
+    const { pageTitle, flattenedTaxonomy } = this.props
+    const { video } = this.state
 
     return(
       <div>

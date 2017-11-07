@@ -33,10 +33,10 @@ describe("saveProfile action", () => {
 
     store.dispatch(actions.saveProfile(sentProfile))
 
-    const receivedAction = store.getActions()[0]
-    expect(receivedAction.type).toBe(constants.RECEIVE_PROFILE)
-    expect(receivedAction.profile.errorMessage).toBe(errorMessage)
-    expect(receivedAction.profile.validationErrors).toEqual(validationErrors)
+    const receiveProfileAction = store.getActions()[0]
+    expect(receiveProfileAction.type).toBe(constants.RECEIVE_PROFILE)
+    expect(receiveProfileAction.profile.errorMessage).toBe(errorMessage)
+    expect(receiveProfileAction.profile.validationErrors).toEqual(validationErrors)
   })
 
   it('after previous validation failure and with all valid information, clears error message, calls api, and dispatches updated profile with success messsage', () => {
@@ -61,47 +61,50 @@ describe("saveProfile action", () => {
 
     return store.dispatch(actions.saveProfile(sentProfile)).then(() => {
       // return of async actions
-      const receivedAction = store.getActions()[0]
-      expect(receivedAction.type).toBe(constants.RECEIVE_PROFILE)
-      expect(receivedAction.profile.successMessage).toBe(successMessage)
-      expect(receivedAction.profile.validationErrors).toEqual([])
-      expect(receivedAction.profile.errorMessage).toBeNull()
+      const invalidateProfileAction = store.getActions()[0]
+      expect(invalidateProfileAction.type).toBe(constants.INVALIDATE_PROFILE)
+
+      const receiveProfileAction = store.getActions()[1]
+      expect(receiveProfileAction.type).toBe(constants.RECEIVE_PROFILE)
+      expect(receiveProfileAction.profile.successMessage).toBe(successMessage)
+      expect(receiveProfileAction.profile.validationErrors).toEqual([])
+      expect(receiveProfileAction.profile.errorMessage).toBeNull()
     })
 
   })
 
 })
 
-describe("handleStudentAdd action", () => {
-  it('should add an empty student and create a receiveProfile action', () => {
-    const profile = new Profile()
-    const result = actions.handleStudentAdd(profile)
-    expect(result.type).toBe(constants.RECEIVE_PROFILE)
-    expect(result.profile.students.length).toBe(1)
-    expect(profile.students.length).toBe(0)
-  })
-})
-
-describe("handleStudentUpdate action", () => {
-  const profile = new Profile()
-  const student = new Student('Billy', '4th', 'Mintz Elementary', 1)
-  profile.students.push(student)
-  const result = actions.handleStudentUpdate(profile, student, 'name', 'Bill')
-  expect(result.type).toBe(constants.RECEIVE_PROFILE)
-  expect(result.profile.students.length).toBe(1)
-  expect(profile.students.length).toBe(1)
-  expect(result.profile.students[0].name).toBe('Bill')
-  expect(profile.students[0].name).toBe('Billy')
-})
-
-describe("handleStudentRemove action", () => {
-  it('should remove student by id and create a receiveProfile action', () => {
-    const profile = new Profile()
-    const student = new Student('Billy', '4th', 'Mintz Elementary', 1)
-    profile.students.push(student)
-    const result = actions.handleStudentRemove(profile, student)
-    expect(result.type).toBe(constants.RECEIVE_PROFILE)
-    expect(result.profile.students.length).toBe(0)
-    expect(profile.students.length).toBe(1)
-  })
-})
+// describe("handleStudentAdd action", () => {
+//   it('should add an empty student and create a receiveProfile action', () => {
+//     const profile = new Profile()
+//     const result = actions.handleStudentAdd(profile)
+//     expect(result.type).toBe(constants.RECEIVE_PROFILE)
+//     expect(result.profile.students.length).toBe(1)
+//     expect(profile.students.length).toBe(0)
+//   })
+// })
+//
+// describe("handleStudentUpdate action", () => {
+//   const profile = new Profile()
+//   const student = new Student('Billy', '4th', 'Mintz Elementary', 1)
+//   profile.students.push(student)
+//   const result = actions.handleStudentUpdate(profile, student, 'name', 'Bill')
+//   expect(result.type).toBe(constants.RECEIVE_PROFILE)
+//   expect(result.profile.students.length).toBe(1)
+//   expect(profile.students.length).toBe(1)
+//   expect(result.profile.students[0].name).toBe('Bill')
+//   expect(profile.students[0].name).toBe('Billy')
+// })
+//
+// describe("handleStudentRemove action", () => {
+//   it('should remove student by id and create a receiveProfile action', () => {
+//     const profile = new Profile()
+//     const student = new Student('Billy', '4th', 'Mintz Elementary', 1)
+//     profile.students.push(student)
+//     const result = actions.handleStudentRemove(profile, student)
+//     expect(result.type).toBe(constants.RECEIVE_PROFILE)
+//     expect(result.profile.students.length).toBe(0)
+//     expect(profile.students.length).toBe(1)
+//   })
+// })
