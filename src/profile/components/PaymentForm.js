@@ -16,7 +16,7 @@ const styles = {
   },
 }
 
-const stripe = window.Stripe('pk_test_DbiImCco0ZbhKMahmOLJE7eV')
+const stripe = window.Stripe(window.config.stripe_key)
 const elements = stripe.elements()
 //const card = elements.create('card')
 const cardNumber = elements.create('cardNumber')
