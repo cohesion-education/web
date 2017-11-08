@@ -3,7 +3,8 @@ applications:
 - name: web
   path: ./build
   buildpack: staticfile_buildpack
-  memory: 16M
+  memory: 128M
+  instances: 2
   routes:
    - route: www.cohesioned.io
   env:
