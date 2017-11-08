@@ -6,3 +6,5 @@ applications:
   memory: 16M
   routes:
    - route: www.cohesioned.io
+  env:
+    FORCE_HTTPS: true
