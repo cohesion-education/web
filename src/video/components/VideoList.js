@@ -95,7 +95,7 @@ export default class VideoList extends React.Component {
                   <td>{video.name}</td>
                   <td>{video.taxonomy_id}</td>
                   <td>{video.created.toString()}</td>
-                  <td>{video.created_by.name}</td>
+                  <td>{video.created_by}</td>
                   <td>{video.bucket}</td>
                   <td>{video.object_name}</td>
                   <td>{video.file_name}</td>
