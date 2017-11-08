@@ -11,7 +11,7 @@ describe("<VideoList /> Component", () => {
     const video = new Video()
     video.title = 'Test Title'
     video.flattened_taxonomy = 'tx 1 > tx 1.1'
-    video.created_by = new Profile('Big John', 'john@cohesioned.io', 'FL', 'Monroe')
+    video.created_by = 1
     video.date_created = Date.now()
 
     const videos = new Array()
