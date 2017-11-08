@@ -8,7 +8,6 @@ export default class Login extends React.Component {
   }
 
   componentWillMount(){
-    // console.log(this.props.from)
     this.props.login(this.props.from)
   }
 

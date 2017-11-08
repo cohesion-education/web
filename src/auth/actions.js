@@ -22,7 +22,7 @@ const webAuth = new auth0.WebAuth({
 export function login(from = '/dashboard') {
   console.log(`from: ${JSON.stringify(from)}`)
   if(isAuthenticated()){
-    history.replace(from)
+    history.replace(from !== '' ? from : '/dashboard')
     return
   }
 
@@ -173,11 +173,6 @@ export function authnHandler(from) {
 
           dispatch(profileActions.receiveProfile(profile))
           dispatch(receiveAuthnSuccess(currentUser))
-
-          if(!profile.onboarded){
-            history.replace('/onboarding')
-            return
-          }
 
           history.replace(from ? from : '/dashboard')
 

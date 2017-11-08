@@ -1,19 +1,20 @@
 import React from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import history from '../../history'
+import { isAdmin } from '../../auth/actions'
+import Profile from '../../types/Profile'
 import TopBar from './TopBar'
 import UserListGroup from './UserListGroup'
 import StudentsListGroup from './StudentsListGroup'
 import AdminListGroup from './AdminListGroup'
 import Footer from './Footer'
-import { isAdmin } from '../../auth/actions'
 
 const styles = {
   containerFluid:{
     padding:0,
     height:'100%',
-  },
-  leftSideMenu:{
-
   },
   main:{
     paddingTop:'0em',
@@ -37,7 +38,24 @@ const styles = {
   }
 }
 
-export default class Dashboard extends React.Component {
+export class Dashboard extends React.Component {
+
+  static propTypes = {
+    profile: PropTypes.object.isRequired
+  }
+
+  static defaultProps =  {
+    profile: new Profile()
+  }
+
+  componentWillMount(){
+    const { profile } = this.props
+    if(!profile.onboarded){
+      history.replace('/onboarding')
+      return
+    }
+  }
+
   render (){
     return(
       <Grid fluid style={styles.containerFluid}>
@@ -47,7 +65,7 @@ export default class Dashboard extends React.Component {
           </Col>
         </Row>
         <Row style={styles.main}>
-          <Col sm={3} xsHidden style={styles.leftSideMenu}>
+          <Col sm={3} xsHidden>
             { isAdmin() &&
               <AdminListGroup />
             }
@@ -67,3 +85,13 @@ export default class Dashboard extends React.Component {
     )
   }
 }
+
+export default connect(
+  (state) => ({
+    //mapStateToProps
+    profile: state.profile
+  }),
+  (dispatch) => ({
+    //mapDispatchToProps
+  })
+)(Dashboard)

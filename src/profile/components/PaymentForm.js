@@ -1,6 +1,4 @@
 import React from 'react'
-// import { connect } from 'react-redux'
-// import { bindActionCreators } from 'redux'
 import { Alert, Button, Col, ControlLabel, Form, FormControl, FormGroup, PageHeader } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 import Profile from '../../types/Profile'

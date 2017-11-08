@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme'
-import Dashboard from './Dashboard'
+import { Dashboard } from './Dashboard'
 
 it('renders without crashing', () => {
   const wrapper = shallow(<Dashboard />)
