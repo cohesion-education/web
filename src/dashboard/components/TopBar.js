@@ -1,11 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Navbar, Nav } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import logo from '../../images/cohesion-logo.png'
 import defaultAvatar from '../../images/default-avatar.png'
 import Profile from '../../types/Profile'
+import * as profileActions from '../../profile/actions'
 
 const styles = {
   nav:{
@@ -28,14 +30,19 @@ const styles = {
   }
 }
 
-class TopBar extends React.Component {
+export class TopBar extends React.Component {
   static propTypes = {
     profile: PropTypes.object.isRequired,
-    error: PropTypes.object
+    error: PropTypes.object,
+    fetchProfileIfNeeded: PropTypes.func.isRequired,
   }
 
   static defaultProps =  {
     profile: new Profile()
+  }
+
+  componentDidMount() {
+    this.props.fetchProfileIfNeeded()
   }
 
   render (){
@@ -53,7 +60,7 @@ class TopBar extends React.Component {
             <Navbar.Text>
               <Link to="/profile" className='navbar-link' style={styles.navLinks}>
                 <img
-                  src={profile.picture ? profile.picture : defaultAvatar} 
+                  src={profile.picture ? profile.picture : defaultAvatar}
                   alt="user-img"
                   className="img-circle"
                   style={styles.profilePicture}/>
@@ -74,5 +81,6 @@ export default connect(
   }),
   (dispatch) => ({
     //mapDispatchToProps
+    fetchProfileIfNeeded: bindActionCreators(profileActions.fetchProfileIfNeeded, dispatch),
   })
 )(TopBar)

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Alert, Button, Col, ControlLabel, Form, FormControl, FormGroup, PageHeader } from 'react-bootstrap'
+import { Alert, Button, Col, ControlLabel, Form, FormControl, FormGroup, Modal, PageHeader } from 'react-bootstrap'
 import Video from '../../types/Video'
 import { Link } from 'react-router-dom'
 import TagsInput from 'react-tagsinput'
@@ -22,7 +22,9 @@ export default class VideoForm extends React.Component {
     super(props)
 
     this.state = {
-      video: props.video
+      video: props.video,
+      showModal: false,
+      modalBody: ''
     }
 
     this.videoWithoutValidationOrMessages = this.videoWithoutValidationOrMessages.bind(this)
@@ -30,6 +32,9 @@ export default class VideoForm extends React.Component {
     this.handleFileChange = this.handleFileChange.bind(this)
     this.handleTagsChange = this.handleTagsChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.openModal = this.openModal.bind(this)
+    this.closeModal = this.closeModal.bind(this)
+    this.modalOnHideHandler = this.modalOnHideHandler.bind(this)
   }
 
   static propTypes = {
@@ -47,7 +52,23 @@ export default class VideoForm extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    this.setState(Object.assign(this.state, {video:nextProps.video}))
+    this.setState(Object.assign(this.state, {video:nextProps.video, showModal: false, modalBody: ''}))
+  }
+
+  closeModal() {
+    this.setState(Object.assign(this.state, { showModal: false, modalBody: ''}))
+  }
+
+  openModal(){
+    this.setState(Object.assign(this.state, { showModal: true }))
+  }
+
+  modalOnHideHandler(){
+    console.log(`preventing modal onhide`)
+  }
+
+  setModalBody(text){
+    this.setState(Object.assign(this.state, { modalBody: text }))
   }
 
   videoWithoutValidationOrMessages(){
@@ -98,12 +119,15 @@ export default class VideoForm extends React.Component {
       return
     }
 
-    video.successMessage = 'Creating video record.'
-    this.setState(Object.assign(this.state, {video: video}))
+    this.setModalBody('Creating video record.')
+    this.openModal()
+    // video.successMessage = 'Creating video record.'
+    // this.setState(Object.assign(this.state, {video: video}))
     this.props.saveHandler(video).then((savedVideo) => {
       if(savedVideo.errorMessage){
-        console.log(`failed to save video metadata: ${savedVideo.errorMessage}`)
-        this.setState(Object.assign(this.state, {video: savedVideo}))
+        this.closeModal()
+        video.errorMessage = savedVideo.errorMessage
+        this.setState(Object.assign(this.state, {video: video}))
         return
       }
 
@@ -112,16 +136,18 @@ export default class VideoForm extends React.Component {
         return
       }
 
-      video.successMessage = 'Video record successfully created. Uploading video to server.'
-      this.setState(Object.assign(this.state, {video: video}))
+      this.setModalBody('Video record successfully created. Uploading video to server. Please wait; you will be redirected once the video file has been successfully uploaded')
+      // video.successMessage = 'Video record successfully created. Uploading video to server.'
+      // this.setState(Object.assign(this.state, {video: video}))
       this.props.uploadHandler(savedVideo, video.file).then((uploadedVideo) => {
         if(uploadedVideo.errorMessage){
-          console.log(`failed to upload video: ${uploadedVideo.errorMessage}`)
-          this.setState(Object.assign(this.state, {video: uploadedVideo}))
+          this.closeModal()
+          video.errorMessage = uploadedVideo.errorMessage
+          this.setState(Object.assign(this.state, {video: video}))
           return
         }
 
-        history.replace(`/admin/video/${uploadedVideo.id}`)
+        setTimeout(() => { history.replace(`/admin/video/${uploadedVideo.id}`) }, 2500)
       })
     })
   }
@@ -141,6 +167,15 @@ export default class VideoForm extends React.Component {
         { video.successMessage &&
           <Alert bsStyle='success'>{video.successMessage}</Alert>
         }
+
+        <Modal show={this.state.showModal} onHide={this.modalOnHideHandler}>
+          <Modal.Header closeButton>
+            <Modal.Title>Creating Video</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {this.state.modalBody}
+          </Modal.Body>
+        </Modal>
 
         <Form horizontal>
           <FormGroup validationState={video.validationState['title']}>

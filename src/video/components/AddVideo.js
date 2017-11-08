@@ -9,6 +9,13 @@ import { bindActionCreators } from 'redux'
 
 export class AddVideo extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      video: new Video(),
+    }
+  }
+
   static propTypes = {
     flattenedTaxonomy: PropTypes.array.isRequired,
     fetchFlattenedTaxonomyList: PropTypes.func.isRequired,
@@ -20,14 +27,19 @@ export class AddVideo extends React.Component {
     flattenedTaxonomy: [],
   }
 
+  componentWillReceiveProps(nextProps){
+    this.setState({video: nextProps.video})
+  }
+
   componentDidMount() {
     this.props.fetchFlattenedTaxonomyList()
   }
 
   render(){
+    const { video } = this.state
     return(
       <VideoForm
-        video={new Video()}
+        video={video}
         pageTitle="Add New Video"
         flattenedTaxonomy={this.props.flattenedTaxonomy}
         saveHandler={this.props.saveHandler}

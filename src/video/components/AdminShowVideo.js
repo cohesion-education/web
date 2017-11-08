@@ -22,6 +22,14 @@ const styles = {
 
 class AdminShowVideo extends React.Component {
 
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      video: props.video,
+    }
+  }
+
   static propTypes = {
     video: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
@@ -36,12 +44,13 @@ class AdminShowVideo extends React.Component {
   componentDidMount() {
     const { id } = this.props.match.params
     this.props.fetchVideoByID(id).then((video) => {
-      this.props.dispatch(actions.receiveVideoToView(video))
+      // this.props.dispatch(actions.receiveVideoToView(video))
+      this.setState(Object.assign({}, {video: video}))
     })
   }
 
   render(){
-    const { video } = this.props
+    const { video } = this.state
     // console.log(`video ${JSON.stringify(video)}`)
     const videoJsOptions = {
       autoplay: false,
@@ -134,7 +143,6 @@ class AdminShowVideo extends React.Component {
 export default connect(
   (state) => ({
     //mapStateToProps
-    video: state.video.requestedVideo,
   }),
   (dispatch) => ({
     //mapDispatchToProps
