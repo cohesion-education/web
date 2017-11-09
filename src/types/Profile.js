@@ -18,6 +18,8 @@ export default class Profile{
     this.onboarded = false
     this.trial_start = null
     this.billing_status = null
+    this.in_trial = false
+    this.days_remaining_in_trial = 0
 
     this.validationErrors = []
     this.validationState = []
@@ -71,4 +73,5 @@ export default class Profile{
       return emailRegex.test(val) === true
     })
   }
+
 }

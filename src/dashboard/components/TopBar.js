@@ -14,6 +14,13 @@ const styles = {
     backgroundColor: '#e2e2e2',
     borderColor: '#cecece',
   },
+  trialPeriodNavbar:{
+    backgroundColor: '#feffc7',
+    borderColor: '#cecece',
+    marginTop: '-20px',
+    fontWeight: 'bold',
+    fontSize: '1.2em',
+  },
   logo:{
     height:'4.5em',
   },
@@ -46,30 +53,41 @@ export class TopBar extends React.Component {
   }
 
   render (){
-    const { profile } = this.props
+    const profile = Object.assign(new Profile(), {...this.props.profile})
     return(
-      <Navbar fluid style={styles.nav}>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <img src={logo} alt='Cohesion Education' style={styles.logo}/>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav pullRight>
-            <Navbar.Text>
-              <Link to="/profile" className='navbar-link' style={styles.navLinks}>
-                <img
-                  src={profile.picture ? profile.picture : defaultAvatar}
-                  alt="user-img"
-                  className="img-circle"
-                  style={styles.profilePicture}/>
-              </Link>
-            </Navbar.Text>
-            <Link to="/logout" className='btn btn-primary' style={styles.navLinks}>Logout</Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+      <div>
+        <Navbar fluid style={styles.nav}>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <img src={logo} alt='Cohesion Education' style={styles.logo}/>
+            </Navbar.Brand>
+            <Navbar.Toggle />
+          </Navbar.Header>
+          <Navbar.Collapse>
+            <Nav pullRight>
+              <Navbar.Text>
+                <Link to="/profile" className='navbar-link' style={styles.navLinks}>
+                  <img
+                    src={profile.picture ? profile.picture : defaultAvatar}
+                    alt="user-img"
+                    className="img-circle"
+                    style={styles.profilePicture}/>
+                </Link>
+              </Navbar.Text>
+              <Link to="/logout" className='btn btn-primary' style={styles.navLinks}>Logout</Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        { profile.in_trial &&
+          <Navbar fluid style={styles.trialPeriodNavbar}>
+            <Navbar.Header>
+              <Navbar.Brand>
+                Your free trial expires in {profile.days_remaining_in_trial} day{profile.days_remaining_in_trial > 1 ? 's' : ''}
+              </Navbar.Brand>
+            </Navbar.Header>
+          </Navbar>
+        }
+      </div>
     )
   }
 }

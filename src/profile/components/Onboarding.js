@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import { PageHeader } from 'react-bootstrap'
-import { fetchProfileIfNeeded, saveProfile, saveStudents, savePaymentDetails } from '../actions'
+import * as actions from '../actions'
 import Profile from '../../types/Profile'
 import { ProfileForm } from './ProfileForm'
 import { StudentsForm } from './StudentsForm'
@@ -63,8 +63,8 @@ export class Onboarding extends React.Component {
     })
   }
 
-  handleSaveStudents(profile){
-    this.props.saveStudents(profile).then(() => {
+  handleSaveStudents(students){
+    this.props.saveStudents(students).then(() => {
       this.transition(states.PAYMENT)
     })
   }
@@ -123,6 +123,7 @@ export class Onboarding extends React.Component {
       <ProfileForm
         profile={this.props.profile}
         saveProfile={this.handleSaveProfile}
+        fetchProfileIfNeeded={this.props.fetchProfileIfNeeded}
       />
     )
   }
@@ -131,8 +132,10 @@ export class Onboarding extends React.Component {
     return(
       <div>
         <StudentsForm
-          profile={this.props.profile.students}
+          profile={this.props.profile}
+          students={this.props.profile.students}
           handleSave={this.handleSaveStudents}
+          fetchStudentsIfNeeded={this.props.fetchStudentsIfNeeded}
         />
       </div>
     )
@@ -155,9 +158,9 @@ export default connect(
     profile:state.profile
   }),
   (dispatch) => ({ //mapDispatchToProps
-    fetchProfileIfNeeded: bindActionCreators(fetchProfileIfNeeded, dispatch),
-    saveProfile: bindActionCreators(saveProfile, dispatch),
-    saveStudents: bindActionCreators(saveStudents, dispatch),
-    savePaymentDetails: bindActionCreators(savePaymentDetails, dispatch)
+    fetchProfileIfNeeded: bindActionCreators(actions.fetchProfileIfNeeded, dispatch),
+    saveProfile: bindActionCreators(actions.saveProfile, dispatch),
+    saveStudents: bindActionCreators(actions.saveStudents, dispatch),
+    savePaymentDetails: bindActionCreators(actions.savePaymentDetails, dispatch)
   })
 )(Onboarding)

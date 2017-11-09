@@ -2,8 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Student from '../../types/Student'
 import { Button, Grid, Row, Col, ControlLabel, FormControl, FormGroup } from 'react-bootstrap'
-// import { connect } from 'react-redux'
-// import { bindActionCreators } from 'redux'
 
 const styles = {
   label:{
@@ -32,7 +30,7 @@ export default class StudentForm extends React.Component {
   }
 
   static defaultProps = {
-    student: new Student()
+    student: new Student(),
   }
 
 
