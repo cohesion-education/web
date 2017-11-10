@@ -8,6 +8,7 @@ import Profile from '../../types/Profile'
 import { ProfileForm } from './ProfileForm'
 import { StudentsForm } from './StudentsForm'
 import PaymentForm from './PaymentForm'
+import history from '../../history'
 import './onboarding.css'
 
 const states = {
@@ -30,6 +31,8 @@ export class Onboarding extends React.Component {
     this.handleSaveProfile = this.handleSaveProfile.bind(this)
     this.handleSaveStudents = this.handleSaveStudents.bind(this)
     this.handleSavePaymentDetails = this.handleSavePaymentDetails.bind(this)
+
+    this.markProfileAsOnboarded = this.markProfileAsOnboarded.bind(this)
 
     this.state = {
       current: states.WELCOME,
@@ -69,19 +72,28 @@ export class Onboarding extends React.Component {
     })
   }
 
-  handleSavePaymentDetails(payment_details){
-    console.log(`payment details: ${JSON.stringify(payment_details)}`)
-    this.props.savePaymentDetails(payment_details).then((result) => {
+  markProfileAsOnboarded(){
+    const profile = Object.assign(this.props.profile, {onboarded: true})
+    this.props.saveProfile(profile).then((result) => {
       if(result.errorMessage){
-        alert(`Failed to save your payment details: ${result.errorMessage}`)
+        alert(`An unexpected error occurred when trying to save your information: ${result.errorMessage}`)
         return
       }
 
-      alert('Your payment details have been saved')
+      history.replace('/dashboard')
+    })
+  }
 
-      //TODO - mark 'onboarded' as true for this user
+  handleSavePaymentDetails(payment_details){
+    console.log(`payment details: ${JSON.stringify(payment_details)}`)
 
-      //TODO - after marking user as onboarded, direct the user to the students video dashboard
+    this.props.savePaymentDetails(payment_details).then((result) => {
+      if(result.errorMessage){
+        alert(`An unexpected error occurred when trying to save your payment details: ${result.errorMessage}`)
+        return
+      }
+
+      this.markProfileAsOnboarded()
     })
   }
 
