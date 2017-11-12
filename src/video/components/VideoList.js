@@ -92,10 +92,10 @@ export default class VideoList extends React.Component {
                   <td>
                     <Link to={`/admin/video/${video.id}`}>{video.id}</Link>
                   </td>
-                  <td>{video.name}</td>
-                  <td>{video.taxonomy_id}</td>
+                  <td>{video.title}</td>
+                  <td>{video.taxonomy.name}</td>
                   <td>{video.created.toString()}</td>
-                  <td>{video.created_by}</td>
+                  <td>{video.created_by.name}</td>
                   <td>{video.bucket}</td>
                   <td>{video.object_name}</td>
                   <td>{video.file_name}</td>

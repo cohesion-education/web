@@ -46,7 +46,7 @@ class EarlyRegistration extends React.Component {
       <div>
         <PageHeader>Welcome to Cohesion Education</PageHeader>
         <p>
-          Thank you for enrolling in our exciting new product! We expect to officially launch this Fall. In the meantime, sign up for our newsletter or request to join our early access Beta program.
+          Thank you for enrolling in our exciting new product! We expect to launch any day now. We will email you when the product has officially launched.
         </p>
 
         { profile.errorMessage &&

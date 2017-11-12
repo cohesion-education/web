@@ -1,6 +1,7 @@
 import React from 'react'
 import Header from './Header'
 import TopOfPageBackgroundImage from './TopOfPageBackgroundImage'
+import TeaserVideo from './TeaserVideo'
 import FeatureDescriptionList from './FeatureDescriptionList'
 import Footer from './Footer'
 import { Features, Testimonials, Pricing } from './containers'
@@ -16,6 +17,7 @@ export default class Homepage extends React.Component {
         <Header login={authActions.login}/>
         <TopOfPageBackgroundImage />
         <Features />
+        <TeaserVideo />
         <FeatureDescriptionList />
         <Testimonials />
         <Pricing />
