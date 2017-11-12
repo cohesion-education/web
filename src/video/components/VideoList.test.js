@@ -11,6 +11,7 @@ describe("<VideoList /> Component", () => {
     const video = new Video()
     video.title = 'Test Title'
     video.flattened_taxonomy = 'tx 1 > tx 1.1'
+    video.taxonomy = new Taxonomy('tx 1.1')
     video.created_by = 1
     video.date_created = Date.now()
 

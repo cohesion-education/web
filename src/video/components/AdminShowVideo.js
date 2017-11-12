@@ -85,7 +85,7 @@ class AdminShowVideo extends React.Component {
             </tr>
             <tr>
               <td>Taxonomy</td>
-              <td>{video.taxonomy_id}</td>
+              <td>{video.taxonomy.name}</td>
             </tr>
             <tr>
               <td>Key Terms</td>
@@ -114,7 +114,7 @@ class AdminShowVideo extends React.Component {
             { video.created_by &&
               <tr>
                 <td>Created By</td>
-                <td>{video.created_by}</td>
+                <td>{video.created_by.name}</td>
               </tr>
             }
             <tr>
