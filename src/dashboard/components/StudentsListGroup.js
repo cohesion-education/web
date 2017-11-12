@@ -24,18 +24,16 @@ export class StudentsListGroup extends React.Component {
 
   render (){
     const { profile } = this.props
-    
+
     return(
       <ListGroup>
         { profile.students && profile.students.map((student, i) => {
             return (!student) ? ( null ) : (
-              <ListGroup key={i}>
-                <ListGroupItem>
-                  <Link to={`/videos/${student.grade}`}>
-                    {student.name}'s Videos
-                  </Link>
-                </ListGroupItem>
-              </ListGroup>
+              <ListGroupItem key={i}>
+                <Link to={`/videos/${student.grade}`}>
+                  {student.name}'s Videos
+                </Link>
+              </ListGroupItem>
             )
           })
         }
