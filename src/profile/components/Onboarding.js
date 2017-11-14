@@ -7,7 +7,7 @@ import * as actions from '../actions'
 import Profile from '../../types/Profile'
 import { ProfileForm } from './ProfileForm'
 import { StudentsForm } from './StudentsForm'
-import PaymentForm from './PaymentForm'
+import { PaymentForm } from './PaymentForm'
 import history from '../../history'
 import './onboarding.css'
 
@@ -30,7 +30,7 @@ export class Onboarding extends React.Component {
 
     this.handleSaveProfile = this.handleSaveProfile.bind(this)
     this.handleSaveStudents = this.handleSaveStudents.bind(this)
-    this.handleSavePaymentDetails = this.handleSavePaymentDetails.bind(this)
+    this.handleSavePaymentDetailsSuccess = this.handleSavePaymentDetailsSuccess.bind(this)
 
     this.markProfileAsOnboarded = this.markProfileAsOnboarded.bind(this)
 
@@ -45,6 +45,7 @@ export class Onboarding extends React.Component {
     fetchProfileIfNeeded: PropTypes.func.isRequired,
     saveProfile: PropTypes.func.isRequired,
     saveStudents: PropTypes.func.isRequired,
+    fetchPaymentDetails: PropTypes.func.isRequired,
     savePaymentDetails: PropTypes.func.isRequired,
   }
 
@@ -84,17 +85,8 @@ export class Onboarding extends React.Component {
     })
   }
 
-  handleSavePaymentDetails(payment_details){
-    console.log(`payment details: ${JSON.stringify(payment_details)}`)
-
-    this.props.savePaymentDetails(payment_details).then((result) => {
-      if(result.errorMessage){
-        alert(`An unexpected error occurred when trying to save your payment details: ${result.errorMessage}`)
-        return
-      }
-
-      this.markProfileAsOnboarded()
-    })
+  handleSavePaymentDetailsSuccess(){
+    this.markProfileAsOnboarded()
   }
 
   render(){
@@ -158,7 +150,9 @@ export class Onboarding extends React.Component {
       <div>
         <PaymentForm
           profile={this.props.profile}
-          savePaymentDetails={this.handleSavePaymentDetails}
+          fetchPaymentDetails={this.props.fetchPaymentDetails}
+          savePaymentDetails={this.props.savePaymentDetails}
+          handleSavePaymentDetailsSuccess={this.handleSavePaymentDetailsSuccess}
         />
       </div>
     )
@@ -173,6 +167,7 @@ export default connect(
     fetchProfileIfNeeded: bindActionCreators(actions.fetchProfileIfNeeded, dispatch),
     saveProfile: bindActionCreators(actions.saveProfile, dispatch),
     saveStudents: bindActionCreators(actions.saveStudents, dispatch),
+    fetchPaymentDetails: bindActionCreators(actions.fetchPaymentDetails, dispatch),
     savePaymentDetails: bindActionCreators(actions.savePaymentDetails, dispatch)
   })
 )(Onboarding)

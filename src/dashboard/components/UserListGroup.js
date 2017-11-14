@@ -8,6 +8,7 @@ export default class UserListGroup extends React.Component {
       <ListGroup>
         <ListGroupItem><Link to="/profile">Profile</Link></ListGroupItem>
         <ListGroupItem><Link to="/profile/students">Students</Link></ListGroupItem>
+        <ListGroupItem><Link to="/profile/payment_details">Payment Details</Link></ListGroupItem>
       </ListGroup>
     )
   }

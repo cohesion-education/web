@@ -1,6 +1,9 @@
 import React from 'react'
 import { Alert, Button, Col, ControlLabel, Form, FormControl, FormGroup, PageHeader } from 'react-bootstrap'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as actions from '../actions'
 import Profile from '../../types/Profile'
 
 const styles = {
@@ -22,7 +25,7 @@ const cardExpiry = elements.create('cardExpiry')
 const cardCvc = elements.create('cardCvc')
 const postalCode = elements.create('postalCode')
 
-export default class PaymentForm extends React.Component {
+export class PaymentForm extends React.Component {
   constructor(props) {
     super(props)
 
@@ -33,10 +36,15 @@ export default class PaymentForm extends React.Component {
       address_city: '',
       address_state: props.profile.state,
       address_zip: '',
+      last4: '',
+      card_id: '',
+      expiry_month: '',
+      expiry_year: '',
       address_country: 'US',
       currency: 'usd',
       card_errors: '',
       profile: props.profile,
+      successMessage: props.profile.successMessage,
     }
 
     this.handleInputChange = this.handleInputChange.bind(this)
@@ -46,7 +54,9 @@ export default class PaymentForm extends React.Component {
 
   static propTypes = {
     profile: PropTypes.object.isRequired,
+    fetchPaymentDetails: PropTypes.func.isRequired,
     savePaymentDetails: PropTypes.func.isRequired,
+    handleSavePaymentDetailsSuccess: PropTypes.func,
   }
 
   static defaultProps = {
@@ -54,6 +64,7 @@ export default class PaymentForm extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
+    //TODO determine whether this method is necessary now that fetchPaymentDetails is implemented
     this.setState({
       name: nextProps.profile.name,
       address_line1: '',
@@ -61,10 +72,15 @@ export default class PaymentForm extends React.Component {
       address_city: '',
       address_state: nextProps.profile.state,
       address_zip: '',
+      last4: '',
+      card_id: '',
+      expiry_month: '',
+      expiry_year: '',
       address_country: 'US',
       currency: 'usd',
       card_errors: '',
       profile: nextProps.profile,
+      successMessage: nextProps.profile.successMessage,
     })
   }
 
@@ -84,10 +100,39 @@ export default class PaymentForm extends React.Component {
     cardExpiry.addEventListener('change', creditCardElementOnChangeListener)
     cardCvc.addEventListener('change', creditCardElementOnChangeListener)
     postalCode.addEventListener('change', creditCardElementOnChangeListener)
+
+    this.props.fetchPaymentDetails().then((payment_details) => {
+      console.log(`payment details: ${JSON.stringify(payment_details)}`)
+      if(payment_details.errorMessage){
+        this.setCardError(payment_details.errorMessage)
+        return
+      }
+
+      this.setState(Object.assign(this.state,
+        {
+          name: payment_details.name,
+          expiry_month: payment_details.expiry_month,
+          expiry_year: payment_details.expiry_year,
+          address_line1: payment_details.address_line1,
+          address_line2: payment_details.address_line2,
+          address_city: payment_details.address_city,
+          address_state: payment_details.address_state,
+          address_zip: payment_details.address_zip,
+          last4: payment_details.last4,
+          card_id: payment_details.card_id,
+          address_country: 'US',
+          currency: 'usd',
+        })
+      )
+    })
   }
 
   setCardError(error){
     this.setState(Object.assign(this.state, {card_errors: error ? error : ''}))
+  }
+
+  setSuccessMessage(message){
+    this.setState(Object.assign(this.state, {successMessage: message ? message : ''}))
   }
 
   handleInputChange(prop, val){
@@ -98,27 +143,39 @@ export default class PaymentForm extends React.Component {
 
   handleSubmit(e){
     e.preventDefault()
-
-    stripe.createToken(cardNumber, this.state).then((result) => {
+    this.setCardError('')
+    this.setSuccessMessage('')
+    const { card_errors, profile, successMessage, ...rest } = this.state
+    const card = {...rest}
+    console.log(JSON.stringify(card))
+    stripe.createToken(cardNumber, card).then((result) => {
       if(result.error){
         this.setCardError(result.error.message)
       } else {
-        this.props.savePaymentDetails(result)
+        const payment_details = Object.assign({}, {...result})
+        this.props.savePaymentDetails(payment_details).then((saveResult) => {
+          if(saveResult.errorMessage){
+            this.setCardError(saveResult.errorMessage)
+          }else if(saveResult.successMessage){
+            this.setSuccessMessage(saveResult.successMessage)
+            if(this.props.handleSavePaymentDetailsSuccess){
+              this.props.handleSavePaymentDetailsSuccess()
+            }
+          }
+        })
       }
     })
   }
 
   render(){
-    const { profile } = this.state
-
     return(
       <div>
         <PageHeader>Payment Details</PageHeader>
         { this.state.card_errors !== '' &&
           <Alert bsStyle="warning">{this.state.card_errors}</Alert>
         }
-        { profile.successMessage &&
-          <Alert bsStyle='success'>{profile.successMessage}</Alert>
+        { this.state.successMessage &&
+          <Alert bsStyle='success'>{this.state.successMessage}</Alert>
         }
         <Form onSubmit={this.handleSubmit} horizontal>
           <FormGroup>
@@ -235,25 +292,25 @@ export default class PaymentForm extends React.Component {
           <FormGroup>
             <Col componentClass={ControlLabel} sm={2}>Postal Code</Col>
             <Col sm={10}>
-              <div style={styles.formField} id="card-postal-code-element"></div>
+              <div style={styles.formField} id="card-postal-code-element">{this.state.address_zip}</div>
             </Col>
           </FormGroup>
           <FormGroup>
             <Col componentClass={ControlLabel} sm={2}>Credit or debit card</Col>
             <Col sm={10}>
-              <div style={styles.formField} id="card-number-element"></div>
+              <div style={styles.formField} id="card-number-element">{this.state.last4 ? '*** **** ' + this.state.last4 : ''}</div>
             </Col>
           </FormGroup>
           <FormGroup>
             <Col componentClass={ControlLabel} sm={2}>Expiration Date</Col>
             <Col sm={10}>
-              <div style={styles.formField} id="card-expiry-element"></div>
+              <div style={styles.formField} id="card-expiry-element">{this.state.expiry_month && this.state.expiry_year ? this.state.expiry_month + '/' + this.state.expiry_year : ''}</div>
             </Col>
           </FormGroup>
           <FormGroup>
             <Col componentClass={ControlLabel} sm={2}>CVC</Col>
             <Col sm={10}>
-              <div style={styles.formField} id="card-cvc-element"></div>
+              <div style={styles.formField} id="card-cvc-element">{this.state.card_id ? '***' : ''}</div>
             </Col>
           </FormGroup>
           <FormGroup>
@@ -268,3 +325,12 @@ export default class PaymentForm extends React.Component {
     )
   }
 }
+
+export default connect(
+  (state) => ({ //mapStateToProps
+  }),
+  (dispatch) => ({ //mapDispatchToProps
+    fetchPaymentDetails: bindActionCreators(actions.fetchPaymentDetails, dispatch),
+    savePaymentDetails: bindActionCreators(actions.savePaymentDetails, dispatch),
+  })
+)(PaymentForm)

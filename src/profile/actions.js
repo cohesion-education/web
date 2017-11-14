@@ -21,6 +21,12 @@ export const requestStudents = () => {
   }
 }
 
+export const requestPaymentDetails = () => {
+  return {
+    type: constants.REQUEST_PAYMENT_DETAILS,
+  }
+}
+
 export const receiveProfile = (profile) => {
   return {
     type: constants.RECEIVE_PROFILE,
@@ -41,6 +47,13 @@ export const receiveStudents = (students) => {
   return {
     type: constants.RECEIVE_STUDENTS,
     students: students
+  }
+}
+
+export const receivePaymentDetails = (payment_details) => {
+  return {
+    type: constants.RECEIVE_PAYMENT_DETAILS,
+    profile: Object.assign({}, {...payment_details})
   }
 }
 
@@ -118,6 +131,47 @@ export function fetchStudentsIfNeeded(){
     }
 
     return dispatch(receiveStudents(getState().profile.students))
+  }
+}
+
+export function fetchPaymentDetails(){
+  const token = getIDToken()
+  const apiURL = `${window.config.api_base}/api/profile/paymentdetails`
+  const opts = {
+    method: 'get',
+    mode: 'cors',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }
+
+  return (dispatch) => {
+    // dispatch(requestPaymentDetails())
+    return fetch(apiURL, opts)
+      .then(response => response.json())
+      .then(payment_details => {
+        if(payment_details.error){
+          payment_details.errorMessage = `An unexpected error occurred when fetching your payment details: ${payment_details.error}`
+        }
+
+        const card = payment_details.token ? payment_details.token.card : {}
+        payment_details.card_id = card.id
+        payment_details.name = card.name
+        payment_details.expiry_month = card.exp_month
+        payment_details.expiry_year = card.exp_year
+        payment_details.address_line1 = card.address_line1
+        payment_details.address_line2 = card.address_line2
+        payment_details.address_city = card.address_city
+        payment_details.address_state = card.address_state
+        payment_details.address_zip = card.address_zip
+        payment_details.last4 = card.last4
+
+        return payment_details
+      })
+      .catch(error => {
+        console.log(`error fetching paymentdetails: ${error}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
+        return {errorMessage:`Failed to fetch your payment details: ${error}`}
+      })
   }
 }
 
@@ -305,22 +359,18 @@ export const savePaymentDetails = (payment_details) => {
 
     return fetch(apiURL, opts)
     .then(response => response.json())
-    .then(json => {
-      if(json.error){
-        json.errorMessage = `Failed to save payment details: ${json.error}`
-        //TODO - anything need to be dispatched?
-        return json
+    .then(payment_details => {
+      if(payment_details.error){
+        payment_details.errorMessage = `Failed to save payment details: ${payment_details.error}`
+        return payment_details
       }
 
-      json.successMessage = 'Successfully saved payment details'
-
-      //TODO - anything need to be dispatched?
-      return json
+      payment_details.successMessage = 'Successfully saved payment details'
+      return payment_details
     })
     .catch(err => {
       payment_details.errorMessage = `An error occurred while trying to save your payment details: ${err}`
       console.log(`error:${payment_details.errorMessage}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
-      //TODO - anything need to be dispatched?
       return payment_details
     })
   }
