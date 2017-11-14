@@ -76,13 +76,20 @@ export default class ByTaxonomy extends React.Component {
             <p>Once the {gradeTitle} videos are available, we will send an email notification and provide a 14 day free trial for you to explore our service.</p>
 
             <p>You can also follow our announcements on our <a href="https://www.facebook.com/pg/cohesioned/">Facebook Page</a> where we will continue to update our followers as we release new videos and features.</p>
+
+            <img src="https://media.giphy.com/media/5Zesu5VPNGJlm/giphy.gif" alt="Working Monkey" />
           </div>
+
         }
         { grade === '3rd' &&
           <div>
             <p>3rd Grade videos are coming any minute now... please check back in just a bit.</p>
+
             <p>We appreciate your patience as we finalize this part of our 3rd grade launch.</p>
+
+            <img src="https://media.giphy.com/media/5Zesu5VPNGJlm/giphy.gif" alt="Working Monkey" />
           </div>
+
         }
       </div>
     )
