@@ -43,7 +43,8 @@ export default class ByTaxonomy extends React.Component {
     //TODO - display list of videos
     console.log(`videos: ${videos}`)
 
-    let title = `${grade} ${grade !== 'Kindergarten' ? 'Grade' : ''}`
+    const gradeTitle = `${grade} ${grade !== 'Kindergarten' ? 'Grade' : ''}`
+    let title = `${gradeTitle}`
     if(subject){
       title += ` > ${subject}`
     }
@@ -70,9 +71,11 @@ export default class ByTaxonomy extends React.Component {
           <div>
             <p>Thank you for signing up!</p>
 
-            <p>We currently do not have videos for {title}, but we're working on releasing those videos soon. You will not be charged for students registered in {title} at this time.</p>
+            <p>We are currently finalizing our {gradeTitle} videos and will be releasing them soon. You will not be charged for students registered in {gradeTitle} at this time.</p>
 
-            <p>Once the {title} videos are available, we will send an email notification and provide a 14 day free trial for you to explore our service.</p>
+            <p>Once the {gradeTitle} videos are available, we will send an email notification and provide a 14 day free trial for you to explore our service.</p>
+
+            <p>You can also follow our announcements on our <a href="https://www.facebook.com/pg/cohesioned/">Facebook Page</a> where we will continue to update our followers as we release new videos and features.</p>
           </div>
         }
         { grade === '3rd' &&
