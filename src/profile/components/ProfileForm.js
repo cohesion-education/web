@@ -20,7 +20,7 @@ export class ProfileForm extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this)
 
     this.state = {
-      profile: props.profile,
+      profile: Object.assign(new Profile(), {...props.profile}),
     }
   }
 
@@ -40,7 +40,9 @@ export class ProfileForm extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    this.setState({profile: nextProps.profile})
+    this.setState({
+      profile: Object.assign(new Profile(), {...nextProps.profile})
+    })
   }
 
   handleInputChange(event) {
@@ -59,7 +61,7 @@ export class ProfileForm extends React.Component {
     }
 
     updated.validate()
-    this.setState(Object.assign(this.state, {profile:updated}))
+    this.setState(Object.assign(this.state, Object.assign(new Profile(), {...updated})))
   }
 
   handleSubmit(e){

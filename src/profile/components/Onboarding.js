@@ -53,6 +53,17 @@ export class Onboarding extends React.Component {
     profile: new Profile()
   }
 
+  componentWillReceiveProps(nextProps){
+    if(nextProps.profile.onboarded){
+      history.replace('/dashboard')
+    }
+
+    this.setState({
+      current: states.WELCOME,
+      profile: Object.assign(new Profile(), {...nextProps.profile})
+    })
+  }
+
   componentDidMount() {
     this.props.fetchProfileIfNeeded()
   }

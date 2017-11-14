@@ -57,12 +57,12 @@ class EarlyRegistration extends React.Component {
         }
         <form>
           <FormGroup>
-            <Checkbox checked={profile.preferences.newsletter} name='newsletter' onClick={this.handleInputChange}>
+            <Checkbox checked={profile.preferences ? profile.preferences.newsletter : false} name='newsletter' onClick={this.handleInputChange}>
               Sign up for our Newsletter
             </Checkbox>
           </FormGroup>
           <FormGroup>
-            <Checkbox checked={profile.preferences.beta_program} name='beta_program' onClick={this.handleInputChange}>
+            <Checkbox checked={profile.preferences ? profile.preferences.beta_program : false} name='beta_program' onClick={this.handleInputChange}>
               Sign up for our early access Beta program
             </Checkbox>
           </FormGroup>

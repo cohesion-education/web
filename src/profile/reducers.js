@@ -1,6 +1,6 @@
 import { INVALIDATE_PROFILE, RECEIVE_PROFILE, RECEIVE_STUDENTS, REQUEST_PROFILE, REQUEST_STUDENTS } from './constants'
 import { RECEIVE_USER_INFO } from '../auth/constants'
-import Profile from '../types/Profile'
+// import Profile from '../types/Profile'
 
 export const userinfoReducer = (state = {}, action) => {
   switch(action.type){
@@ -12,7 +12,7 @@ export const userinfoReducer = (state = {}, action) => {
   }
 }
 
-export const profileReducer = (state = new Profile(), action) => {
+export const profileReducer = (state = {}, action) => {
   switch(action.type){
     case INVALIDATE_PROFILE:
       return Object.assign({}, state, {didInvalidate: true})
