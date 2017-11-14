@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 export default class PricingPlan extends React.Component {
   static propTypes = {
-    handlePurchaseNow: PropTypes.string.isRequired,
+    handlePurchaseNow: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     price: PropTypes.string.isRequired,
     duration: PropTypes.string.isRequired
