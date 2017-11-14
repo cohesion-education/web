@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Navbar, Nav } from 'react-bootstrap'
+import { Navbar } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import logo from '../../images/cohesion-logo.png'
@@ -25,7 +25,7 @@ const styles = {
     height:'4.5em',
   },
   navLinks:{
-    marginTop: '24px',
+    marginTop: '13px',
     fontSize: '1.2em',
     marginRight: '5px',
   },
@@ -64,18 +64,18 @@ export class TopBar extends React.Component {
             <Navbar.Toggle />
           </Navbar.Header>
           <Navbar.Collapse>
-            <Nav pullRight>
-              <Navbar.Text>
-                <Link to="/profile" className='navbar-link' style={styles.navLinks}>
-                  <img
-                    src={profile.picture ? profile.picture : defaultAvatar}
-                    alt="user-img"
-                    className="img-circle"
-                    style={styles.profilePicture}/>
-                </Link>
-              </Navbar.Text>
+            <Navbar.Text pullRight>
               <Link to="/logout" className='btn btn-primary' style={styles.navLinks}>Logout</Link>
-            </Nav>
+            </Navbar.Text>
+            <Navbar.Text pullRight>
+              <Link to="/profile" className='navbar-link' style={styles.navLinks}>
+                <img
+                  src={profile.picture ? profile.picture : defaultAvatar}
+                  alt="user-img"
+                  className="img-circle"
+                  style={styles.profilePicture}/>
+              </Link>
+            </Navbar.Text>
           </Navbar.Collapse>
         </Navbar>
         { profile.in_trial &&
