@@ -58,10 +58,9 @@ export class Onboarding extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    // if(nextProps.profile.onboarded === true){
-    //   history.replace('/dashboard')
-    // }
-    console.log(`componentWillReceiveProps - students: ${JSON.stringify(nextProps.students)}`)
+    if(nextProps.profile.onboarded === true){
+      history.replace('/dashboard')
+    }
 
     this.setState(Object.assign(this.state, { profile: nextProps.profile, students: nextProps.students }))
   }
@@ -150,7 +149,6 @@ export class Onboarding extends React.Component {
   renderStudentsForm(){
     const { profile } = this.state
     const students = this.state.students ? this.state.students : []
-    console.log(`Onboarding::renderStudentsForm - students: ${students}`)
     return(
       <div>
         <StudentsForm

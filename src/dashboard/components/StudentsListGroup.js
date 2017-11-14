@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import * as profileActions from '../../profile/actions'
-import Profile from '../../types/Profile'
 
 export class StudentsListGroup extends React.Component {
 

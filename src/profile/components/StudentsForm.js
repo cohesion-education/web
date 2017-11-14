@@ -114,8 +114,8 @@ export class StudentsForm extends React.Component {
   }
 
   render(){
-    let { students, profile } = this.state
-    students = students === null ? [] : students
+    const { profile } = this.state
+    const { students } = this.state ? this.state : []
 
     return(
       <div>
@@ -161,7 +161,7 @@ export class StudentsForm extends React.Component {
 
 export default connect(
   (state) => ({ //mapStateToProps
-    students: state.students,
+    students: state.students.students,
     profile: state.profile,
   }),
   (dispatch) => ({ //mapDispatchToProps
