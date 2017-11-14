@@ -79,104 +79,10 @@ export default class ByTaxonomy extends React.Component {
           </div>
         }
         { grade === '3rd' &&
-          <Grid fluid style={styles.containerFluid}>
-            <Row style={styles.videoRow}>
-              <Col style={styles.videoGroupTitle}>
-                Recently Viewed
-              </Col>
-            </Row>
-            <Row style={styles.videoRow}>
-              <Col sm={3} style={styles.videoCell}>
-                <Link to="/video/1234">
-                  <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                   <h5>Video Title</h5>
-                 </Thumbnail>
-               </Link>
-              </Col>
-              <Col sm={3} style={styles.videoCell}>
-                <Link to="/video/1234">
-                  <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                   <h5>Video Title</h5>
-                 </Thumbnail>
-               </Link>
-              </Col>
-              <Col sm={3} style={styles.videoCell}>
-                <Link to="/video/1234">
-                  <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                   <h5>Video Title</h5>
-                 </Thumbnail>
-               </Link>
-              </Col>
-            </Row>
-            <Row style={styles.videoRow}>
-              <Col style={styles.videoGroupTitle}>
-                Unit > Set
-              </Col>
-            </Row>
-            <Row style={styles.videoRow}>
-              <Col style={styles.videoGroupTitle}>
-                Unit > Set
-              </Col>
-            </Row>
-            <Row style={styles.videoRow}>
-              <Col sm={3} style={styles.videoCell}>
-                <Link to="/video/1234">
-                  <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                   <h5>Video Title</h5>
-                 </Thumbnail>
-               </Link>
-              </Col>
-              <Col sm={3} style={styles.videoCell}>
-                <Link to="/video/1234">
-                  <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                   <h5>Video Title</h5>
-                 </Thumbnail>
-               </Link>
-              </Col>
-              <Col sm={3} style={styles.videoCell}>
-                <Link to="/video/1234">
-                  <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                   <h5>Video Title</h5>
-                 </Thumbnail>
-               </Link>
-              </Col>
-              <Col sm={3} style={styles.videoCell}>
-                <Link to="/video/1234">
-                  <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                   <h5>Video Title</h5>
-                 </Thumbnail>
-               </Link>
-              </Col>
-              <Col sm={3} style={styles.videoCell}>
-                <Link to="/video/1234">
-                  <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                   <h5>Video Title</h5>
-                 </Thumbnail>
-               </Link>
-              </Col>
-              <Col sm={3} style={styles.videoCell}>
-                <Link to="/video/1234">
-                  <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                   <h5>Video Title</h5>
-                 </Thumbnail>
-               </Link>
-              </Col>
-              <Col sm={3} style={styles.videoCell}>
-                <Link to="/video/1234">
-                  <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                   <h5>Video Title</h5>
-                 </Thumbnail>
-               </Link>
-              </Col>
-              <Col sm={3} style={styles.videoCell}>
-                <Link to="/video/1234">
-                  <Thumbnail src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" alt="Video Title">
-                   <h5>Video Title</h5>
-                 </Thumbnail>
-               </Link>
-              </Col>
-            </Row>
-          </Grid>
+          <div>
+            <p>3rd Grade videos are coming any minute now... please check back in just a bit.</p>
+            <p>We appreciate your patience as we finalize this part of our 3rd grade launch.</p>
+          </div>
         }
       </div>
     )
