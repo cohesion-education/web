@@ -334,12 +334,12 @@ export const saveStudents = (students) => {
     .then(json => {
       if(json.error){
         json.errorMessage = `Failed to save students: ${json.error}`
-        return dispatch(receiveStudents(json))
+        return dispatch(receiveStudents(json.students))
       }
 
       json.successMessage = 'Your students have been saved'
       dispatch(invalidateProfile())
-      return dispatch(receiveStudents(json))
+      return dispatch(receiveStudents(json.students))
     })
     .catch(err => {
       students.errorMessage = `An error occurred while trying to save your student list: ${err}`
