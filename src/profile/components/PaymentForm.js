@@ -30,11 +30,11 @@ export class PaymentForm extends React.Component {
     super(props)
 
     this.state = {
-      name: props.profile.name,
+      name: props.profile ? props.profile.name : '',
       address_line1: '',
       address_line2: '',
       address_city: '',
-      address_state: props.profile.state,
+      address_state: props.profile ? props.profile.state : '',
       address_zip: '',
       last4: '',
       card_id: '',
@@ -43,17 +43,17 @@ export class PaymentForm extends React.Component {
       address_country: 'US',
       currency: 'usd',
       card_errors: '',
-      profile: props.profile,
-      successMessage: props.profile.successMessage,
+      successMessage: props.profile ? props.profile.successMessage : '',
     }
 
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.setCardError = this.setCardError.bind(this)
+    this.setSuccessMessage = this.setSuccessMessage.bind(this)
   }
 
   static propTypes = {
-    profile: PropTypes.object.isRequired,
+    profile: PropTypes.object,
     fetchPaymentDetails: PropTypes.func.isRequired,
     savePaymentDetails: PropTypes.func.isRequired,
     handleSavePaymentDetailsSuccess: PropTypes.func,
@@ -61,27 +61,6 @@ export class PaymentForm extends React.Component {
 
   static defaultProps = {
     profile: new Profile()
-  }
-
-  componentWillReceiveProps(nextProps){
-    //TODO determine whether this method is necessary now that fetchPaymentDetails is implemented
-    this.setState({
-      name: nextProps.profile.name,
-      address_line1: '',
-      address_line2: '',
-      address_city: '',
-      address_state: nextProps.profile.state,
-      address_zip: '',
-      last4: '',
-      card_id: '',
-      expiry_month: '',
-      expiry_year: '',
-      address_country: 'US',
-      currency: 'usd',
-      card_errors: '',
-      profile: nextProps.profile,
-      successMessage: nextProps.profile.successMessage,
-    })
   }
 
   componentDidMount() {
@@ -108,15 +87,15 @@ export class PaymentForm extends React.Component {
         return
       }
 
-      this.setState(Object.assign(this.state,
+      this.setState(Object.assign({}, this.state,
         {
-          name: payment_details.name,
+          name: payment_details.name ? payment_details.name : this.state.name,
           expiry_month: payment_details.expiry_month,
           expiry_year: payment_details.expiry_year,
           address_line1: payment_details.address_line1,
           address_line2: payment_details.address_line2,
           address_city: payment_details.address_city,
-          address_state: payment_details.address_state,
+          address_state: payment_details.address_state ? payment_details.address_state : this.state.address_state,
           address_zip: payment_details.address_zip,
           last4: payment_details.last4,
           card_id: payment_details.card_id,
@@ -128,16 +107,17 @@ export class PaymentForm extends React.Component {
   }
 
   setCardError(error){
-    this.setState(Object.assign(this.state, {card_errors: error ? error : ''}))
+    this.setState(Object.assign({}, this.state, {card_errors: error ? error : ''}))
   }
 
   setSuccessMessage(message){
-    this.setState(Object.assign(this.state, {successMessage: message ? message : ''}))
+    this.setState(Object.assign({}, this.state, {successMessage: message ? message : ''}))
   }
 
   handleInputChange(prop, val){
-    const next = Object.assign(this.state)
+    const next = Object.assign({}, this.state)
     next[prop] = val
+    console.log(`next state: ${JSON.stringify(next)}`)
     this.setState(next)
   }
 
@@ -146,13 +126,14 @@ export class PaymentForm extends React.Component {
     this.setCardError('')
     this.setSuccessMessage('')
     const { card_errors, profile, successMessage, ...rest } = this.state
-    const card = {...rest}
-    console.log(JSON.stringify(card))
-    stripe.createToken(cardNumber, card).then((result) => {
-      if(result.error){
-        this.setCardError(result.error.message)
+    const cardData = {...rest}
+    console.log(`card data: ${JSON.stringify(cardData)}`)
+    stripe.createToken(cardNumber, cardData).then((createTokenResult) => {
+      if(createTokenResult.error){
+        this.setCardError(createTokenResult.error.message)
       } else {
-        const payment_details = Object.assign({}, {...result})
+        const payment_details = Object.assign({}, {...createTokenResult})
+        console.log(`payment details from stripe: ${JSON.stringify(payment_details)}`)
         this.props.savePaymentDetails(payment_details).then((saveResult) => {
           if(saveResult.errorMessage){
             this.setCardError(saveResult.errorMessage)
