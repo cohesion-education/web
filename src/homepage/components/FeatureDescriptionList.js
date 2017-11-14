@@ -1,6 +1,21 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 class FeatureDescriptionList extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleTryNow = this.handleTryNow.bind(this)
+  }
+
+  static propTypes = {
+    handleTryNow: PropTypes.func.isRequired
+  }
+
+  handleTryNow(e){
+    e.preventDefault()
+    this.props.handleTryNow()
+  }
+
   render(){
     return(
       <div>
@@ -11,7 +26,7 @@ class FeatureDescriptionList extends React.Component {
                 <div className="feat-description m-t-20">
                   <h4>Simple &amp; Organized</h4>
                   <p className="text-muted">We know how busy you are and the last thing you want to do after a long day is search for your child's math homework topic and never know if you're seeing the right thing. We pride ourselves on organizing content in a variety of ways so you can find what you need, when you need it.</p>
-                  <a href="" className="btn btn-custom">Learn More</a>
+                  <a onClick={this.handleTryNow} className="btn btn-custom">Try for Free</a>
                 </div>
               </div>
               <div className="col-sm-6 col-sm-offset-1">
@@ -30,7 +45,7 @@ class FeatureDescriptionList extends React.Component {
                 <div className="feat-description">
                   <h4>Tailored to Your Child</h4>
                   <p className="text-muted">Progress through your video lesson library will be tracked and tailored to YOUR child so you will always know what you've seen, what you haven't seen, and what is recommened for you!</p>
-                  <a href="" className="btn btn-custom">Learn More</a>
+                  <a onClick={this.handleTryNow} className="btn btn-custom">Try for Free</a>
                 </div>
               </div>
             </div>

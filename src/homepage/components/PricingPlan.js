@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 export default class PricingPlan extends React.Component {
   static propTypes = {
+    handlePurchaseNow: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     price: PropTypes.string.isRequired,
     duration: PropTypes.string.isRequired
@@ -15,7 +16,7 @@ export default class PricingPlan extends React.Component {
   }
 
   render(){
-    const { title, price, duration } = this.props
+    const { title, price, duration, handlePurchaseNow } = this.props
     return(
       <article className="pricing-column col-lg-4 col-md-4">
         <div className="inner-box">
@@ -25,7 +26,7 @@ export default class PricingPlan extends React.Component {
             <div className="plan-duration">{duration}</div>
           </div>
           <div className="text-center">
-            <a href="/purchase" className="btn btn-sm btn-custom btn-login">Purchase Now</a>
+            <a onClick={handlePurchaseNow} href="/purchase" className="btn btn-sm btn-custom btn-login">Purchase Now</a>
           </div>
         </div>
       </article>

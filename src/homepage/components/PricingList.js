@@ -4,7 +4,13 @@ import ScrollableAnchor from 'react-scrollable-anchor'
 import PricingPlan from './PricingPlan'
 
 export default class PricingList extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handlePurchaseNow = this.handlePurchaseNow.bind(this)
+  }
+
   static propTypes = {
+    handlePurchaseNow: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     subtitle: PropTypes.string.isRequired,
     list: PropTypes.array.isRequired
@@ -15,6 +21,12 @@ export default class PricingList extends React.Component {
     subtitle: "",
     list: []
   }
+
+  handlePurchaseNow(e){
+    e.preventDefault()
+    this.props.handlePurchaseNow()
+  }
+
   render(){
     const {title, subtitle, list} = this.props
     return(
@@ -32,7 +44,7 @@ export default class PricingList extends React.Component {
               <div className="col-lg-10 col-lg-offset-1">
                 <div className="row">
                   {list.map((pricing, i) =>
-                    <PricingPlan key={i} {...pricing} />
+                    <PricingPlan key={i} handlePurchaseNow={this.handlePurchaseNow} {...pricing} />
                   )}
                 </div>
               </div>

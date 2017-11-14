@@ -18,9 +18,9 @@ export default class Homepage extends React.Component {
         <TopOfPageBackgroundImage />
         <Features />
         <TeaserVideo />
-        <FeatureDescriptionList />
+        <FeatureDescriptionList handleTryNow={authActions.login}/>
         <Testimonials />
-        <Pricing />
+        <Pricing handlePurchaseNow={authActions.login}/>
         <Footer />
       </div>
     )

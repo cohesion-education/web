@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Nav, Navbar, NavItem } from 'react-bootstrap'
+import { Nav, Navbar, NavItem } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import logo from '../../images/cohesion-logo.png'
 
 const styles = {
@@ -43,18 +44,27 @@ const styles = {
     padding:'0px',
   },
   navCta:{
-    marginTop:'28px',
+    marginTop:'15px',
     backgroundColor:'#5d9cec !important',
   },
 }
 
 export default class Header extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleLogin = this.handleLogin.bind(this)
+  }
+
   static propTypes = {
     login: PropTypes.func.isRequired
   }
 
+  handleLogin(e){
+    e.preventDefault()
+    this.props.login()
+  }
+
   render (){
-    const { login } = this.props
     return(
       <Navbar fluid collapseOnSelect style={styles.navbar}>
         <Navbar.Header>
@@ -64,11 +74,19 @@ export default class Header extends React.Component {
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
+          <Navbar.Text pullRight>
+            <Link
+              to="/register"
+              style={styles.navCta}
+              onClick={this.handleLogin}
+              className='btn btn-primary'>
+              Try for Free
+            </Link>
+          </Navbar.Text>
           <Nav pullRight>
             <NavItem href='#features' style={styles.navLinks}>Features</NavItem>
             <NavItem href='#pricing' style={styles.navLinks}>Plans</NavItem>
-            <NavItem href="/login" style={styles.navLinks} onClick={login}>Login</NavItem>
-            <Button bsStyle="primary" href='/register' style={styles.navCta} onClick={login}>Try for Free</Button>
+            <NavItem href="/login" style={styles.navLinks} onClick={this.handleLogin}>Login</NavItem>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

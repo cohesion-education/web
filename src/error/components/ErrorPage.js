@@ -1,6 +1,7 @@
 import React from 'react'
 import Header from '../../homepage/components/Header'
 import Footer from '../../homepage/components/Footer'
+import * as authActions from '../../auth/actions'
 import '../../css/fonts.css'
 import '../../css/font-awesome.css'
 import '../../css/homepage.css'
@@ -12,7 +13,7 @@ export default class PageNotFound extends React.Component {
   render(){
     return(
       <div>
-        <Header />
+        <Header login={authActions.login}/>
         <div className="wrapper-page">
           <div className="ex-page-content text-center">
             {this.props.children}

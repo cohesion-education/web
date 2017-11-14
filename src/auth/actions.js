@@ -20,7 +20,6 @@ const webAuth = new auth0.WebAuth({
 })
 
 export function login(from = '/dashboard') {
-  console.log(`from: ${JSON.stringify(from)}`)
   if(isAuthenticated()){
     history.replace(from !== '' ? from : '/dashboard')
     return
