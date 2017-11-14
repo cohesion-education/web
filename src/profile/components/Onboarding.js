@@ -37,12 +37,15 @@ export class Onboarding extends React.Component {
     this.state = {
       current: states.WELCOME,
       profile: props.profile,
+      students: props.students,
     }
   }
 
   static propTypes = {
     profile: PropTypes.object.isRequired,
+    students: PropTypes.array,
     fetchProfileIfNeeded: PropTypes.func.isRequired,
+    fetchStudentsIfNeeded: PropTypes.func.isRequired,
     saveProfile: PropTypes.func.isRequired,
     saveStudents: PropTypes.func.isRequired,
     fetchPaymentDetails: PropTypes.func.isRequired,
@@ -50,18 +53,17 @@ export class Onboarding extends React.Component {
   }
 
   static defaultProps = {
-    profile: new Profile()
+    profile: new Profile(),
+    students: [],
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps.profile.onboarded){
-      history.replace('/dashboard')
-    }
+    // if(nextProps.profile.onboarded === true){
+    //   history.replace('/dashboard')
+    // }
+    console.log(`componentWillReceiveProps - students: ${JSON.stringify(nextProps.students)}`)
 
-    this.setState({
-      current: states.WELCOME,
-      profile: Object.assign(new Profile(), {...nextProps.profile})
-    })
+    this.setState(Object.assign(this.state, { profile: nextProps.profile, students: nextProps.students }))
   }
 
   componentDidMount() {
@@ -74,6 +76,7 @@ export class Onboarding extends React.Component {
 
   handleSaveProfile(profile){
     this.props.saveProfile(profile).then(() => {
+      this.props.fetchStudentsIfNeeded()
       this.transition(states.STUDENTS)
     })
   }
@@ -134,9 +137,10 @@ export class Onboarding extends React.Component {
 
 
   renderWelcome(){
+    const { profile } = this.state
     return(
       <ProfileForm
-        profile={this.props.profile}
+        profile={profile}
         saveProfile={this.handleSaveProfile}
         fetchProfileIfNeeded={this.props.fetchProfileIfNeeded}
       />
@@ -144,23 +148,26 @@ export class Onboarding extends React.Component {
   }
 
   renderStudentsForm(){
+    const { profile } = this.state
+    const students = this.state.students ? this.state.students : []
+    console.log(`Onboarding::renderStudentsForm - students: ${students}`)
     return(
       <div>
         <StudentsForm
-          profile={this.props.profile}
-          students={this.props.profile.students}
+          profile={profile}
+          students={students}
           handleSave={this.handleSaveStudents}
-          fetchStudentsIfNeeded={this.props.fetchStudentsIfNeeded}
         />
       </div>
     )
   }
 
   renderPaymentForm(){
+    const { profile } = this.state
     return(
       <div>
         <PaymentForm
-          profile={this.props.profile}
+          profile={profile}
           fetchPaymentDetails={this.props.fetchPaymentDetails}
           savePaymentDetails={this.props.savePaymentDetails}
           handleSavePaymentDetailsSuccess={this.handleSavePaymentDetailsSuccess}
@@ -172,13 +179,15 @@ export class Onboarding extends React.Component {
 
 export default connect(
   (state) => ({ //mapStateToProps
-    profile:state.profile
+    profile:state.profile,
+    students: state.students.students,
   }),
   (dispatch) => ({ //mapDispatchToProps
     fetchProfileIfNeeded: bindActionCreators(actions.fetchProfileIfNeeded, dispatch),
+    fetchStudentsIfNeeded: bindActionCreators(actions.fetchStudentsIfNeeded, dispatch),
     saveProfile: bindActionCreators(actions.saveProfile, dispatch),
     saveStudents: bindActionCreators(actions.saveStudents, dispatch),
     fetchPaymentDetails: bindActionCreators(actions.fetchPaymentDetails, dispatch),
-    savePaymentDetails: bindActionCreators(actions.savePaymentDetails, dispatch)
+    savePaymentDetails: bindActionCreators(actions.savePaymentDetails, dispatch),
   })
 )(Onboarding)

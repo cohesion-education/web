@@ -61,7 +61,7 @@ export class ProfileForm extends React.Component {
     }
 
     updated.validate()
-    this.setState(Object.assign(this.state, Object.assign(new Profile(), {...updated})))
+    this.setState(Object.assign(this.state, {profile:updated}))
   }
 
   handleSubmit(e){

@@ -21,6 +21,13 @@ export const requestStudents = () => {
   }
 }
 
+export const fetchStudentsFailure = (error) => {
+  return {
+    type: constants.FETCH_STUDENTS_FAILURE,
+    error: error,
+  }
+}
+
 export const requestPaymentDetails = () => {
   return {
     type: constants.REQUEST_PAYMENT_DETAILS,
@@ -222,14 +229,13 @@ export function fetchStudents() {
       .then(json => {
         if(json){
           console.log(`fetch students response: ${JSON.stringify(json)}`)
-          const profile = Object.assign(new Profile(), {...json})
           // console.log(`fetch students response: ${JSON.stringify(profile)}`)
-          dispatch(receiveStudents(profile.students))
+          dispatch(receiveStudents(json.students))
         }
       })
       .catch(error => {
         console.log(`error fetching students: ${error}\nuri: ${apiURL}\nopts: ${JSON.stringify(opts)}`)
-        dispatch(receiveProfileFailure(error))
+        dispatch(fetchStudentsFailure(error))
       })
   }
 }

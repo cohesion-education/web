@@ -5,7 +5,7 @@ import { createLogger } from 'redux-logger'
 import history from '../history'
 import { homepageReducer } from '../homepage/reducers'
 import { authResultReducer } from '../auth/reducers'
-import { profileReducer, userinfoReducer } from '../profile/reducers'
+import { profileReducer, userinfoReducer, studentsReducer } from '../profile/reducers'
 import { taxonomyReducer } from '../taxonomy/reducers'
 import { videoReducer } from '../video/reducers'
 
@@ -19,6 +19,7 @@ export default function configureStore(preloadedState) {
       authResult: authResultReducer,
       userinfo: userinfoReducer,
       profile: profileReducer,
+      students: studentsReducer,
       taxonomy: taxonomyReducer,
       video: videoReducer,
     }),

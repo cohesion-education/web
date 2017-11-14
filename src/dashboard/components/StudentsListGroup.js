@@ -10,12 +10,12 @@ import Profile from '../../types/Profile'
 export class StudentsListGroup extends React.Component {
 
   static propTypes = {
-    profile: PropTypes.object.isRequired,
+    students: PropTypes.array.isRequired,
     fetchStudents: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-    profile: new Profile()
+    students: []
   }
 
   componentDidMount() {
@@ -23,11 +23,11 @@ export class StudentsListGroup extends React.Component {
   }
 
   render (){
-    const { profile } = this.props
+    const { students } = this.props
 
     return(
       <ListGroup>
-        { profile.students && profile.students.map((student, i) => {
+        { students && students.map((student, i) => {
             return (!student) ? ( null ) : (
               <ListGroupItem key={i}>
                 <Link to={`/videos/${student.grade}`}>
@@ -45,7 +45,7 @@ export class StudentsListGroup extends React.Component {
 export default connect(
   (state) => ({
     //mapStateToProps
-    profile: state.profile,
+    students: state.students.students,
   }),
   (dispatch) => ({
     //mapDispatchToProps

@@ -18,12 +18,19 @@ export const profileReducer = (state = {}, action) => {
       return Object.assign({}, state, {didInvalidate: true})
     case REQUEST_PROFILE:
       return Object.assign({}, state, {isFetching: true, didInvalidate: false})
-    case REQUEST_STUDENTS:
-      return Object.assign({}, state, {isFetchingStudents: true, didInvalidate: false})
     case RECEIVE_PROFILE:
       return Object.assign({}, state, {isFetching: false, didInvalidate: false, ...action.profile})
+    default:
+      return state
+  }
+}
+
+export const studentsReducer = (state = {students: [], isFetching: false, didInvalidate: false}, action) => {
+  switch(action.type){
+    case REQUEST_STUDENTS:
+      return Object.assign({}, state, {isFetching: true, didInvalidate: false})
     case RECEIVE_STUDENTS:
-      return Object.assign({}, state, {isFetchingStudents: false, didInvalidate: false, students: action.students})
+      return Object.assign({}, state, {isFetching: false, didInvalidate: false, students: action.students})
     default:
       return state
   }

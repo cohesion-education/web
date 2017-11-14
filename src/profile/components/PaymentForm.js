@@ -292,7 +292,7 @@ export class PaymentForm extends React.Component {
           <FormGroup>
             <Col componentClass={ControlLabel} sm={2}>Postal Code</Col>
             <Col sm={10}>
-              <div style={styles.formField} id="card-postal-code-element">{this.state.address_zip}</div>
+              <div style={styles.formField} id="card-postal-code-element">{this.state.address_zip ? this.state.address_zip : ''}</div>
             </Col>
           </FormGroup>
           <FormGroup>

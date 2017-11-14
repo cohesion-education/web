@@ -49,6 +49,7 @@ export class StudentsForm extends React.Component {
   static propTypes = {
     students: PropTypes.array.isRequired,
     profile: PropTypes.object.isRequired,
+    fetchStudentsIfNeeded: PropTypes.func,
     handleSave: PropTypes.func.isRequired
   }
 
@@ -160,7 +161,7 @@ export class StudentsForm extends React.Component {
 
 export default connect(
   (state) => ({ //mapStateToProps
-    students: state.profile.students,
+    students: state.students,
     profile: state.profile,
   }),
   (dispatch) => ({ //mapDispatchToProps
