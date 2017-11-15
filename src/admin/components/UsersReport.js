@@ -55,7 +55,7 @@ export default class UsersReport extends React.Component {
               return (
                 <tr key={i}>
                   <td>{user.id}</td>
-                  <td>{user.full_name}</td>
+                  <td>{user.name}</td>
                   <td>{user.email}</td>
                   <td>{user.state}</td>
                   <td>{user.county}</td>
