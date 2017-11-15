@@ -60,7 +60,7 @@ export default class UsersReport extends React.Component {
                   <td>{user.state}</td>
                   <td>{user.county}</td>
                   <td>{user.created.toString()}</td>
-                  <td>{user.onboarded}</td>
+                  <td>{user.onboarded ? 'Yes' : 'No'}</td>
                   <td>{user.sub}</td>
                 </tr>
               )
