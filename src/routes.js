@@ -17,6 +17,7 @@ import * as authContainers from './auth/components/containers'
 import * as profilePages from './profile/components/ComposedDashboards'
 import * as videoPages from './video/components/ComposedDashboards'
 import* as taxonomyPages from './taxonomy/components/ComposedDashboards'
+import* as adminPages from './admin/components/ComposedDashboards'
 import { homepage } from './homepage/data/'
 
 
@@ -57,6 +58,7 @@ export default () => (
         <PrivateRoute path='/videos/:grade' component={videoPages.ByGradePage} />
         <PrivateRoute path='/video/:id' component={videoPages.ShowVideoPage} />
 
+        <AdminRoute path='/admin/report' component={adminPages.AdminReportPage} />
         <AdminRoute path='/admin/taxonomy/:grade/:subject/:unit/:set' component={taxonomyPages.TaxonomyManagerPage} />
         <AdminRoute path='/admin/taxonomy/:grade/:subject/:unit' component={taxonomyPages.TaxonomyManagerPage} />
         <AdminRoute path='/admin/taxonomy/:grade/:subject' component={taxonomyPages.TaxonomyManagerPage} />

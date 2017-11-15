@@ -5,6 +5,7 @@ import EditVideo from './EditVideo'
 import VideoList from '../containers/VideoList'
 import ShowVideo from './ShowVideo'
 import AdminShowVideo from './AdminShowVideo'
+import ByGrade from './ByGrade'
 import ByTaxonomy from './ByTaxonomy'
 
 export const VideoListPage = () =>
@@ -47,5 +48,5 @@ export const BySubjectPage = ({ match }) =>
   </Dashboard>
 export const ByGradePage = ({ match }) =>
   <Dashboard>
-    <ByTaxonomy match={match} />
+    <ByGrade match={match} />
   </Dashboard>

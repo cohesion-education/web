@@ -7,6 +7,7 @@ export default class AdminListGroup extends React.Component {
     return(
       <ListGroup>
         <ListGroupItem>Admin Functions</ListGroupItem>
+        <ListGroupItem><Link to="/admin/report">Report</Link></ListGroupItem>
         <ListGroupItem><Link to="/admin/taxonomy">Taxonomy</Link></ListGroupItem>
         <ListGroupItem><Link to="/admin/videos">Videos</Link></ListGroupItem>
       </ListGroup>
