@@ -29,6 +29,8 @@ export default class ByGrade extends React.Component {
   constructor(props) {
     super(props)
 
+    this.renderVideoCell = this.renderVideoCell.bind(this)
+
     this.state = {
       videosByGrade: {},
     }
@@ -50,10 +52,50 @@ export default class ByGrade extends React.Component {
         return
       }
 
-      console.log(`fetch videos by grade response: ${JSON.stringify(result.by_grade)}`)
-
       this.setState(Object.assign({}, {videosByGrade: result.by_grade}))
     })
+  }
+
+  renderVideoRows(sectionKey, sectionTitle, videos){
+    let rows = [], cols = []
+
+    videos.forEach((video, i) => {
+      cols.push(this.renderVideoCell(video))
+
+      if((i + 1) === videos.length || (i + 1) % 4 === 0){
+        rows.push(
+          <Row key={i} style={styles.videoRow}>
+            {cols}
+          </Row>
+        )
+
+        cols = []
+      }
+    })
+
+    return(
+      <Grid fluid style={styles.containerFluid} key={sectionKey}>
+        <Row style={styles.videoRow}>
+          <Col style={styles.videoGroupTitle}>
+            {sectionTitle} ({videos.length})
+          </Col>
+        </Row>
+
+        { rows }
+      </Grid>
+    )
+  }
+
+  renderVideoCell(video){
+    return(
+      <Col sm={3} style={styles.videoCell} key={video.id}>
+        <Link to={`/video/${video.id}`}>
+          <Thumbnail src={video.ThumbnailURL} alt={video.title}>
+           <p style={styles.videoTitle}>{video.title}</p>
+         </Thumbnail>
+       </Link>
+     </Col>
+    )
   }
 
   render(){
@@ -62,8 +104,6 @@ export default class ByGrade extends React.Component {
     const pageTitle = `${gradeTitle} Videos`
 
     const videosByGrade = this.state.videosByGrade ? this.state.videosByGrade : {}
-    console.log(`rendering videos by grade: ${JSON.stringify(videosByGrade)}`)
-    // console.log(`current state: ${JSON.stringify(this.state)}`)
 
     return(
       <div>
@@ -87,34 +127,11 @@ export default class ByGrade extends React.Component {
         }
         { grade === '3rd' && Object.keys(videosByGrade).map((key, i) => {
           const videos = videosByGrade[key] ? videosByGrade[key] : []
-          console.log(`${key}: ${videos.length}`)
           if(videos.length  === 0){
             return ''
           }
-          
-          return (
-            <Grid fluid style={styles.containerFluid} key={i}>
-              <Row style={styles.videoRow}>
-                <Col style={styles.videoGroupTitle}>
-                  {key} ({videos.length})
-                </Col>
-              </Row>
-              <Row style={styles.videoRow}>
-                {videos.map((video, i) => {
-                  return(
-                    <Col sm={3} style={styles.videoCell}>
-                      <Link to={`/video/${video.id}`}>
-                        <Thumbnail src={video.ThumbnailURL} alt={video.title} rounded>
-                         <p style={styles.videoTitle}>{video.title}</p>
-                       </Thumbnail>
-                     </Link>
-                   </Col>
-                  )
-                })}
-              </Row>
-            </Grid>
-          )
 
+          return this.renderVideoRows(i, key, videos)
         })}
       </div>
     )
