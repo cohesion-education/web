@@ -1,49 +1,74 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { PageHeader } from 'react-bootstrap'
-//import Taxonomy from '../../types/Taxonomy'
-//import ByTaxonomy from './ByTaxonomy'
+import { Col, Grid, PageHeader, Row, Thumbnail } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import * as actions from '../actions'
 
+const styles = {
+  containerFluid:{
+    padding:0,
+    height:'100%',
+  },
+  videoRow:{
+    padding:'1em',
+  },
+  videoCell:{
+    paddingBottom:'1em',
+  },
+  videoGroupTitle:{
+    fontWeight: 'bold',
+    fontSize: '1.1em',
+  },
+  videoTitle:{
+    fontWeight: 'bold',
+    textOverflow: 'hidden',
+  },
+}
 
 export default class ByGrade extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      videosByGrade: {},
+    }
+  }
+
   static propTypes = {
-    videos: PropTypes.array.isRequired,
+    match: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
-    videos: []
   }
 
   componentDidMount() {
-    // this.props.fetchVideoList()
+    const { grade } = this.props.match.params
+
+    actions.fetchVideosByGrade(grade).then((result) => {
+      if(result.errorMessage){
+        alert(result.errorMessage)
+        return
+      }
+
+      console.log(`fetch videos by grade response: ${JSON.stringify(result.by_grade)}`)
+
+      this.setState(Object.assign({}, {videosByGrade: result.by_grade}))
+    })
   }
 
   render(){
-    // const videos = this.props.videos ? this.props.videos : []
-    const { grade, subject, unit, set } = this.props.match.params
-
+    const { grade } = this.props.match.params
     const gradeTitle = `${grade} ${grade !== 'Kindergarten' ? 'Grade' : ''}`
-    let title = `${gradeTitle}`
-    // if(subject){
-    //   title += ` > ${subject}`
-    // }
-    //
-    // if(unit){
-    //   title += ` > ${unit}`
-    // }
-    //
-    // if(set){
-    //   title += ` > ${set}`
-    // }
+    const pageTitle = `${gradeTitle} Videos`
 
-    title += ' Videos'
-
-    console.log(`grade: ${grade} - subject ${subject} - unit: ${unit} - set: ${set}`)
+    const videosByGrade = this.state.videosByGrade ? this.state.videosByGrade : {}
+    console.log(`rendering videos by grade: ${JSON.stringify(videosByGrade)}`)
+    // console.log(`current state: ${JSON.stringify(this.state)}`)
 
     return(
       <div>
         <PageHeader>
-          {title}
+          {pageTitle}
         </PageHeader>
 
         { grade !== '3rd' &&
@@ -60,19 +85,37 @@ export default class ByGrade extends React.Component {
           </div>
 
         }
-        { grade === '3rd' &&
-          <div>
-            <p>3rd Grade videos are coming any minute now... please check back in just a bit.</p>
+        { grade === '3rd' && Object.keys(videosByGrade).map((key, i) => {
+          const videos = videosByGrade[key] ? videosByGrade[key] : []
+          console.log(`${key}: ${videos.length}`)
+          if(videos.length  === 0){
+            return ''
+          }
+          
+          return (
+            <Grid fluid style={styles.containerFluid} key={i}>
+              <Row style={styles.videoRow}>
+                <Col style={styles.videoGroupTitle}>
+                  {key} ({videos.length})
+                </Col>
+              </Row>
+              <Row style={styles.videoRow}>
+                {videos.map((video, i) => {
+                  return(
+                    <Col sm={3} style={styles.videoCell}>
+                      <Link to={`/video/${video.id}`}>
+                        <Thumbnail src={video.ThumbnailURL} alt={video.title} rounded>
+                         <p style={styles.videoTitle}>{video.title}</p>
+                       </Thumbnail>
+                     </Link>
+                   </Col>
+                  )
+                })}
+              </Row>
+            </Grid>
+          )
 
-            <p>We appreciate your patience as we finalize this part of our 3rd grade launch.</p>
-
-            <img src="https://media.giphy.com/media/5Zesu5VPNGJlm/giphy.gif" alt="Working Monkey" />
-          </div>
-
-        }
-
-        { /* <ByTaxonomy taxonomy={new Taxonomy()} videos={[]} /> */ }
-
+        })}
       </div>
     )
   }

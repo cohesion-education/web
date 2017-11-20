@@ -50,7 +50,7 @@ export class Dashboard extends React.Component {
 
   componentWillMount(){
     const { profile } = this.props
-    if(!profile.onboarded && !isAdmin()){
+    if(profile.onboarded === false && !isAdmin()){
       history.replace('/onboarding')
       return
     }

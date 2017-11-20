@@ -1,11 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Row, Col, ListGroup, ListGroupItem, PageHeader, Image } from 'react-bootstrap'
+import { Grid, Row, Col, ListGroup, ListGroupItem, PageHeader } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import VideoPlayer from './VideoPlayer'
 import Video from '../../types/Video'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import * as actions from '../actions'
 
 const styles = {
@@ -48,13 +46,19 @@ const styles = {
   },
 }
 
-class ShowVideo extends React.Component {
+export default class ShowVideo extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      video: props.video,
+    }
+  }
 
   static propTypes = {
-    video: PropTypes.object.isRequired,
+    video: PropTypes.object,
     match: PropTypes.object.isRequired,
-    fetchVideoByID: PropTypes.func.isRequired,
-    dispatch: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -62,26 +66,21 @@ class ShowVideo extends React.Component {
   }
 
   componentDidMount() {
-    /*const { id } = this.props.match.params
-    this.props.fetchVideoByID(id).then((video) => {
-      this.props.dispatch(actions.receiveVideoToView(video))
-    })*/
+    const { id } = this.props.match.params
+
+    actions.fetchVideoByID(id).then((video) => {
+      this.setState(Object.assign({}, {video: video}))
+    })
   }
 
   render(){
-    // const { video } = this.props
-
-    let video = new Video()
-    video.signed_url = 'http://techslides.com/demos/sample-videos/small.mp4'
-    video.title = 'Divide by Zero'
-    video.key_terms = ['term 1', 'term 2', 'term 3']
-    video.state_standards = ['fl.1.1', 'fl.1.2']
-    video.common_core_standards = ['cc.1.1']
+    const video = this.state.video ? this.state.video : new Video()
 
     const videoJsOptions = {
       autoplay: false,
       controls: true,
       fluid: true,
+      poster: video.ThumbnailURL,
       sources: [{
         src: video.signed_url,
         type: 'video/mp4'
@@ -95,53 +94,49 @@ class ShowVideo extends React.Component {
             <Col sm={8}>
               <PageHeader>{video.title}</PageHeader>
             </Col>
-            <Col sm={3}>
-              <div style={styles.ratingComponent}>
-                <div style={{...styles.stoplight, ...styles.greenlight}}></div>
-                <div style={{...styles.stoplight, ...styles.redlight}}></div>
-              </div>
-            </Col>
           </Row>
           <Row>
             <Col smOffest={1} sm={11}>
-              1st Grade &gt; Math &gt; Fun with Numbers &gt; Division
+              {video.taxonomy ? video.taxonomy.name : ''}
             </Col>
           </Row>
           <Row style={styles.videoPlayerRow}>
             <Col sm={8}>
-              <VideoPlayer { ...videoJsOptions } />
-            </Col>
-            <Col sm={3}>
-              <div style={styles.relatedVideosTitle}>Related Videos</div>
-              <Image src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" thumbnail />
-              <Image src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" thumbnail />
-              <Image src="https://i.ytimg.com/vi/VzAap35yd34/maxresdefault.jpg" thumbnail />
+              { video.signed_url &&
+                <VideoPlayer { ...videoJsOptions } />
+              }
             </Col>
           </Row>
           <Row>
             <Col sm={8}>
               <ListGroup>
-                <ListGroupItem>
-                  Key Terms: {video.key_terms.map((term, i) => {
-                    return (
-                      <Link style={styles.videoMetaLink} key={i} to="">{term}</Link>
-                    )
-                  })}
-                </ListGroupItem>
-                <ListGroupItem>
-                  State Standards: {video.state_standards.map((term, i) => {
-                    return (
-                      <Link style={styles.videoMetaLink} key={i} to="">{term}</Link>
-                    )
-                  })}
-                </ListGroupItem>
-                <ListGroupItem>
-                  Common Core Standards: {video.common_core_standards.map((term, i) => {
-                    return (
-                      <Link style={styles.videoMetaLink} key={i} to="">{term}</Link>
-                    )
-                  })}
-                </ListGroupItem>
+                { (video.key_terms && video.key_terms.length !== 0) &&
+                  <ListGroupItem>
+                    Key Terms: {video.key_terms.map((term, i) => {
+                      return (
+                        <Link style={styles.videoMetaLink} key={i} to="" onClick={(e) => e.preventDefault()}>{term}</Link>
+                      )
+                    })}
+                  </ListGroupItem>
+                }
+                { (video.state_standards && video.state_standards.length !== 0) &&
+                  <ListGroupItem>
+                    State Standards: {video.state_standards.map((term, i) => {
+                      return (
+                        <Link style={styles.videoMetaLink} key={i} to="" onClick={(e) => e.preventDefault()}>{term}</Link>
+                      )
+                    })}
+                  </ListGroupItem>
+                }
+                { (video.common_core_standards && video.common_core_standards.length !== 0) &&
+                  <ListGroupItem>
+                    Common Core Standards: {video.common_core_standards.map((term, i) => {
+                      return (
+                        <Link style={styles.videoMetaLink} key={i} to="" onClick={(e) => e.preventDefault()}>{term}</Link>
+                      )
+                    })}
+                  </ListGroupItem>
+                }
               </ListGroup>
             </Col>
           </Row>
@@ -150,15 +145,3 @@ class ShowVideo extends React.Component {
     )
   }
 }
-
-export default connect(
-  (state) => ({
-    //mapStateToProps
-    video: state.video.requestedVideo,
-  }),
-  (dispatch) => ({
-    //mapDispatchToProps
-    dispatch: dispatch,
-    fetchVideoByID: bindActionCreators(actions.fetchVideoByID, dispatch),
-  })
-)(ShowVideo)

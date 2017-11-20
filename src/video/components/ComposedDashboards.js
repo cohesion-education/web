@@ -6,7 +6,6 @@ import VideoList from '../containers/VideoList'
 import ShowVideo from './ShowVideo'
 import AdminShowVideo from './AdminShowVideo'
 import ByGrade from './ByGrade'
-import ByTaxonomy from './ByTaxonomy'
 
 export const VideoListPage = () =>
   <Dashboard>
@@ -33,19 +32,6 @@ export const ShowVideoPage = ({ match }) =>
     <ShowVideo match={match} />
   </Dashboard>
 
-
-export const BySetPage = ({ match }) =>
-  <Dashboard>
-    <ByTaxonomy match={match} />
-  </Dashboard>
-export const ByUnitPage = ({ match }) =>
-  <Dashboard>
-    <ByTaxonomy match={match} />
-  </Dashboard>
-export const BySubjectPage = ({ match }) =>
-  <Dashboard>
-    <ByTaxonomy match={match} />
-  </Dashboard>
 export const ByGradePage = ({ match }) =>
   <Dashboard>
     <ByGrade match={match} />

@@ -189,6 +189,66 @@ export function fetchVideoList() {
   }
 }
 
+export function fetchVideosByGrade(grade) {
+  const token = getIDToken()
+  const uri = `${window.config.api_base}/api/videos/by_grade/${grade}`
+  const opts = {
+    method: 'get',
+    mode: 'cors',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+  }
+
+  return fetch(uri, opts)
+    .then(response => response.json())
+    .then(json => {
+      if(json.error){
+        json.errorMessage = `failed to retrieve videos by grade: ${json.error}`
+        return json
+      }
+
+      return json
+    })
+    .catch(error => {
+      return {
+        errorMessage: `error fetching videos by grade: ${error}`,
+        uri: uri,
+        opts: opts,
+      }
+    })
+}
+
+export function fetchVideosByTaxonomy(taxonomy) {
+  const token = getIDToken()
+  const uri = `${window.config.api_base}/api/videos/by_taxonomy/${taxonomy.id}`
+  const opts = {
+    method: 'get',
+    mode: 'cors',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+  }
+
+  return fetch(uri, opts)
+    .then(response => response.json())
+    .then(json => {
+      if(json.error){
+        json.errorMessage = `failed to retrieve videos: ${json.error}`
+        return json
+      }
+
+      return json.list
+    })
+    .catch(error => {
+      return {
+        errorMessage: `error fetching video list: ${error}`,
+        uri: uri,
+        opts: opts,
+      }
+    })
+}
+
 export function fetchVideoByID(id) {
   const token = getIDToken()
   const uri = `${window.config.api_base}/api/video/${id}`
@@ -199,24 +259,22 @@ export function fetchVideoByID(id) {
       'Authorization': `Bearer ${token}`
     },
   }
+  
+  return fetch(uri, opts)
+    .then(response => response.json())
+    .then(json => {
+      if(json.error){
+        json.errorMessage = `failed to get video by id ${id}: ${json.error}`
+        return json
+      }
 
-  return (dispatch) => {
-    return fetch(uri, opts)
-      .then(response => response.json())
-      .then(json => {
-        if(json.error){
-          json.errorMessage = `failed to get video by id ${id}: ${json.error}`
-          return json
-        }
-
-        const video = Object.assign(new Video(), {...json})
-        return video
-      })
-      .catch(error => {
-        console.log(`error getting video by id: ${error}\nuri: ${uri}\nopts: ${JSON.stringify(opts)}`)
-        //TODO - dispatch error
-      })
-  }
+      const video = Object.assign(new Video(), {...json})
+      return video
+    })
+    .catch(error => {
+      console.log(`error getting video by id: ${error}\nuri: ${uri}\nopts: ${JSON.stringify(opts)}`)
+      return {errorMessage: error}
+    })
 }
 
 export function deleteVideo(id) {

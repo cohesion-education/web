@@ -1,7 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import * as actions from '../actions'
 import { PageHeader, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
@@ -20,7 +18,7 @@ const styles = {
   },
 }
 
-class AdminShowVideo extends React.Component {
+export default class AdminShowVideo extends React.Component {
 
   constructor(props) {
     super(props)
@@ -33,8 +31,6 @@ class AdminShowVideo extends React.Component {
   static propTypes = {
     video: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
-    fetchVideoByID: PropTypes.func.isRequired,
-    dispatch: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -43,15 +39,14 @@ class AdminShowVideo extends React.Component {
 
   componentDidMount() {
     const { id } = this.props.match.params
-    this.props.fetchVideoByID(id).then((video) => {
-      // this.props.dispatch(actions.receiveVideoToView(video))
+    actions.fetchVideoByID(id).then((video) => {
       this.setState(Object.assign({}, {video: video}))
     })
   }
 
   render(){
     const { video } = this.state
-    // console.log(`video ${JSON.stringify(video)}`)
+    
     const videoJsOptions = {
       autoplay: false,
       controls: true,
@@ -139,14 +134,3 @@ class AdminShowVideo extends React.Component {
     )
   }
 }
-
-export default connect(
-  (state) => ({
-    //mapStateToProps
-  }),
-  (dispatch) => ({
-    //mapDispatchToProps
-    dispatch: dispatch,
-    fetchVideoByID: bindActionCreators(actions.fetchVideoByID, dispatch),
-  })
-)(AdminShowVideo)

@@ -40,7 +40,7 @@ export function fetchStudents() {
     .then(response => response.json())
     .then(json => {
       if(json){
-        console.log(`fetch students response: ${JSON.stringify(json)}`)
+        // console.log(`fetch students response: ${JSON.stringify(json)}`)
         return json
       }
     })
