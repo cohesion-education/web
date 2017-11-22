@@ -6,6 +6,7 @@ import VideoList from '../containers/VideoList'
 import ShowVideo from './ShowVideo'
 import AdminShowVideo from './AdminShowVideo'
 import ByGrade from './ByGrade'
+import BySubject from './BySubject'
 
 export const VideoListPage = () =>
   <Dashboard>
@@ -35,4 +36,9 @@ export const ShowVideoPage = ({ match }) =>
 export const ByGradePage = ({ match }) =>
   <Dashboard>
     <ByGrade match={match} />
+  </Dashboard>
+
+export const BySubjectPage = ({ match }) =>
+  <Dashboard>
+    <BySubject match={match} />
   </Dashboard>

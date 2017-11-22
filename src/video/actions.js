@@ -219,6 +219,36 @@ export function fetchVideosByGrade(grade) {
     })
 }
 
+export function fetchVideosBySubject(grade, subject) {
+  const token = getIDToken()
+  const uri = `${window.config.api_base}/api/videos/by_grade/${grade}/by_subject/${subject}`
+  const opts = {
+    method: 'get',
+    mode: 'cors',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+  }
+
+  return fetch(uri, opts)
+    .then(response => response.json())
+    .then(json => {
+      if(json.error){
+        json.errorMessage = `failed to retrieve videos by grade: ${json.error}`
+        return json
+      }
+
+      return json
+    })
+    .catch(error => {
+      return {
+        errorMessage: `error fetching videos by grade: ${error}`,
+        uri: uri,
+        opts: opts,
+      }
+    })
+}
+
 export function fetchVideosByTaxonomy(taxonomy) {
   const token = getIDToken()
   const uri = `${window.config.api_base}/api/videos/by_taxonomy/${taxonomy.id}`
@@ -259,7 +289,7 @@ export function fetchVideoByID(id) {
       'Authorization': `Bearer ${token}`
     },
   }
-  
+
   return fetch(uri, opts)
     .then(response => response.json())
     .then(json => {

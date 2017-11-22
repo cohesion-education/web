@@ -52,6 +52,7 @@ export default () => (
         <PrivateRoute path='/profile/students' component={profilePages.StudentsFormPage} />
         <PrivateRoute path='/profile/payment_details' component={profilePages.PaymentFormPage} />
         <PrivateRoute path='/profile' component={profilePages.ProfileFormPage} />
+        <PrivateRoute path='/videos/:grade/:subject' component={videoPages.BySubjectPage} />
         <PrivateRoute path='/videos/:grade' component={videoPages.ByGradePage} />
         <PrivateRoute path='/video/:id' component={videoPages.ShowVideoPage} />
 

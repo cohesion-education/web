@@ -1,40 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Col, Grid, PageHeader, Row, Thumbnail } from 'react-bootstrap'
+import { ListGroup, ListGroupItem, PageHeader } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import * as actions from '../actions'
 
-const styles = {
-  containerFluid:{
-    padding:0,
-    height:'100%',
-  },
-  videoRow:{
-    padding:'1em',
-  },
-  videoCell:{
-    paddingBottom:'1em',
-  },
-  videoGroupTitle:{
-    fontWeight: 'bold',
-    fontSize: '1.1em',
-  },
-  videoTitle:{
-    fontWeight: 'bold',
-    textOverflow: 'hidden',
-  },
-}
 
 export default class ByGrade extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.renderVideoCell = this.renderVideoCell.bind(this)
-
-    this.state = {
-      videosByGrade: {},
-    }
-  }
 
   static propTypes = {
     match: PropTypes.object.isRequired,
@@ -43,67 +13,11 @@ export default class ByGrade extends React.Component {
   static defaultProps = {
   }
 
-  componentDidMount() {
-    const { grade } = this.props.match.params
-
-    actions.fetchVideosByGrade(grade).then((result) => {
-      if(result.errorMessage){
-        alert(result.errorMessage)
-        return
-      }
-
-      this.setState(Object.assign({}, {videosByGrade: result.by_grade}))
-    })
-  }
-
-  renderVideoRows(sectionKey, sectionTitle, videos){
-    let rows = [], cols = []
-
-    videos.forEach((video, i) => {
-      cols.push(this.renderVideoCell(video))
-
-      if((i + 1) === videos.length || (i + 1) % 4 === 0){
-        rows.push(
-          <Row key={i} style={styles.videoRow}>
-            {cols}
-          </Row>
-        )
-
-        cols = []
-      }
-    })
-
-    return(
-      <Grid fluid style={styles.containerFluid} key={sectionKey}>
-        <Row style={styles.videoRow}>
-          <Col style={styles.videoGroupTitle}>
-            {sectionTitle} ({videos.length})
-          </Col>
-        </Row>
-
-        { rows }
-      </Grid>
-    )
-  }
-
-  renderVideoCell(video){
-    return(
-      <Col sm={3} style={styles.videoCell} key={video.id}>
-        <Link to={`/video/${video.id}`}>
-          <Thumbnail src={video.ThumbnailURL} alt={video.title}>
-           <p style={styles.videoTitle}>{video.title}</p>
-         </Thumbnail>
-       </Link>
-     </Col>
-    )
-  }
 
   render(){
     const { grade } = this.props.match.params
     const gradeTitle = `${grade} ${grade !== 'Kindergarten' ? 'Grade' : ''}`
     const pageTitle = `${gradeTitle} Videos`
-
-    const videosByGrade = this.state.videosByGrade ? this.state.videosByGrade : {}
 
     return(
       <div>
@@ -125,14 +39,16 @@ export default class ByGrade extends React.Component {
           </div>
 
         }
-        { grade === '3rd' && Object.keys(videosByGrade).map((key, i) => {
-          const videos = videosByGrade[key] ? videosByGrade[key] : []
-          if(videos.length  === 0){
-            return ''
-          }
-
-          return this.renderVideoRows(i, key, videos)
-        })}
+        { grade === '3rd' &&
+          <ListGroup>
+            <ListGroupItem>
+              <Link to={`/videos/${grade}/ELA`}>ELA Videos</Link>
+            </ListGroupItem>
+            <ListGroupItem>
+              <Link to={`/videos/${grade}/Math`}>Math Videos</Link>
+            </ListGroupItem>
+          </ListGroup>
+        }
       </div>
     )
   }
