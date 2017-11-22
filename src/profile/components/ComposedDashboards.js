@@ -1,10 +1,16 @@
 import React from 'react'
 import Dashboard from '../../dashboard/components/Dashboard'
+import Landing from './Landing'
 import EarlyRegistration from './EarlyRegistration'
 import Onboarding from './Onboarding'
 import ProfileForm from './ProfileForm'
 import StudentsForm from './StudentsForm'
 import PaymentForm from './PaymentForm'
+
+export const LandingPage = () =>
+  <Dashboard>
+    <Landing />
+  </Dashboard>
 
 export const EarlyRegistrationPage = () =>
   <Dashboard>

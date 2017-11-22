@@ -108,7 +108,6 @@ export class StudentsForm extends React.Component {
 
   handleSubmit(e){
     e.preventDefault()
-    // console.log('saving students - haha, I know, right? :-)')
     //TODO - validate each student first
     this.props.handleSave(this.state.students)
   }

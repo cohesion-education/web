@@ -47,7 +47,7 @@ export default () => (
         <Route path='/terms' component={TermsOfService} />
 
         <PrivateRoute path='/logout' component={authContainers.LogoutPage} />
-        <PrivateRoute path='/dashboard' component={profilePages.EarlyRegistrationPage} />
+        <PrivateRoute path='/dashboard' component={profilePages.LandingPage} />
         <PrivateRoute path='/onboarding' component={profilePages.OnboardingPage} />
         <PrivateRoute path='/profile/students' component={profilePages.StudentsFormPage} />
         <PrivateRoute path='/profile/payment_details' component={profilePages.PaymentFormPage} />
